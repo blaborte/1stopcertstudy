@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Flashcards — CCNA 200-301 | BL Cert Hub</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    :root{--navy:#0B1D3A;--blue:#1A5276;--accent:#2E86C1;--sky:#5DADE2;--light:#EAF4FB;--mid:#D6EAF8;--white:#fff;--text:#0B1D3A;--muted:#5D7A8C;--border:rgba(30,80,130,0.13);--shadow:0 2px 12px rgba(11,29,58,0.08)}
+    html{scroll-behavior:smooth}
+    body{font-family:"DM Sans",sans-serif;background:var(--light);color:var(--text);min-height:100vh;display:flex;flex-direction:column}
+    nav{background:var(--navy);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:56px;position:sticky;top:0;z-index:100;border-bottom:1px solid rgba(93,173,226,0.15)}
+    .nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+    .bl-circle{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#2E86C1,#5DADE2);display:flex;align-items:center;justify-content:center;font-family:"Space Mono",monospace;font-size:10px;font-weight:700;color:#fff;flex-shrink:0}
+    .nav-brand span{font-size:13px;font-weight:500;color:rgba(255,255,255,0.85);letter-spacing:.02em}
+    .nav-links{display:flex;gap:6px}
+    .nav-links a{font-size:12px;font-weight:500;color:rgba(255,255,255,0.6);text-decoration:none;padding:6px 12px;border-radius:6px;transition:all .18s}
+    .nav-links a:hover{color:#fff;background:rgba(255,255,255,0.08)}
+    .nav-links a.active{color:var(--sky);background:rgba(93,173,226,0.12)}
+    .theme-btn{width:34px;height:34px;border-radius:8px;border:1px solid rgba(255,255,255,0.18);background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.75);cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;transition:all .18s;flex-shrink:0}
+    .theme-btn:hover{background:rgba(255,255,255,0.15);color:#fff}
+    .hero{background:linear-gradient(135deg,#0B1D3A 0%,#1A5276 55%,#2E86C1 100%);padding:3rem 2rem 2.5rem;position:relative;overflow:hidden}
+    .hero-grid-pattern{position:absolute;inset:0;background-image:linear-gradient(rgba(93,173,226,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(93,173,226,0.04) 1px,transparent 1px);background-size:32px 32px;pointer-events:none}
+    .hero-bg-ring{position:absolute;border-radius:50%;border:40px solid rgba(93,173,226,0.08);pointer-events:none}
+    .hero-bg-ring.r1{width:300px;height:300px;top:-70px;right:-50px}
+    .hero-bg-ring.r2{width:180px;height:180px;bottom:-60px;left:40%;border-width:22px}
+    .hero-inner{position:relative;max-width:860px;margin:0 auto}
+    .exam-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.18);border-radius:20px;padding:5px 14px 5px 5px;margin-bottom:1.25rem}
+    .exam-badge .bl-circle{width:26px;height:26px;font-size:9px}
+    .exam-badge span{font-size:12px;color:rgba(255,255,255,0.8);font-weight:500}
+    .hero h1{font-family:"Space Mono",monospace;font-size:clamp(22px,3.5vw,38px);font-weight:700;color:#fff;line-height:1.2;margin-bottom:.5rem}
+    .hero h1 .accent{color:var(--sky)}
+    .hero-sub{font-size:14px;color:rgba(255,255,255,0.6);font-weight:300;line-height:1.7;max-width:500px}
+    .main{max-width:860px;margin:0 auto;padding:2rem 2rem 3rem;flex:1}
+    /* CONTROLS */
+    .controls-bar{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:14px 20px;margin-bottom:1.5rem;box-shadow:var(--shadow);display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between}
+    .filter-group{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+    .filter-label{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-right:2px}
+    .filter-btn{font-size:11px;font-weight:500;padding:5px 12px;border-radius:20px;border:1px solid var(--border);background:var(--light);color:var(--muted);cursor:pointer;transition:all .16s;font-family:"DM Sans",sans-serif}
+    .filter-btn:hover{border-color:var(--accent);color:var(--accent)}
+    .filter-btn.active{background:var(--accent);border-color:var(--accent);color:#fff}
+    .filter-btn[data-domain="1"].active{background:#6B3FA0;border-color:#6B3FA0}
+    .filter-btn[data-domain="2"].active{background:#C0531A;border-color:#C0531A}
+    .filter-btn[data-domain="3"].active{background:#0E7A8A;border-color:#0E7A8A}
+    .filter-btn[data-domain="4"].active{background:#B8860B;border-color:#B8860B}
+    .filter-btn[data-domain="5"].active{background:#2E7D32;border-color:#2E7D32}
+    .filter-btn[data-domain="6"].active{background:#5D6D7E;border-color:#5D6D7E}
+    .action-group{display:flex;gap:8px}
+    .btn{font-family:"DM Sans",sans-serif;font-size:12px;font-weight:500;padding:7px 16px;border-radius:8px;border:1px solid;cursor:pointer;transition:all .18s}
+    .btn-primary{background:var(--accent);border-color:var(--accent);color:#fff}
+    .btn-primary:hover{background:var(--blue)}
+    .btn-outline{background:transparent;border-color:var(--border);color:var(--text)}
+    .btn-outline:hover{border-color:var(--accent);color:var(--accent)}
+    /* STATS */
+    .stats-row{display:flex;gap:10px;margin-bottom:1.5rem;flex-wrap:wrap}
+    .stat-pill{font-size:12px;font-weight:500;padding:6px 14px;border-radius:8px;background:var(--white);border:1px solid var(--border);color:var(--muted)}
+    .stat-pill span{font-family:"Space Mono",monospace;font-weight:700;color:var(--accent)}
+    .stat-pill.mastered span{color:#2E7D32}
+    .stat-pill.reviewing span{color:#B8860B}
+    /* PROGRESS */
+    .prog-wrap{margin-bottom:1.5rem}
+    .prog-row{display:flex;justify-content:space-between;margin-bottom:5px}
+    .prog-lbl{font-size:12px;color:var(--muted)}
+    .prog-pct{font-family:"Space Mono",monospace;font-size:12px;font-weight:700;color:var(--accent)}
+    .prog-track{height:5px;background:var(--mid);border-radius:3px;overflow:hidden}
+    .prog-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--sky));border-radius:3px;transition:width .5s}
+    /* FLASHCARD */
+    .fc-area{display:flex;flex-direction:column;align-items:center;margin-bottom:1.5rem}
+    .fc-counter-row{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:620px;margin-bottom:10px}
+    .fc-counter{font-family:"Space Mono",monospace;font-size:12px;color:var(--muted)}
+    .fc-domain-badge{font-size:10px;font-weight:600;padding:3px 10px;border-radius:20px;border:1px solid}
+    .fc-scene{perspective:1400px;width:100%;max-width:620px;height:240px;cursor:pointer}
+    .fc-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .55s cubic-bezier(.4,0,.2,1)}
+    .fc-inner.flipped{transform:rotateY(180deg)}
+    .fc-face{position:absolute;inset:0;backface-visibility:hidden;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 32px;text-align:center;border:1px solid var(--border);box-shadow:0 4px 20px rgba(11,29,58,0.1)}
+    .fc-front{background:var(--navy)}
+    .fc-back{background:var(--blue);transform:rotateY(180deg)}
+    .fc-side-label{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,0.35);position:absolute;top:16px;left:20px}
+    .fc-term{font-family:"Space Mono",monospace;font-size:clamp(16px,3vw,22px);font-weight:700;color:#fff;line-height:1.3}
+    .fc-def{font-size:13px;color:rgba(255,255,255,0.9);line-height:1.7;font-weight:300}
+    .fc-hint{font-size:11px;color:rgba(255,255,255,0.35);margin-top:12px}
+    .fc-dots{display:flex;gap:5px;justify-content:center;margin-bottom:14px}
+    .fc-dot{width:7px;height:7px;border-radius:50%;background:var(--mid);transition:all .2s;cursor:pointer}
+    .fc-dot.active{background:var(--accent);transform:scale(1.3)}
+    .fc-dot.mastered{background:#2E7D32}
+    .fc-dot.reviewing{background:#B8860B}
+    /* CONTROLS */
+    .fc-controls{display:flex;align-items:center;gap:10px;justify-content:center;width:100%;max-width:620px;margin-bottom:1.5rem}
+    .fc-nav-btn{width:40px;height:40px;border-radius:50%;border:1px solid var(--border);background:var(--white);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;transition:all .18s;color:var(--text)}
+    .fc-nav-btn:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
+    .fc-nav-btn:disabled{opacity:.3;pointer-events:none}
+    .fc-center-btns{display:flex;gap:8px}
+    .grade-btn{font-size:11px;font-weight:600;padding:8px 16px;border-radius:8px;border:1px solid;cursor:pointer;transition:all .18s;font-family:"DM Sans",sans-serif;letter-spacing:.02em}
+    .grade-btn.mastered{background:rgba(46,125,50,0.08);border-color:rgba(46,125,50,0.3);color:#2E7D32}
+    .grade-btn.mastered:hover{background:#2E7D32;color:#fff}
+    .grade-btn.reviewing{background:rgba(184,134,11,0.08);border-color:rgba(184,134,11,0.3);color:#B8860B}
+    .grade-btn.reviewing:hover{background:#B8860B;color:#fff}
+    .grade-btn.again{background:rgba(192,57,43,0.08);border-color:rgba(192,57,43,0.3);color:#C0392B}
+    .grade-btn.again:hover{background:#C0392B;color:#fff}
+    .grade-note{font-size:11px;color:var(--muted);text-align:center;margin-bottom:1rem}
+    /* CARD LIST */
+    .section-label{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);display:flex;align-items:center;gap:10px;margin-bottom:.9rem}
+    .section-label::after{content:"";flex:1;height:1px;background:var(--border)}
+    .card-list{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+    .card-mini{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:10px 12px;cursor:pointer;transition:all .18s;position:relative;overflow:hidden}
+    .card-mini::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--dm-color)}
+    .card-mini:hover{border-color:var(--dm-color);transform:translateY(-1px);box-shadow:0 3px 10px rgba(11,29,58,0.08)}
+    .card-mini.is-mastered{background:rgba(46,125,50,0.05);border-color:rgba(46,125,50,0.25)}
+    .card-mini.is-reviewing{background:rgba(184,134,11,0.05);border-color:rgba(184,134,11,0.25)}
+    .card-mini-term{font-size:11px;font-weight:600;color:var(--text);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .card-mini-status{font-size:10px;color:var(--muted)}
+    /* DARK */
+    html.dark{--light:#131b27;--mid:#1a2535;--white:#1e2a3a;--text:#d4e6f7;--muted:#7aa3c0;--border:rgba(93,173,226,0.14)}
+    html.dark body{background:var(--light);color:var(--text)}
+    html.dark nav,html.dark footer{background:#0a1220}
+    html.dark .controls-bar,html.dark .stat-pill,html.dark .fc-nav-btn,html.dark .card-mini{background:var(--white);border-color:var(--border)}
+    html.dark .filter-btn,html.dark .btn-outline{background:var(--mid);border-color:var(--border);color:var(--muted)}
+    html.dark .fc-front{background:#0d1929}
+    html.dark .fc-back{background:#122040}
+    html.dark .fc-dot{background:rgba(93,173,226,0.2)}
+    html.dark .card-mini-term{color:var(--text)}
+    html.dark .card-mini.is-mastered{background:rgba(46,125,50,0.1)}
+    html.dark .card-mini.is-reviewing{background:rgba(184,134,11,0.1)}
+    footer{background:var(--navy);padding:1.25rem 2rem;text-align:center;border-top:1px solid rgba(93,173,226,0.12)}
+    footer p{font-size:12px;color:rgba(255,255,255,0.3)}
+    footer a{color:var(--sky);text-decoration:none}
+    @media(max-width:600px){.main{padding:1.25rem};nav{padding:0 1.25rem};.hero{padding:2rem 1.25rem 2rem};.card-list{grid-template-columns:repeat(2,1fr)};.controls-bar{flex-direction:column;align-items:flex-start}}
+  </style>
+</head>
+<body>
+<script>
+(function(){const K="bl-theme";function apply(d){document.documentElement.classList.toggle("dark",d);const b=document.getElementById("theme-btn");if(b)b.textContent=d?"☀":"☾"}apply(localStorage.getItem(K)==="dark");window.__toggleTheme=function(){const d=!document.documentElement.classList.contains("dark");localStorage.setItem(K,d?"dark":"light");apply(d)};window.addEventListener("storage",function(e){if(e.key===K)apply(e.newValue==="dark")})})();
+</script>
+<nav>
+  <a class="nav-brand" href="index.html"><div class="bl-circle">BL</div><span>BL Cert Hub</span></a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="ccna-home.html">CCNA</a>
+    <a href="#" class="active">Flashcards</a>
+    <button class="theme-btn" id="theme-btn" onclick="__toggleTheme()">☾</button>
+  </div>
+</nav>
+<div class="hero">
+  <div class="hero-grid-pattern"></div>
+  <div class="hero-bg-ring r1"></div>
+  <div class="hero-bg-ring r2"></div>
+  <div class="hero-inner">
+    <div class="exam-badge"><div class="bl-circle">BL</div><span>Cisco CCNA 200-301</span></div>
+    <h1>Flash<span class="accent">cards</span></h1>
+    <p class="hero-sub">70 cards covering all 6 CCNA domains. Tap to flip, mark mastered or review, filter by domain.</p>
+  </div>
+</div>
+<div class="main">
+  <div class="controls-bar">
+    <div class="filter-group">
+      <span class="filter-label">Domain</span>
+      <button class="filter-btn active" data-domain="all" onclick="setFilter('all',this)">All</button>
+      <button class="filter-btn" data-domain="1" onclick="setFilter('1',this)">1.0</button>
+      <button class="filter-btn" data-domain="2" onclick="setFilter('2',this)">2.0</button>
+      <button class="filter-btn" data-domain="3" onclick="setFilter('3',this)">3.0</button>
+      <button class="filter-btn" data-domain="4" onclick="setFilter('4',this)">4.0</button>
+      <button class="filter-btn" data-domain="5" onclick="setFilter('5',this)">5.0</button>
+      <button class="filter-btn" data-domain="6" onclick="setFilter('6',this)">6.0</button>
+    </div>
+    <div class="action-group">
+      <button class="btn btn-outline" onclick="shuffleDeck()">⇄ Shuffle</button>
+      <button class="btn btn-outline" onclick="resetStatus()">↺ Reset</button>
+      <button class="btn btn-primary" onclick="studyWeak()">Study Weak</button>
+    </div>
+  </div>
+  <div class="stats-row">
+    <div class="stat-pill">Total: <span id="stat-total">70</span></div>
+    <div class="stat-pill mastered">Mastered: <span id="stat-mastered">0</span></div>
+    <div class="stat-pill reviewing">Reviewing: <span id="stat-reviewing">0</span></div>
+    <div class="stat-pill">Unseen: <span id="stat-unseen">70</span></div>
+  </div>
+  <div class="prog-wrap">
+    <div class="prog-row"><span class="prog-lbl">Mastery Progress</span><span class="prog-pct" id="prog-pct">0%</span></div>
+    <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+  </div>
+  <div class="fc-area">
+    <div class="fc-counter-row">
+      <span class="fc-counter" id="fc-counter">1 / 70</span>
+      <span class="fc-domain-badge" id="fc-domain-badge"></span>
+    </div>
+    <div class="fc-scene" onclick="flip()">
+      <div class="fc-inner" id="fc-inner">
+        <div class="fc-face fc-front">
+          <span class="fc-side-label">Term</span>
+          <div class="fc-term" id="fc-term">Loading...</div>
+          <div class="fc-hint">Tap to reveal definition</div>
+        </div>
+        <div class="fc-face fc-back">
+          <span class="fc-side-label">Definition</span>
+          <div class="fc-def" id="fc-def"></div>
+        </div>
+      </div>
+    </div>
+    <div class="fc-dots" id="fc-dots"></div>
+  </div>
+  <div class="fc-controls">
+    <button class="fc-nav-btn" id="btn-prev" onclick="navigate(-1)">←</button>
+    <div class="fc-center-btns">
+      <button class="grade-btn again" onclick="grade('again')">✗ Again</button>
+      <button class="grade-btn reviewing" onclick="grade('reviewing')">~ Review</button>
+      <button class="grade-btn mastered" onclick="grade('mastered')">✓ Got it</button>
+    </div>
+    <button class="fc-nav-btn" id="btn-next" onclick="navigate(1)">→</button>
+  </div>
+  <div class="grade-note">Grade yourself to track mastery · Flip the card first, then grade</div>
+  <div class="section-label">All Cards</div>
+  <div class="card-list" id="card-list"></div>
+</div>
+<footer><p>Built by <a href="https://blaborte.github.io" target="_blank">Baltazar Laborte</a> · BL Cert Hub · Cisco CCNA 200-301</p></footer>
+<script>
+const DOMAIN_COLORS={'1':['#6B3FA0','rgba(107,63,160,0.12)'],'2':['#C0531A','rgba(192,83,26,0.12)'],'3':['#0E7A8A','rgba(14,122,138,0.12)'],'4':['#B8860B','rgba(184,134,11,0.12)'],'5':['#2E7D32','rgba(46,125,50,0.12)'],'6':['#5D6D7E','rgba(93,109,126,0.12)']};
+const DOMAIN_NAMES={'1':'Network Fundamentals','2':'Network Access','3':'IP Connectivity','4':'IP Services','5':'Security Fundamentals','6':'Automation & Programmability'};
+const ALL_CARDS=[
+  // Domain 1 – Network Fundamentals
+  {d:'1',term:'OSI Model Layers',def:'7 layers: Physical(1) Data Link(2) Network(3) Transport(4) Session(5) Presentation(6) Application(7). Mnemonic bottom-up: Please Do Not Throw Sausage Pizza Away.'},
+  {d:'1',term:'TCP Three-Way Handshake',def:'SYN → SYN-ACK → ACK. Client sends SYN, server responds SYN-ACK, client confirms ACK. Establishes reliable connection before data transfer begins.'},
+  {d:'1',term:'TCP vs UDP',def:'TCP: connection-oriented, reliable, ordered, uses handshake. UDP: connectionless, no delivery guarantee, lower overhead. UDP used for DNS, DHCP, SNMP, VoIP, TFTP.'},
+  {d:'1',term:'IPv4 Private Ranges',def:'Class A: 10.0.0.0/8 | Class B: 172.16.0.0/12 | Class C: 192.168.0.0/16. These are RFC 1918 non-routable ranges requiring NAT for internet access.'},
+  {d:'1',term:'APIPA Address Range',def:'169.254.0.0/16 — automatically assigned when DHCP fails. Device can only communicate locally. Indicates DHCP server unreachable.'},
+  {d:'1',term:'Subnetting — /27',def:'/27 = 255.255.255.224 | 30 usable hosts | block size 32. Subnets: x.x.x.0, .32, .64, .96, .128, .160, .192, .224. Formula: 2^(32-27)-2 = 30.'},
+  {d:'1',term:'Subnetting — /30',def:'/30 = 255.255.255.252 | 2 usable hosts | block size 4. Used for point-to-point WAN links between routers — minimal IP waste.'},
+  {d:'1',term:'IPv6 Global Unicast',def:'2000::/3 — starts with 2 or 3. Globally routable like a public IPv4 address. Assigned by ISPs. Written as 8 groups of 4 hex digits.'},
+  {d:'1',term:'IPv6 Link-Local',def:'FE80::/10 — automatically configured on every IPv6 interface. NOT routable beyond local segment. Used for neighbor discovery and routing protocol hellos.'},
+  {d:'1',term:'EUI-64',def:'Method to derive a 64-bit IPv6 interface ID from a 48-bit MAC address. Split MAC in middle, insert FF:FE, flip 7th bit (Universal/Local bit).'},
+  {d:'1',term:'SLAAC',def:'Stateless Address AutoConfiguration. IPv6 device builds its own global address from: network prefix (from Router Advertisement) + EUI-64 interface ID. No DHCP needed.'},
+  {d:'1',term:'CAM / MAC Address Table',def:'Switch database mapping MAC addresses to ports. Populated by learning source MACs from incoming frames. Unknown MACs trigger flooding out all ports in the VLAN.'},
+  // Domain 2 – Network Access
+  {d:'2',term:'VLAN',def:'Virtual Local Area Network — logical broadcast domain within a switch. Devices in different VLANs cannot communicate without a Layer 3 device. Configured with vlan 10.'},
+  {d:'2',term:'802.1Q Trunking',def:'IEEE standard adding a 4-byte VLAN tag to Ethernet frames on trunk links. Trunk ports carry multiple VLANs. Native VLAN traffic is untagged — must match on both ends.'},
+  {d:'2',term:'Native VLAN',def:'The VLAN whose traffic travels untagged on an 802.1Q trunk. Default is VLAN 1 — change it for security. Mismatch causes VLAN hopping vulnerability.'},
+  {d:'2',term:'STP Root Bridge Election',def:'Switch with lowest Bridge ID (priority + MAC) becomes root. Default priority 32768 in multiples of 4096. Lower priority = preferred. All traffic flows toward root.'},
+  {d:'2',term:'STP Port States',def:'Blocking (no forwarding) → Listening → Learning → Forwarding. RSTP (802.1w) converges much faster — adds Alternate and Backup port roles.'},
+  {d:'2',term:'PortFast',def:'Cisco STP feature that immediately transitions an access port to Forwarding, skipping Listening and Learning states. Only use on end-device ports — never on switch-to-switch links.'},
+  {d:'2',term:'BPDU Guard',def:'Disables a PortFast port if any BPDU is received — prevents rogue switches from being connected. Port goes into err-disabled state. Re-enable with shutdown/no shutdown.'},
+  {d:'2',term:'EtherChannel / LACP',def:'Bundles multiple physical links into one logical link. LACP (802.3ad) is open standard — active initiates, passive responds. Increases bandwidth and provides redundancy.'},
+  {d:'2',term:'CAPWAP',def:'Control And Provisioning of Wireless Access Points. Tunnel protocol between Lightweight APs and WLC. UDP 5246 (control), UDP 5247 (data). Encrypted control channel.'},
+  {d:'2',term:'WPA2 vs WPA3',def:'WPA2: AES/CCMP encryption, PSK or Enterprise (802.1X/RADIUS). WPA3: SAE handshake, resistant to dictionary attacks, forward secrecy. WPA3 is current standard.'},
+  {d:'2',term:'Autonomous vs Lightweight AP',def:'Autonomous: standalone, self-configured, per-AP management. Lightweight: managed by WLC via CAPWAP, zero-touch provisioning, centralized policy — enterprise standard.'},
+  // Domain 3 – IP Connectivity
+  {d:'3',term:'Longest Prefix Match',def:'Router always chooses the most specific (longest) matching route. /28 beats /24 beats /0. The routing table is searched for the most specific prefix matching the destination.'},
+  {d:'3',term:'Administrative Distance',def:'Router trustworthiness rating per route source. Lower = more trusted. Connected=0, Static=1, EIGRP=90, OSPF=110, RIP=120, BGP external=20, Unknown=255.'},
+  {d:'3',term:'Default Route',def:'ip route 0.0.0.0 0.0.0.0 [next-hop] — Gateway of Last Resort. Matches all destinations not in routing table. Shown as S* in routing table.'},
+  {d:'3',term:'Floating Static Route',def:'Static route with higher AD than dynamic routing protocol — acts as backup. ip route x.x.x.x mask next-hop [AD]. Only used when dynamic route is gone.'},
+  {d:'3',term:'OSPF Router ID',def:'32-bit identifier for OSPF router. Selection order: 1) manually configured, 2) highest loopback IP, 3) highest active interface IP. Used in DR/BDR elections.'},
+  {d:'3',term:'OSPF DR/BDR Election',def:'On multi-access segments: highest priority wins (default 1, range 0-255). Ties broken by highest Router ID. Priority 0 = never elected DR or BDR.'},
+  {d:'3',term:'OSPF Passive Interface',def:'passive-interface gi0/0 — stops OSPF hellos on that interface but still advertises the connected network. Use on LAN interfaces facing end users.'},
+  {d:'3',term:'OSPF Neighbor Requirements',def:'Same area ID, same hello/dead timers, same subnet, same MTU, matching stub flags, compatible authentication. Verify with: show ip ospf neighbor.'},
+  {d:'3',term:'HSRP',def:'Hot Standby Router Protocol (Cisco). Active router forwards traffic, standby takes over on failure. Routers share a virtual IP that clients use as default gateway. Preempt for priority-based failback.'},
+  {d:'3',term:'VRRP',def:'Virtual Router Redundancy Protocol — open standard equivalent of HSRP. Master router handles traffic, backup takes over on failure. Uses multicast 224.0.0.18.'},
+  // Domain 4 – IP Services
+  {d:'4',term:'DHCP DORA Process',def:'Discover → Offer → Request → Acknowledge. Client broadcasts Discover, server offers IP, client requests it, server confirms. Uses UDP 67 (server) and 68 (client).'},
+  {d:'4',term:'DHCP ip helper-address',def:'Configured on router interface facing clients. Forwards DHCP broadcast to unicast toward DHCP server IP. Enables DHCP across different subnets/VLANs.'},
+  {d:'4',term:'NAT Inside/Outside',def:'Inside local: private IP on inside. Inside global: public IP representing inside host. Outside global: destination public IP. ip nat inside on LAN, ip nat outside on WAN.'},
+  {d:'4',term:'PAT (NAT Overload)',def:'Many private IPs share ONE public IP using different port numbers. ip nat inside source list ACL interface gi0/0 overload. Most common form of NAT in home/enterprise.'},
+  {d:'4',term:'NTP Stratum',def:'Stratum 0 = atomic clock (reference). Stratum 1 = directly connected to stratum 0. Each hop adds 1. ntp server [ip] makes device a client. ntp master [stratum] makes it a server.'},
+  {d:'4',term:'Syslog Severity Levels',def:'0=Emergency, 1=Alert, 2=Critical, 3=Error, 4=Warning, 5=Notice, 6=Informational, 7=Debug. Setting level N includes N and all LOWER numbers (more severe).'},
+  {d:'4',term:'SNMPv3 vs SNMPv2c',def:'SNMPv2c: community strings (plaintext) — insecure but simple. SNMPv3: adds authentication (MD5/SHA) and encryption (AES/DES) — always use in production.'},
+  {d:'4',term:'QoS DSCP / LLQ',def:'DSCP EF (Expedited Forwarding) for VoIP — highest priority. LLQ (Low Latency Queue) reserves bandwidth for voice. Policing drops excess, shaping delays it.'},
+  {d:'4',term:'DNS Record Types',def:'A=IPv4, AAAA=IPv6, CNAME=alias, MX=mail server, NS=nameserver, PTR=reverse lookup, TXT=verification (SPF/DKIM). ip name-server sets DNS on Cisco IOS.'},
+  {d:'4',term:'SSH Configuration on IOS',def:'Steps: 1) ip domain-name lab.local  2) crypto key generate rsa modulus 2048  3) ip ssh version 2  4) line vty 0 4: transport input ssh, login local.'},
+  // Domain 5 – Security Fundamentals
+  {d:'5',term:'Standard vs Extended ACL',def:'Standard (1-99): filters SOURCE IP only — apply close to DESTINATION. Extended (100-199): filters source, dest, protocol, port — apply close to SOURCE. Implicit deny at end.'},
+  {d:'5',term:'ACL Implicit Deny',def:'Every ACL ends with an invisible "deny any" statement. Packets matching no rule are dropped. Always add "permit ip any any" or "permit any" at end if needed.'},
+  {d:'5',term:'Port Security',def:'Limits MAC addresses per switch port. switchport port-security maximum [n]. Violation modes: shutdown (err-disable), restrict (drop+log), protect (drop silently).'},
+  {d:'5',term:'DHCP Snooping',def:'Switch feature blocking DHCP offers from untrusted ports. ip dhcp snooping vlan 10, then ip dhcp snooping trust on uplink ports. Prevents rogue DHCP servers.'},
+  {d:'5',term:'Dynamic ARP Inspection (DAI)',def:'Validates ARP packets against DHCP snooping binding table. ip arp inspection vlan 10. Prevents ARP spoofing/poisoning attacks. Depends on DHCP snooping being enabled.'},
+  {d:'5',term:'802.1X Port Authentication',def:'Port-based NAC. Device must authenticate via RADIUS before network access granted. Supplicant (device) → Authenticator (switch) → RADIUS server. aaa new-model required.'},
+  {d:'5',term:'enable secret vs enable password',def:'enable secret: MD5-encrypted, stored as hash — always use this. enable password: cleartext or weak encryption — legacy, avoid. service password-encryption encrypts other passwords.'},
+  {d:'5',term:'RADIUS vs TACACS+',def:'RADIUS: UDP, combines auth and authorization, for network access (Wi-Fi, VPN). TACACS+: TCP, separates AAA, for device administration. Both require aaa new-model.'},
+  {d:'5',term:'Cisco IOS Banners',def:'banner motd # message # — displayed before login. banner login # message # — at login prompt. banner exec # message # — after successful login. Used for legal warning.'},
+  {d:'5',term:'login block-for',def:'login block-for 120 attempts 3 within 60 — blocks all logins for 120 seconds after 3 failed attempts in 60 seconds. Defends against brute force on VTY lines.'},
+  // Domain 6 – Automation & Programmability
+  {d:'6',term:'SDN Data vs Control Plane',def:'Data plane: forwards packets using ASIC hardware — fast. Control plane: makes routing/switching decisions (OSPF, STP) — CPU-based. SDN separates control plane to central controller.'},
+  {d:'6',term:'Southbound vs Northbound APIs',def:'Southbound: controller to network devices (OpenFlow, NETCONF, RESTCONF). Northbound: applications to controller (REST APIs). Management plane: SSH/SNMP admin access.'},
+  {d:'6',term:'REST API HTTP Methods',def:'GET = read. POST = create. PUT = replace entire resource. PATCH = update part. DELETE = remove. Stateless — each request is independent. Returns JSON or XML.'},
+  {d:'6',term:'JSON Structure',def:'Objects: { } with key:value pairs. Arrays: [ ] with ordered items. Strings in quotes, numbers plain, booleans true/false. Most common format for REST API responses.'},
+  {d:'6',term:'Ansible',def:'Agentless configuration management. Uses SSH/APIs — no agent needed on managed device. Playbooks written in YAML. Push-based. Idempotent. Most common in networking automation.'},
+  {d:'6',term:'Puppet vs Chef',def:'Both agent-based (agent must run on managed device). Puppet uses Ruby manifests, pull-based. Chef uses Ruby cookbooks. More complex than Ansible. Enterprise DevOps origins.'},
+  {d:'6',term:'NETCONF / YANG',def:'NETCONF: IETF protocol for device configuration using XML over SSH. YANG: data modeling language defining the structure of configuration and state data for NETCONF.'},
+  {d:'6',term:'Cisco DNA Center',def:'Cisco IBN platform for Intent-Based Networking. GUI and API for network design, provisioning, and verification. DNA Assurance uses AI/ML to detect and troubleshoot issues.'},
+  {d:'6',term:'SD-WAN (Viptela)',def:'Software-Defined WAN. Centralized policy, zero-touch provisioning, transport-agnostic (MPLS, broadband, LTE). Fabric components: vManage (GUI), vSmart (controller), vBond (orchestrator).'},
+  {d:'6',term:'Infrastructure as Code (IaC)',def:'Define and manage network infrastructure through code files — version controlled, reproducible, automated. Prevents configuration drift. Ansible playbooks and Terraform are common tools.'},
+];
+
+let deck=[],status={},curIdx=0,isFlipped=false,activeFilter='all';
+function init(){ALL_CARDS.forEach((_,i)=>{status[i]='unseen'});applyFilter('all')}
+function applyFilter(f){
+  activeFilter=f;
+  deck=f==='all'?ALL_CARDS.map((_,i)=>i):ALL_CARDS.map((_,i)=>i).filter(i=>ALL_CARDS[i].d===f);
+  curIdx=0;renderCard();renderDots();renderCardList();updateStats();
+}
+function setFilter(f,btn){document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');applyFilter(f)}
+function renderCard(){
+  if(!deck.length)return;
+  isFlipped=false;document.getElementById('fc-inner').classList.remove('flipped');
+  const card=ALL_CARDS[deck[curIdx]];
+  setTimeout(()=>{
+    document.getElementById('fc-term').textContent=card.term;
+    document.getElementById('fc-def').textContent=card.def;
+    const[col,bg]=DOMAIN_COLORS[card.d];
+    const badge=document.getElementById('fc-domain-badge');
+    badge.textContent=card.d+'.0 '+DOMAIN_NAMES[card.d];
+    badge.style.color=col;badge.style.background=bg;badge.style.borderColor=col;
+  },50);
+  document.getElementById('fc-counter').textContent=`${curIdx+1} / ${deck.length}`;
+  document.getElementById('btn-prev').disabled=curIdx===0;
+  document.getElementById('btn-next').disabled=curIdx===deck.length-1;
+  renderDots();
+}
+function flip(){isFlipped=!isFlipped;document.getElementById('fc-inner').classList.toggle('flipped',isFlipped)}
+function navigate(dir){const n=curIdx+dir;if(n<0||n>=deck.length)return;curIdx=n;renderCard()}
+function grade(g){
+  const idx=deck[curIdx];status[idx]=g==='again'?'again':g;
+  updateStats();renderCardList();renderDots();
+  if(curIdx<deck.length-1){curIdx++;renderCard()}
+}
+function shuffleDeck(){deck=deck.sort(()=>Math.random()-.5);curIdx=0;renderCard();renderDots()}
+function studyWeak(){
+  const weak=ALL_CARDS.map((_,i)=>i).filter(i=>{const s=status[i];return s==='again'||s==='reviewing'||s==='unseen'}).filter(i=>activeFilter==='all'||ALL_CARDS[i].d===activeFilter);
+  if(!weak.length){alert('No weak cards! 🎉 Try resetting.');return}
+  deck=weak.sort(()=>Math.random()-.5);curIdx=0;renderCard();renderDots();
+}
+function resetStatus(){ALL_CARDS.forEach((_,i)=>{status[i]='unseen'});updateStats();renderCardList();renderDots()}
+function updateStats(){
+  const inDeck=activeFilter==='all'?ALL_CARDS.map((_,i)=>i):ALL_CARDS.map((_,i)=>i).filter(i=>ALL_CARDS[i].d===activeFilter);
+  const m=inDeck.filter(i=>status[i]==='mastered').length;
+  const r=inDeck.filter(i=>status[i]==='reviewing').length;
+  const u=inDeck.filter(i=>status[i]==='unseen'||status[i]==='again').length;
+  document.getElementById('stat-total').textContent=inDeck.length;
+  document.getElementById('stat-mastered').textContent=m;
+  document.getElementById('stat-reviewing').textContent=r;
+  document.getElementById('stat-unseen').textContent=u;
+  const pct=inDeck.length>0?Math.round((m/inDeck.length)*100):0;
+  document.getElementById('prog-pct').textContent=pct+'%';
+  document.getElementById('prog-fill').style.width=pct+'%';
+}
+function renderDots(){
+  const dots=document.getElementById('fc-dots');
+  const max=Math.min(deck.length,12);dots.innerHTML='';
+  for(let i=0;i<max;i++){
+    const d=document.createElement('div');d.className='fc-dot';
+    if(i===curIdx)d.classList.add('active');
+    else{const s=status[deck[i]];if(s==='mastered')d.classList.add('mastered');else if(s==='reviewing')d.classList.add('reviewing')}
+    d.onclick=((idx)=>()=>{curIdx=idx;renderCard()})(i);
+    dots.appendChild(d);
+  }
+}
+function renderCardList(){
+  const list=document.getElementById('card-list');list.innerHTML='';
+  const cards=activeFilter==='all'?ALL_CARDS.map((c,i)=>({c,i})):ALL_CARDS.map((c,i)=>({c,i})).filter(({c})=>c.d===activeFilter);
+  cards.forEach(({c,i})=>{
+    const[col]=DOMAIN_COLORS[c.d];const s=status[i];
+    const el=document.createElement('div');
+    el.className='card-mini'+(s==='mastered'?' is-mastered':s==='reviewing'?' is-reviewing':'');
+    el.style.setProperty('--dm-color',col);
+    el.innerHTML=`<div class="card-mini-term">${c.term}</div><div class="card-mini-status">${s==='unseen'?'—':s==='mastered'?'✓ Mastered':s==='reviewing'?'~ Reviewing':'✗ Again'}</div>`;
+    el.onclick=()=>{const di=deck.indexOf(i);if(di!==-1){curIdx=di;renderCard();window.scrollTo({top:0,behavior:'smooth'})}};
+    list.appendChild(el);
+  });
+}
+init();
+</script>
+</body>
+</html>
