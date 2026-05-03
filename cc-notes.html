@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>ISC2 CC — Course Notes | BL Cert Hub</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    :root{
+      --navy:#0B1D3A;--blue:#1A5276;--accent:#2E86C1;--sky:#5DADE2;
+      --light:#EAF4FB;--mid:#D6EAF8;--white:#fff;--text:#0B1D3A;--muted:#5D7A8C;
+      --border:rgba(30,80,130,0.13);--shadow:0 2px 12px rgba(11,29,58,0.08);
+      --c1:#6B3FA0;--c2:#C0531A;--c3:#0E7A8A;--c4:#B8860B;--c5:#2E7D32;
+    }
+    html{scroll-behavior:smooth}
+    body{font-family:"DM Sans",sans-serif;background:var(--light);color:var(--text);min-height:100vh;display:flex;flex-direction:column}
+
+    /* NAV */
+    nav{background:var(--navy);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:56px;position:sticky;top:0;z-index:200;border-bottom:1px solid rgba(93,173,226,0.15)}
+    .nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+    .bl-circle{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#2E86C1,#5DADE2);display:flex;align-items:center;justify-content:center;font-family:"Space Mono",monospace;font-size:10px;font-weight:700;color:#fff;flex-shrink:0}
+    .nav-brand span{font-size:13px;font-weight:500;color:rgba(255,255,255,0.85);letter-spacing:.02em}
+    .nav-links{display:flex;gap:6px;align-items:center}
+    .nav-links a{font-size:12px;font-weight:500;color:rgba(255,255,255,0.6);text-decoration:none;padding:6px 12px;border-radius:6px;transition:all .18s}
+    .nav-links a:hover{color:#fff;background:rgba(255,255,255,0.08)}
+    .nav-links a.active{color:var(--sky);background:rgba(93,173,226,0.12)}
+    .theme-btn{width:34px;height:34px;border-radius:8px;border:1px solid rgba(255,255,255,0.18);background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.75);cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;transition:all .18s;flex-shrink:0}
+    .theme-btn:hover{background:rgba(255,255,255,0.15);color:#fff}
+
+    /* HERO */
+    .hero{background:linear-gradient(135deg,#0B1D3A 0%,#1A5276 55%,#2E86C1 100%);padding:3.5rem 2rem 3rem;position:relative;overflow:hidden}
+    .hero-gp{position:absolute;inset:0;background-image:linear-gradient(rgba(93,173,226,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(93,173,226,0.04) 1px,transparent 1px);background-size:32px 32px;pointer-events:none}
+    .hero-ring{position:absolute;border-radius:50%;border:40px solid rgba(93,173,226,0.07);pointer-events:none}
+    .hero-ring.r1{width:320px;height:320px;top:-80px;right:-60px}
+    .hero-ring.r2{width:180px;height:180px;bottom:-60px;left:38%;border-width:22px}
+    .hero-inner{position:relative;max-width:900px;margin:0 auto}
+    .exam-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.18);border-radius:20px;padding:5px 14px 5px 5px;margin-bottom:1.25rem}
+    .exam-badge .bl-circle{width:26px;height:26px;font-size:9px}
+    .exam-badge span{font-size:12px;color:rgba(255,255,255,0.8);font-weight:500}
+    .hero h1{font-family:"Space Mono",monospace;font-size:clamp(24px,4vw,42px);font-weight:700;color:#fff;line-height:1.15;margin-bottom:.6rem}
+    .hero h1 .accent{color:var(--sky)}
+    .hero-sub{font-size:14px;color:rgba(255,255,255,0.6);line-height:1.7;max-width:560px;margin-bottom:1.5rem}
+    .hero-pills{display:flex;gap:8px;flex-wrap:wrap}
+    .pill{font-size:11px;font-weight:500;padding:5px 12px;border-radius:6px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.8)}
+
+    /* LAYOUT */
+    .page-body{display:flex;max-width:1100px;margin:0 auto;padding:2.5rem 2rem 4rem;gap:32px;flex:1;width:100%}
+
+    /* SIDEBAR TOC */
+    .toc-sidebar{width:240px;flex-shrink:0}
+    .toc-sticky{position:sticky;top:72px;max-height:calc(100vh - 90px);overflow-y:auto;padding-right:4px}
+    .toc-sticky::-webkit-scrollbar{width:3px}
+    .toc-sticky::-webkit-scrollbar-thumb{background:var(--mid);border-radius:2px}
+    .toc-title{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--border)}
+    .toc-domain{margin-bottom:4px}
+    .toc-domain-link{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;text-decoration:none;font-size:12px;font-weight:600;color:var(--text);transition:all .18s;border:1px solid transparent}
+    .toc-domain-link:hover{background:var(--white);border-color:var(--border)}
+    .toc-domain-link.active{color:#fff;border-color:transparent}
+    .toc-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+    .toc-sub{padding-left:22px;margin-top:2px;display:none}
+    .toc-domain.open .toc-sub{display:block}
+    .toc-sub-link{display:block;padding:4px 8px;font-size:11px;color:var(--muted);text-decoration:none;border-radius:5px;transition:all .15s;border-left:2px solid transparent}
+    .toc-sub-link:hover{color:var(--accent);border-left-color:var(--accent)}
+    .toc-progress{height:2px;background:var(--mid);border-radius:1px;margin-top:14px;overflow:hidden}
+    .toc-progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--sky));border-radius:1px;transition:width .3s;width:0%}
+
+    /* MAIN CONTENT */
+    .notes-main{flex:1;min-width:0}
+
+    /* DOMAIN SECTION */
+    .domain-section{margin-bottom:3.5rem}
+    .domain-header{display:flex;align-items:center;gap:16px;margin-bottom:1.75rem;padding-bottom:1rem;border-bottom:2px solid var(--border);position:relative}
+    .domain-header::after{content:"";position:absolute;bottom:-2px;left:0;width:80px;height:2px;background:var(--d-color)}
+    .domain-num-badge{font-family:"Space Mono",monospace;font-size:11px;font-weight:700;padding:4px 12px;border-radius:6px;color:#fff;flex-shrink:0}
+    .domain-title-text{font-family:"Space Mono",monospace;font-size:clamp(17px,2.5vw,22px);font-weight:700;color:var(--text)}
+    .domain-pct{font-family:"Space Mono",monospace;font-size:11px;font-weight:700;padding:4px 10px;border-radius:6px;background:var(--mid);color:var(--blue);margin-left:auto;flex-shrink:0}
+
+    /* TOPIC CARD */
+    .topic-card{background:var(--white);border:1px solid var(--border);border-radius:14px;margin-bottom:1.25rem;overflow:hidden;box-shadow:var(--shadow)}
+    .topic-card-header{display:flex;align-items:center;gap:12px;padding:14px 20px;cursor:pointer;user-select:none;transition:background .15s;border-left:4px solid var(--d-color)}
+    .topic-card-header:hover{background:rgba(46,134,193,0.03)}
+    .topic-card-icon{font-size:16px;flex-shrink:0}
+    .topic-card-title{font-size:14px;font-weight:600;color:var(--text);flex:1}
+    .topic-chevron{font-size:11px;color:var(--muted);transition:transform .25s;flex-shrink:0}
+    .topic-chevron.open{transform:rotate(180deg)}
+    .topic-card-body{display:none;padding:20px 24px 24px;border-top:1px solid var(--border);background:rgba(234,244,251,0.3)}
+    .topic-card-body.open{display:block}
+
+    /* NOTE CONTENT STYLES */
+    .note-intro{font-family:"Merriweather",serif;font-size:13.5px;line-height:1.85;color:var(--muted);margin-bottom:1.25rem;font-weight:300;font-style:italic;padding:12px 16px;border-left:3px solid var(--d-color);background:rgba(234,244,251,0.5);border-radius:0 8px 8px 0}
+    .note-section{margin-bottom:1.5rem}
+    .note-section:last-child{margin-bottom:0}
+    .note-section-title{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--d-color);margin-bottom:.75rem;display:flex;align-items:center;gap:8px}
+    .note-section-title::after{content:"";flex:1;height:1px;background:rgba(46,134,193,0.15)}
+    .note-p{font-size:13px;line-height:1.75;color:var(--text);margin-bottom:.75rem}
+    .note-p:last-child{margin-bottom:0}
+    .note-list{list-style:none;display:flex;flex-direction:column;gap:6px;margin-bottom:.75rem}
+    .note-list li{font-size:13px;line-height:1.6;color:var(--text);padding-left:18px;position:relative}
+    .note-list li::before{content:"▸";position:absolute;left:0;color:var(--d-color);font-size:10px;top:3px}
+    .note-list li strong{color:var(--navy);font-weight:600}
+    .note-list.sub{margin-top:4px;margin-left:16px}
+    .note-list.sub li::before{content:"–";color:var(--muted)}
+
+    /* TERM GRID */
+    .term-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:.75rem}
+    .term-card{background:var(--light);border:1px solid var(--border);border-radius:8px;padding:10px 12px}
+    .term-name{font-family:"Space Mono",monospace;font-size:11px;font-weight:700;color:var(--accent);margin-bottom:3px}
+    .term-def{font-size:12px;color:var(--muted);line-height:1.5}
+
+    /* TABLE */
+    .note-table-wrap{overflow-x:auto;margin-bottom:.75rem}
+    .note-table{width:100%;border-collapse:collapse;font-size:12px}
+    .note-table th{background:var(--navy);color:rgba(255,255,255,0.75);padding:9px 12px;text-align:left;font-size:11px;font-weight:600;letter-spacing:.04em}
+    .note-table th:first-child{border-radius:6px 0 0 0}
+    .note-table th:last-child{border-radius:0 6px 0 0}
+    .note-table td{padding:8px 12px;border-bottom:1px solid var(--border);color:var(--text)}
+    .note-table tr:last-child td{border-bottom:none}
+    .note-table tr:hover td{background:rgba(46,134,193,0.04)}
+    .mono{font-family:"Space Mono",monospace;font-size:11px;color:var(--accent)}
+
+    /* CALLOUT */
+    .callout{border-radius:10px;padding:12px 16px;margin-bottom:.75rem;display:flex;gap:10px;align-items:flex-start}
+    .callout.tip{background:rgba(39,174,96,0.08);border:1px solid rgba(39,174,96,0.2)}
+    .callout.warn{background:rgba(243,156,18,0.08);border:1px solid rgba(243,156,18,0.25)}
+    .callout.key{background:rgba(46,134,193,0.08);border:1px solid rgba(46,134,193,0.2)}
+    .callout.exam{background:rgba(192,57,43,0.07);border:1px solid rgba(192,57,43,0.2)}
+    .callout-icon{font-size:14px;flex-shrink:0;margin-top:1px}
+    .callout-body{font-size:12.5px;line-height:1.65;color:var(--text)}
+    .callout-body strong{font-weight:600}
+
+    /* TAG CHIPS */
+    .tag-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:.75rem}
+    .tag{font-size:10px;font-weight:600;padding:3px 9px;border-radius:20px;background:var(--mid);color:var(--blue)}
+
+    /* PROGRESS BAR INLINE */
+    .pbar-row{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+    .pbar-label{font-size:12px;color:var(--text);min-width:160px}
+    .pbar-track{flex:1;height:7px;background:var(--mid);border-radius:4px;overflow:hidden}
+    .pbar-fill{height:100%;border-radius:4px}
+
+    /* DARK MODE */
+    html.dark{--light:#131b27;--mid:#1a2535;--white:#1e2a3a;--text:#d4e6f7;--muted:#7aa3c0;--border:rgba(93,173,226,0.14)}
+    html.dark body{background:var(--light);color:var(--text)}
+    html.dark nav,html.dark footer{background:#0a1220}
+    html.dark .topic-card{background:var(--white);border-color:var(--border)}
+    html.dark .topic-card-body{background:rgba(0,0,0,0.15)}
+    html.dark .note-intro{background:rgba(0,0,0,0.2)}
+    html.dark .term-card{background:var(--mid);border-color:var(--border)}
+    html.dark .note-table td{border-color:var(--border);color:var(--text)}
+    html.dark .note-table tr:hover td{background:rgba(93,173,226,0.04)}
+    html.dark .toc-domain-link:hover{background:var(--mid)}
+    html.dark .tag{background:var(--mid)}
+    html.dark .pbar-track{background:var(--mid)}
+
+    footer{background:var(--navy);padding:1.25rem 2rem;text-align:center;border-top:1px solid rgba(93,173,226,0.12)}
+    footer p{font-size:12px;color:rgba(255,255,255,0.3)}
+    footer a{color:var(--sky);text-decoration:none}
+
+    @media(max-width:768px){
+      .toc-sidebar{display:none}
+      .page-body{padding:1.5rem 1.25rem 3rem}
+      .term-grid{grid-template-columns:1fr}
+      nav{padding:0 1.25rem}
+      .hero{padding:2rem 1.25rem 2rem}
+    }
+  </style>
+</head>
+<body>
+<script>
+(function(){const K="bl-theme";function apply(d){document.documentElement.classList.toggle("dark",d);const b=document.getElementById("theme-btn");if(b)b.textContent=d?"☀":"☾"}apply(localStorage.getItem(K)==="dark");window.__toggleTheme=function(){const d=!document.documentElement.classList.contains("dark");localStorage.setItem(K,d?"dark":"light");apply(d)};window.addEventListener("storage",function(e){if(e.key===K)apply(e.newValue==="dark")});})();
+</script>
+<nav>
+  <a class="nav-brand" href="index.html"><div class="bl-circle">BL</div><span>BL Cert Hub</span></a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="cc-home.html">CC</a>
+    <a href="#" class="active">Course Notes</a>
+    <button class="theme-btn" id="theme-btn" onclick="__toggleTheme()">☾</button>
+  </div>
+</nav>
+<div class="hero">
+  <div class="hero-gp"></div>
+  <div class="hero-ring r1"></div>
+  <div class="hero-ring r2"></div>
+  <div class="hero-inner">
+    <div class="exam-badge"><div class="bl-circle">BL</div><span>ISC2 Certified in Cybersecurity (CC)</span></div>
+    <h1>Course <span class="accent">Notes</span></h1>
+    <p class="hero-sub">Comprehensive study notes covering all five CC domains. In-depth coverage of every concept with examples, code of ethics, access controls, and practical exam guidance.</p>
+    <div class="hero-pills"><span class="pill">CC 2024</span><span class="pill">5 Domains</span><span class="pill">Full Deep-Dive</span><span class="pill">Exam Ready</span></div>
+  </div>
+</div>
+<div class="page-body">
+  <!-- TOC SIDEBAR -->
+  <aside class="toc-sidebar">
+    <div class="toc-sticky">
+      <div class="toc-title">Contents</div>
+      <div class="toc-domain">
+  <a class="toc-domain-link" href="#cc_d1" data-color="#6B3FA0">
+    <span class="toc-dot" style="background:#6B3FA0"></span>1.0 Security Principles
+  </a>
+</div><div class="toc-domain">
+  <a class="toc-domain-link" href="#cc_d2" data-color="#C0531A">
+    <span class="toc-dot" style="background:#C0531A"></span>2.0 BC, DR & Incident Response
+  </a>
+</div><div class="toc-domain">
+  <a class="toc-domain-link" href="#cc_d3" data-color="#0E7A8A">
+    <span class="toc-dot" style="background:#0E7A8A"></span>3.0 Access Controls
+  </a>
+</div><div class="toc-domain">
+  <a class="toc-domain-link" href="#cc_d4" data-color="#B8860B">
+    <span class="toc-dot" style="background:#B8860B"></span>4.0 Network Security
+  </a>
+</div><div class="toc-domain">
+  <a class="toc-domain-link" href="#cc_d5" data-color="#2E7D32">
+    <span class="toc-dot" style="background:#2E7D32"></span>5.0 Security Operations
+  </a>
+</div>
+      <div class="toc-progress"><div class="toc-progress-fill" id="read-progress"></div></div>
+    </div>
+  </aside>
+  <!-- MAIN NOTES -->
+  <main class="notes-main" id="notes-main">
+    <section class="domain-section" id="cc_d1" style="--d-color:#6B3FA0">
+  <div class="domain-header">
+    <span class="domain-num-badge" style="background:#6B3FA0">1.0</span>
+    <span class="domain-title-text">Security Principles</span>
+    <span class="domain-pct">26%</span>
+  </div>
+  <div class="topic-card">
+  <div class="topic-card-header" onclick="toggleTopic(this)">
+    <span class="topic-card-icon">🔐</span>
+    <span class="topic-card-title">CIA Triad & Core Security Concepts</span>
+    <span class="topic-chevron">▼</span>
+  </div>
+  <div class="topic-card-body"><div class="note-intro">The CIA triad is the bedrock of every security decision. All controls, policies, and incidents map back to one or more of these three properties. The ISC2 CC exam tests these relentlessly.</div><div class="note-section"><div class="note-section-title">Confidentiality</div><ul class="note-list"><li><strong>Definition</strong>: Information is accessible ONLY to those authorized to access it</li><li><strong>Threat</strong>: unauthorized disclosure, eavesdropping, data theft, social engineering</li><li><strong>Controls</strong>: encryption (AES-256, TLS), access control lists, data classification, need-to-know principle</li><li><strong>Examples</strong>: PII protection, PHI under HIPAA, classified government data, trade secrets</li></ul></div><div class="note-section"><div class="note-section-title">Integrity</div><ul class="note-list"><li><strong>Definition</strong>: Data has NOT been modified without authorization — trustworthy and accurate</li><li><strong>Threat</strong>: man-in-the-middle modification, insider tampering, malware corruption</li><li><strong>Controls</strong>: hashing (SHA-256, MD5 deprecated), digital signatures, version control, checksums</li><li><strong>Hash properties</strong>: one-way (irreversible), deterministic, unique (collision-resistant), fixed output size</li></ul></div><div class="note-section"><div class="note-section-title">Availability</div><ul class="note-list"><li><strong>Definition</strong>: Systems and data are accessible to authorized users when they need them</li><li><strong>Threat</strong>: DoS/DDoS, ransomware, hardware failure, natural disasters</li><li><strong>Controls</strong>: redundancy, backups (3-2-1 rule), HA clustering, load balancing, UPS, geographic diversity</li><li><strong>3-2-1 backup rule</strong>: 3 copies of data, on 2 different media types, with 1 offsite</li></ul></div><div class="callout key"><span class="callout-icon">🔑</span><div class="callout-body"><strong>Beyond CIA — Non-Repudiation:</strong> The sender cannot deny having sent a message. Achieved with digital signatures using asymmetric cryptography. Critical for financial transactions and legal evidence.</div></div><div class="note-section"><div class="note-section-title">Authentication vs Authorization vs Accountability</div><ul class="note-list"><li><strong>Authentication</strong>: verifying WHO you are — passwords, biometrics, tokens, certificates</li><li><strong>Authorization</strong>: defining WHAT you can do after being authenticated — RBAC, ACLs, permissions</li><li><strong>Accountability / Accounting</strong>: recording WHAT you did — audit logs, access records, non-repudiation</li></ul></div></div>
+</div><div class="topic-card">
+  <div class="topic-card-header" onclick="toggleTopic(this)">
+    <span class="topic-card-icon">⚖️</span>
+    <span class="topic-card-title">ISC2 Code of Ethics</span>
+    <span class="topic-chevron">▼</span>
+  </div>
+  <div class="topic-card-body"><div class="note-intro">The ISC2 Code of Ethics is tested directly on the CC exam. You must know all four canons word-for-word and understand their practical application.</div><div class="note-section"><div class="note-section-title">The Four Canons (in priority order)</div><ul class="note-list"><li><strong>Canon 1</strong>: "Protect society, the common good, necessary public trust and confidence, and the infrastructure."</li><li><strong>Canon 2</strong>: "Act honorably, honestly, justly, responsibly, and legally."</li><li><strong>Canon 3</strong>: "Provide diligent and competent service to principals."</li><li><strong>Canon 4</strong>: "Advance and protect the profession."</li></ul></div><div class="callout exam"><span class="callout-icon">🎯</span><div class="callout-body"><strong>Exam traps:</strong> "Promote the profession" is NOT Canon 4 — it's "Advance AND PROTECT." "Provide active and qualified service" is WRONG — it must be "diligent and competent." "Provide service to stakeholders" is wrong — it's "to principals."</div></div><div class="note-section"><div class="note-section-title">Practical Canon Applications</div><ul class="note-list"><li><strong>Canon 3 — Conflicts of interest</strong>: avoid apparent or actual conflicts of interest — recuse yourself from decisions where you have a personal stake</li><li><strong>Canon 2 — Due care</strong>: do what a reasonably prudent person would do in each situation</li><li><strong>Canon 1 — Priority</strong>: public safety ALWAYS comes first — above employer interests, client interests, and personal interests</li><li><strong>Reporting violations</strong>: first report to company management through internal channels</li></ul></div></div>
+</div><div class="topic-card">
+  <div class="topic-card-header" onclick="toggleTopic(this)">
+    <span class="topic-card-icon">📋</span>
+    <span class="topic-card-title">Governance, Policies & Risk</span>
+    <span class="topic-chevron">▼</span>
+  </div>
+  <div class="topic-card-body"><div class="note-intro">Security governance is the organizational framework that ensures security aligns with business objectives. Every security professional must understand the hierarchy from law down to procedure.</div><div class="note-section"><div class="note-section-title">Document Hierarchy (most to least formal)</div><ul class="note-list"><li><strong>Regulations / Laws</strong>: legally mandated — government enforced — financial penalties for non-compliance. Examples: GDPR, HIPAA, PCI-DSS, SOX.</li><li><strong>Policies</strong>: mandatory organizational rules — signed by senior management — must be followed. Examples: AUP, password policy, BYOD policy.</li><li><strong>Standards</strong>: specify HOW policies are implemented — prescriptive. Examples: encryption standard (AES-256), password complexity (min 12 chars).</li><li><strong>Procedures</strong>: step-by-step instructions for completing specific tasks — operational level.</li><li><strong>Guidelines</strong>: recommendations and best practices — NOT mandatory, advisory only.</li></ul></div><div class="callout tip"><span class="callout-icon">💡</span><div class="callout-body"><strong>Memory aid:</strong> RSPPG — Regulations, Standards, Policies, Procedures, Guidelines — from most binding to least binding.</div></div><div class="note-section"><div class="note-section-title">Risk Management</div><ul class="note-list"><li><strong>Risk identification</strong>: what could go wrong? assets, threats, vulnerabilities</li><li><strong>Risk assessment</strong>: likelihood × impact = risk level — qualitative (high/medium/low) or quantitative (dollar values)</li><li><strong>Risk treatments</strong>:</li></ul></div><ul class="note-list sub"><li><strong>Accept</strong>: acknowledge and live with the risk — when cost to fix > cost of loss</li><li><strong>Transfer</strong>: shift financial consequences to another party — cyber insurance</li><li><strong>Avoid</strong>: eliminate the risky activity entirely — don't deploy the vulnerable system</li><li><strong>Mitigate/Reduce</strong>: implement controls to reduce likelihood or impact</li></ul><div class="note-section"><div class="note-section-title">Key Regulations</div><div class="term-grid"><div class="term-card"><div class="term-name">GDPR</div><div class="term-def">EU General Data Protection Regulation — requires consent, right to erasure, breach notification within 72 hours, data residency</div></div><div class="term-card"><div class="term-name">HIPAA</div><div class="term-def">Health Insurance Portability and Accountability Act — protects PHI (Protected Health Information) in the US</div></div><div class="term-card"><div class="term-name">PCI-DSS</div><div class="term-def">Payment Card Industry Data Security Standard — 12 requirements for handling credit card data</div></div><div class="term-card"><div class="term-name">SOX</div><div class="term-def">Sarbanes-Oxley — US financial reporting and controls for public companies</div></div></div></div></div>
+</div><div class="topic-card">
+  <div class="topic-card-header" onclick="toggleTopic(this)">
+    <span class="topic-card-icon">🔒</span>
+    <span class="topic-card-title">Cryptography Fundamentals</span>
+    <span class="topic-chevron">▼</span>
+  </div>
+  <div class="topic-card-body"><div class="note-intro">Cryptography is the mathematical foundation of information security. Understanding the difference between symmetric, asymmetric, and hashing — and when to use each — is essential for the CC exam.</div><div class="note-section"><div class="note-section-title">Symmetric Encryption</div><ul class="note-list"><li><strong>Same key</strong> used for both encryption and decryption</li><li><strong>Fast</strong> — suitable for encrypting large amounts of data (data at rest)</li><li><strong>Problem</strong>: key distribution — how do you securely share the key?</li><li><strong>Algorithm</strong>: AES (Advanced Encryption Standard) — 128, 192, or 256-bit keys — current gold standard</li><li><strong>Use cases</strong>: disk encryption (BitLocker, FileVault), database encryption, bulk data transfer</li></ul></div><div class="note-section"><div class="note-section-title">Asymmetric Encryption</div><ul class="note-list"><li><strong>Key pair</strong>: public key (shared with anyone) and private key (never shared)</li><li><strong>Rule</strong>: encrypt with public key, decrypt with private key. Sign with private key, verify with public key.</li><li><strong>Slower</strong> — used for key exchange and signatures, not bulk encryption</li><li><strong>Algorithms</strong>: RSA (2048+ bit), ECC (Elliptic Curve) — smaller keys, same security level</li><li><strong>Use cases</strong>: HTTPS key exchange, digital signatures, certificate validation, SSH key auth</li></ul></div><div class="note-section"><div class="note-section-title">Hashing</div><ul class="note-list"><li><strong>One-way function</strong> — converts data to fixed-size digest, cannot be reversed</li><li><strong>Properties</strong>: deterministic (same input = same output), unique (different inputs = different outputs), fixed output size</li><li><strong>SHA-256 / SHA-3</strong>: current standards — used for integrity verification, password storage, digital signatures</li><li><strong>MD5</strong>: deprecated — collision vulnerabilities found — do NOT use for security</li><li><strong>Use cases</strong>: file integrity (checksums), password hashing, digital signatures, certificates</li></ul></div><div class="note-section"><div class="note-section-title">Digital Signatures & PKI</div><ul class="note-list"><li><strong>Digital signature</strong>: hash of message encrypted with sender's private key — provides authentication, integrity, non-repudiation</li><li><strong>Certificate</strong>: binds a public key to an identity — signed by a Certificate Authority (CA)</li><li><strong>PKI</strong>: Public Key Infrastructure — ecosystem of CAs, certificates, CRLs, OCSP for managing digital certificates</li><li><strong>What digital signatures do NOT provide</strong>: confidentiality — for that you need encryption</li></ul></div></div>
+</div>
+</section><section class="domain-section" id="cc_d2" style="--d-color:#C0531A">
+  <div class="domain-header">
+    <span class="domain-num-badge" style="background:#C0531A">2.0</span>
+    <span class="domain-title-text">BC, DR & Incident Response</span>
+    <span class="domain-pct">10%</span>
+  </div>
+  <div class="topic-card">
+  <div class="topic-card-header" onclick="toggleTopic(this)">
+    <span class="topic-card-icon">🏢</span>
+    <span class="topic-card-title">Business Continuity Planning</span>
+    <span class="topic-chevron">▼</span>
+  </div>
+  <div class="topic-card-body"><div class="note-intro">Business Continuity is about keeping the organization functional during disruptions. The BCP is the strategic document; everything else supports it.</div><div class="note-section"><div class="note-section-title">Business Impact Analysis (BIA)</div><ul class="note-list"><li><strong>Purpose</strong>: identifies critical business functions, determines the impact of disruptions, establishes recovery priorities</li><li><strong>RPO (Recovery Point Objective)</strong>: maximum acceptable DATA LOSS measured in time — drives backup frequency</li><li><strong>RTO (Recovery Time Objective)</strong>: maximum acceptable DOWNTIME — drives recovery infrastructure investment</li><li><strong>MTTR</strong>: Mean Time To Repair — average time to restore a failed component</li><li><strong>MTBF</strong>: Mean Time Between Failures — average time between failures — hardware reliability metric</li><li><strong>Output</strong>: prioritized list of critical systems with RPO/RTO targets per system</li></ul></div><div class="note-section"><div class="note-section-title">BCP Components</div><ul class="note-list"><li><strong>Immediate response procedures and checklists</strong>: step-by-step actions when disruption occurs</li><li><strong>Notification systems and call trees</strong>: who to contact, in what order, through what channels</li><li><strong>BCP team member list</strong>: roles and responsibilities — who makes decisions</li><li><strong>Resource requirements</strong>: what personnel, equipment, and facilities are needed</li><li><strong>NOT a typical BCP component</strong>: cost predictions of immediate response procedures</li></ul></div><div class="callout tip"><span class="callout-icon">💡</span><div class="callout-body"><strong>BCP vs DRP:</strong> BCP = sustain operations DURING a disruption. DRP = restore IT systems AFTER a disruption. BCP is the umbrella; DRP is a subset.</div></div></div>
+</div><div class="topic-card">
+  <div class="topic-card-header" onclick="toggleTopic(this)">
+    <span class="topic-card-icon">🔁</span>
+    <span class="topic-card-title">Disaster Recovery</span>
+    <span class="topic-chevron">▼</span>
+  </div>
+  <div class="topic-card-body"><div class="note-intro">Disaster Recovery focuses on restoring IT systems and data to operation after a significant incident. Site type selection is a cost-vs-recovery-time trade-off.</div><div class="note-section"><div class="note-section-title">DR Site Types</div><ul class="note-list"><li><strong>Hot site</strong>: fully operational mirror, real-time data replication, fail over in minutes. Most expensive. Best RTO.</li><li><strong>Warm site</strong>: hardware present, partially configured, NO current data — operational in hours to a day. Moderate cost.</li><li><strong>Cold site</strong>: facility only, no equipment, no data — recovery takes days to weeks. Cheapest.</li></ul></div><div class="note-section"><div class="note-section-title">Backup Types</div><ul class="note-list"><li><strong>Full backup</strong>: complete copy of all data — most storage, longest backup time, fastest restore</li><li><strong>Incremental backup</strong>: only changes since LAST BACKUP of any type — fastest backup, slowest restore (need full + every incremental)</li><li><strong>Differential backup</strong>: all changes since LAST FULL BACKUP — medium backup time, faster restore (only need full + latest differential)</li></ul></div><div class="callout exam"><span class="callout-icon">🎯</span><div class="callout-body"><strong>Exam trap:</strong> Differential captures changes since last FULL. Incremental captures changes since last backup OF ANY TYPE. Differential restores are faster; incremental backups are faster.</div></div><div class="note-section"><div class="note-section-title">High Availability</div><ul class="note-list"><li><strong>Active-Active</strong>: all nodes process traffic — load balancing + fault tolerance. Best performance.</li><li><strong>Active-Passive</strong>: standby takes over on failure — fault tolerance only, no load balancing.</li><li><strong>Redundancy</strong>: duplicate components ensure continuity — power, network, storage, servers.</li></ul></div></div>
+</div><div class="topic-card">
+  <div class="topic-card-header" onclick="toggleTopic(this)">
+    <span class="topic-card-icon">🚨</span>
+    <span class="topic-card-title">Incident Response</span>
+    <span class="topic-chevron">▼</span>
+  </div>
+  <div class="topic-card-body"><div class="note-intro">Incident Response is the structured approach to handling security incidents. Know the phases, the IRT models, and what happens at each phase.</div><div class="note-section"><div class="note-section-title">IR Phases (ISC2 Order)</div><ul class="note-list"><li><strong>1. Preparation</strong>: policies, playbooks, training, tools ready BEFORE an incident. Includes forming the IRT.</li><li><strong>2. Detection and Analysis</strong>: identify and confirm the incident — IoCs, log analysis, SIEM alerts. PRIORITIZE incidents here.</li><li><strong>3. Containment, Eradication, and Recovery</strong>: isolate affected systems, remove root cause, restore operations.</li><li><strong>4. Post-Incident Activity</strong>: lessons learned, documentation, process improvements, report to management.</li></ul></div><div class="note-section"><div class="note-section-title">IRT Models</div><ul class="note-list"><li><strong>Dedicated team</strong>: full-time IR professionals — large enterprises, 24/7 coverage, most responsive</li><li><strong>Leveraged team</strong>: part-time, pulled from other roles during incidents — smaller organizations, cost-effective</li><li><strong>Hybrid team</strong>: core dedicated team supplemented by leveraged resources — most common approach</li><li><strong>NOT a valid model</strong>: "Pre-existing" — this is not an ISC2-recognized IRT model</li></ul></div><div class="note-section"><div class="note-section-title">IRT Roles</div><ul class="note-list"><li><strong>Information security professionals</strong>: technical lead on response</li><li><strong>Communications / Public Relations</strong>: link to senior management, external communications</li><li><strong>Legal representatives</strong>: evidence handling, liability, regulatory notifications</li><li><strong>Senior management</strong>: authorization, resource allocation, executive decisions</li><li><strong>NOT typically on IRT</strong>: Human Resources (not a primary technical response role)</li></ul></div></div>
+</div>
+</section><section class="domain-section" id="cc_d3" style="--d-color:#0E7A8A">
+  <div class="domain-header">
+    <span class="domain-num-badge" style="background:#0E7A8A">3.0</span>
+    <span class="domain-title-text">Access Controls</span>
+    <span class="domain-pct">22%</span>
+  </div>
+  <div class="topic-card">
+  <div class="topic-card-header" onclick="toggleTopic(this)">
+    <span class="topic-card-icon">🚪</span>
+    <span class="topic-card-title">Physical Access Controls</span>
+    <span class="topic-chevron">▼</span>
+  </div>
+  <div class="topic-card-body"><div class="note-intro">Physical security is the foundation — if an attacker can touch your hardware, all technical controls can be bypassed. The CC exam tests specific physical controls and their purposes.</div><div class="note-section"><div class="note-section-title">Physical Control Types</div><div class="term-grid"><div class="term-card"><div class="term-name">Locks</div><div class="term-def">Most effective for door-level access control — electronic, biometric, or mechanical</div></div><div class="term-card"><div class="term-name">Turnstiles</div><div class="term-def">Prevent tailgating — allow exactly one person through per authentication event</div></div><div class="term-card"><div class="term-name">Bollards</div><div class="term-def">Vehicle barriers — prevent rams and vehicle-based attacks on buildings — NOT effective for individual access</div></div><div class="term-card"><div class="term-name">Fences</div><div class="term-def">Perimeter control — deter and delay, not absolute prevention</div></div><div class="term-card"><div class="term-name">Barriers</div><div class="term-def">Restrict movement through an area — mantraps use two barriers with an airlock</div></div><div class="term-card"><div class="term-name">CCTV</div><div class="term-def">Detective AND deterrent — records events, discourages attackers — NOT corrective</div></div><div class="term-card"><div class="term-name">Guards</div><div class="term-def">Human oversight — most flexible control, can make judgment calls</div></div><div class="term-card"><div class="term-name">Biometrics</div><div class="term-def">Fingerprint, retina, facial, voice — high accuracy, hard to spoof or share</div></div><div class="term-card"><div class="term-name">Badge/Key card</div><div class="term-def">Easy to issue, revoke, audit — vulnerable to loss/theft, tailgating</div></div></div></div><div class="callout exam"><span class="callout-icon">🎯</span><div class="callout-body"><strong>Exam trap:</strong> Bollards cannot prevent individual unauthorized access — they stop vehicles. Turnstiles prevent tailgating. CCTV cannot be corrective — it cannot undo an attack.</div></div><div class="note-section"><div class="note-section-title">Fail Modes</div><ul class="note-list"><li><strong>Fail secure (fail closed)</strong>: door locks on power loss — secure but may trap people</li><li><strong>Fail safe (fail open)</strong>: door unlocks on power loss — safe for evacuation but insecure</li><li>Life safety typically overrides security — evacuation routes must fail open</li></ul></div></div>
+</div><div class="topic-card">
+  <div class="topic-card-header" onclick="toggleTopic(this)">
+    <span class="topic-card-icon">💻</span>
+    <span class="topic-card-title">Logical & Technical Access Controls</span>
+    <span class="topic-chevron">▼</span>
+  </div>
+  <div class="topic-card-body"><div class="note-intro">Logical controls enforce access to systems, data, and services. They are the technical implementation of access policies. Know all four access control models cold.</div><div class="note-section"><div class="note-section-title">Access Control Models</div><ul class="note-list"><li><strong>DAC (Discretionary Access Control)</strong>: data OWNER controls who can access their objects — delegate permissions at discretion. Windows NTFS. Flexible but hard to enforce centrally.</li><li><strong>MAC (Mandatory Access Control)</strong>: administrators assign security LABELS — users cannot change them. Bell-LaPadula model. Used in government/military. "No read up, no write down."</li><li><strong>RBAC (Role-Based Access Control)</strong>: permissions assigned to ROLES, users assigned to roles. Most common enterprise model. Easy to manage.</li><li><strong>ABAC (Attribute-Based Access Control)</strong>: access based on multiple ATTRIBUTES (user dept, resource type, time of day, location) — most flexible and granular.</li><li><strong>Rule-Based</strong>: ACLs on firewalls and routers — rules determine access, not identity per se.</li></ul></div><div class="note-section"><div class="note-section-title">Authentication Factors (MFA)</div><ul class="note-list"><li><strong>Something you know</strong>: password, PIN, security question — weakest factor alone</li><li><strong>Something you have</strong>: smartcard, token, phone OTP, hardware key — second most common</li><li><strong>Something you are</strong>: fingerprint, retina, voice, facial recognition — biometrics</li><li><strong>NOT a factor</strong>: "something you trust" — not a recognized MFA category</li><li><strong>MFA requirement</strong>: must use factors from at least 2 DIFFERENT categories — two passwords is NOT MFA</li></ul></div><div class="note-section"><div class="note-section-title">Least Privilege & Other Principles</div><ul class="note-list"><li><strong>Least Privilege</strong>: grant ONLY the minimum permissions required for the job — no more</li><li><strong>Separation of Duties</strong>: critical tasks divided among multiple people — prevents single-person fraud</li><li><strong>Need-to-know</strong>: access limited to information necessary for specific work assignment</li><li><strong>Zero Trust</strong>: never trust, always verify — regardless of location (inside or outside the network)</li><li><strong>Trust but verify</strong>: NOT a best practice — contradicts Zero Trust principles</li><li><strong>Periodic access reviews</strong>: regularly verify that user permissions still apply — remove stale access</li></ul></div></div>
+</div>
+</section><section class="domain-section" id="cc_d4" style="--d-color:#B8860B">
+  <div class="domain-header">
+    <span class="domain-num-badge" style="background:#B8860B">4.0</span>
+    <span class="domain-title-text">Network Security</span>
+    <span class="domain-pct">24%</span>
+  </div>
+  <div class="topic-card">
+  <div class="topic-card-header" onclick="toggleTopic(this)">
+    <span class="topic-card-icon">🌐</span>
+    <span class="topic-card-title">Network Fundamentals for CC</span>
+    <span class="topic-chevron">▼</span>
+  </div>
+  <div class="topic-card-body"><div class="note-intro">The CC exam tests networking concepts as they relate to security. Understand OSI layers, IP addressing, and key protocols at a level that lets you identify threats and appropriate defenses.</div><div class="note-section"><div class="note-section-title">OSI Model Security Relevance</div><div class="note-table-wrap"><table class="note-table"><thead><tr><th>Layer</th><th>Name</th><th>Security Relevance</th></tr></thead><tbody><tr><td>7</td><td>Application</td><td>Phishing, XSS, SQLi, application-layer firewalls, proxies</td></tr><tr><td>6</td><td>Presentation</td><td>SSL/TLS encryption/decryption, certificate validation</td></tr><tr><td>5</td><td>Session</td><td>Session hijacking, replay attacks, session tokens</td></tr><tr><td>4</td><td>Transport</td><td>TCP SYN floods, port scanning, firewall rules (ports)</td></tr><tr><td>3</td><td>Network</td><td>IP spoofing, routing attacks, ICMP attacks, ACLs by IP</td></tr><tr><td>2</td><td>Data Link</td><td>ARP spoofing, MAC flooding, VLAN hopping, port security</td></tr><tr><td>1</td><td>Physical</td><td>Cable tapping, physical access to hardware, jamming</td></tr></tbody></table></div></div><div class="note-section"><div class="note-section-title">Critical Ports for CC</div><ul class="note-list"><li><strong>22</strong>: SSH — secure remote administration</li><li><strong>25</strong>: SMTP — email sending (unencrypted) — should be 587 for submission</li><li><strong>53</strong>: DNS — can be targeted for DNS poisoning/spoofing</li><li><strong>80</strong>: HTTP — unencrypted web — susceptible to MitM</li><li><strong>443</strong>: HTTPS — TLS-encrypted web — certificate validation critical</li><li><strong>3389</strong>: RDP — Remote Desktop — high-value attack target, restrict access</li><li><strong>67/68</strong>: DHCP — rogue DHCP servers can redirect all traffic</li></ul></div><div class="note-section"><div class="note-section-title">IPv4 Private vs Public</div><ul class="note-list"><li><strong>Private (RFC 1918)</strong>: 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16 — NOT routable on internet, require NAT</li><li><strong>Public</strong>: any address outside the three private ranges — routable globally</li><li><strong>Loopback</strong>: 127.0.0.1 — always points to local machine</li><li><strong>APIPA</strong>: 169.254.x.x — self-assigned when DHCP fails — indicates DHCP problem</li></ul></div></div>
+</div><div class="topic-card">
+  <div class="topic-card-header" onclick="toggleTopic(this)">
+    <span class="topic-card-icon">⚔️</span>
+    <span class="topic-card-title">Network Threats & Attack Types</span>
+    <span class="topic-chevron">▼</span>
+  </div>
+  <div class="topic-card-body"><div class="note-intro">Understanding attack types is foundational for the CC exam. You must recognize each attack, understand its mechanism, and know appropriate mitigations.</div><div class="note-section"><div class="note-section-title">Malware Types</div><ul class="note-list"><li><strong>Virus</strong>: requires host file and user action to spread — attaches to programs</li><li><strong>Worm</strong>: self-replicates across networks WITHOUT human intervention — exploits vulnerabilities automatically</li><li><strong>Trojan</strong>: disguised as legitimate software — user installs it unknowingly — provides backdoor</li><li><strong>Rootkit</strong>: hides deep in OS — maintains persistent hidden remote access — hardest to detect/remove</li><li><strong>Ransomware</strong>: encrypts data, demands payment for decryption key — WannaCry, NotPetya</li><li><strong>Backdoor</strong>: hidden access mechanism bypassing normal authentication — primary goal: outside control</li><li><strong>Logic bomb</strong>: malicious code that triggers when specific conditions are met (date, event)</li><li><strong>Spyware/Keylogger</strong>: covertly monitors and records user activity — captures credentials</li></ul></div><div class="note-section"><div class="note-section-title">Social Engineering Attacks</div><ul class="note-list"><li><strong>Phishing</strong>: fraudulent email tricking users into revealing info or installing malware</li><li><strong>Spear phishing</strong>: targeted phishing at specific individuals using personalized context</li><li><strong>Whaling</strong>: spear phishing targeting C-suite executives — high-value targets</li><li><strong>Vishing</strong>: voice/phone-based phishing</li><li><strong>Smishing</strong>: SMS-based phishing</li><li><strong>Pretexting</strong>: fabricating a scenario to gain trust and extract information</li><li><strong>Baiting</strong>: leaving infected USB drives or media hoping targets will plug them in</li><li><strong>Quid pro quo</strong>: offering something in exchange for information or access</li><li><strong>NOT social engineering</strong>: "double-dealing" — not a recognized technique</li></ul></div><div class="note-section"><div class="note-section-title">Network Attacks</div><ul class="note-list"><li><strong>DoS/DDoS</strong>: exhaust resources to deny service — Availability attack</li><li><strong>On-path (MitM)</strong>: intercepts and potentially modifies traffic between two parties</li><li><strong>Replay attack</strong>: captures valid authentication and retransmits it — defend with message digesting/timestamps</li><li><strong>Cross-Site Scripting (XSS)</strong>: injects malicious scripts into web pages via poor input validation</li><li><strong>SQL Injection</strong>: malicious SQL in form fields — accesses or corrupts database</li><li><strong>DNS poisoning/spoofing</strong>: corrupts DNS cache to redirect users to malicious sites</li><li><strong>Side-channel attack</strong>: extracts info from physical characteristics (power consumption, timing, EM) — NOT an IP network attack</li><li><strong>APT</strong>: Advanced Persistent Threat — long-term sophisticated attacks, often nation-state</li></ul></div></div>
+</div><div class="topic-card">
+  <div class="topic-card-header" onclick="toggleTopic(this)">
+    <span class="topic-card-icon">🛡️</span>
+    <span class="topic-card-title">Network Security Infrastructure</span>
+    <span class="topic-chevron">▼</span>
+  </div>
+  <div class="topic-card-body"><div class="note-intro">Security infrastructure is the collection of devices and architectures that protect a network. Know what each device does and where it belongs in the network architecture.</div><div class="note-section"><div class="note-section-title">Security Devices</div><div class="term-grid"><div class="term-card"><div class="term-name">Firewall</div><div class="term-def">Inspects packet headers (source/dest IP, port, protocol) to enforce allow/deny rules — can be stateful or next-gen</div></div><div class="term-card"><div class="term-name">IDS</div><div class="term-def">Intrusion Detection System — passive, detects and alerts, does NOT block. Can be HIDS (host) or NIDS (network).</div></div><div class="term-card"><div class="term-name">IPS</div><div class="term-def">Intrusion Prevention System — inline, detects AND BLOCKS malicious activity automatically. Must be in traffic path.</div></div><div class="term-card"><div class="term-name">SIEM</div><div class="term-def">Collects and correlates logs/events across the organization — NOT log encryption. Features: aggregation, correlation, alerting, retention, forensics.</div></div><div class="term-card"><div class="term-name">NAC</div><div class="term-def">Network Access Control — checks device compliance (patch level, AV) before granting network access</div></div><div class="term-card"><div class="term-name">WAF</div><div class="term-def">Web Application Firewall — inspects HTTP/S traffic, blocks XSS/SQLi/CSRF attacks</div></div><div class="term-card"><div class="term-name">VPN</div><div class="term-def">Creates encrypted tunnel over untrusted network — site-to-site or remote access</div></div><div class="term-card"><div class="term-name">Proxy</div><div class="term-def">Intermediary for client requests — caches content, filters URLs, hides client IPs</div></div></div></div><div class="note-section"><div class="note-section-title">Network Architecture</div><ul class="note-list"><li><strong>DMZ (Screened subnet)</strong>: segment for public-facing servers (web, email) — isolated from internal network by firewalls</li><li><strong>VLAN segmentation</strong>: logical separation of network — limits blast radius of breaches, reduces attack surface</li><li><strong>Defense in Depth</strong>: multiple overlapping security layers — if one fails, others compensate</li><li><strong>Zero Trust</strong>: every access request verified regardless of source — no implicit trust based on location</li></ul></div></div>
+</div>
+</section><section class="domain-section" id="cc_d5" style="--d-color:#2E7D32">
+  <div class="domain-header">
+    <span class="domain-num-badge" style="background:#2E7D32">5.0</span>
+    <span class="domain-title-text">Security Operations</span>
+    <span class="domain-pct">18%</span>
+  </div>
+  <div class="topic-card">
+  <div class="topic-card-header" onclick="toggleTopic(this)">
+    <span class="topic-card-icon">💾</span>
+    <span class="topic-card-title">Data Security & Classification</span>
+    <span class="topic-chevron">▼</span>
+  </div>
+  <div class="topic-card-body"><div class="note-intro">Data is the crown jewel that security protects. Every control maps back to protecting data in one of its three states. Classification tells you how much protection is warranted.</div><div class="note-section"><div class="note-section-title">Data States</div><ul class="note-list"><li><strong>Data at rest</strong>: stored on disk, tape, USB drive, cloud storage — encrypt with AES-256, full disk encryption</li><li><strong>Data in transit</strong>: moving across a network — encrypt with TLS, HTTPS, VPN, SFTP</li><li><strong>Data in use</strong>: actively being processed in memory — hardest to protect, secure enclaves, trusted execution environments</li></ul></div><div class="note-section"><div class="note-section-title">Data Lifecycle (ISC2)</div><ul class="note-list"><li><strong>1. Create</strong> → <strong>2. Store</strong> → <strong>3. Use</strong> → <strong>4. Share</strong> → <strong>5. Archive</strong> → <strong>6. Destroy</strong></li><li>Destruction is the FINAL phase — must be done securely (degaussing, shredding, overwriting)</li><li><strong>Data remanence</strong>: residual data remaining after deletion — requires secure disposal methods</li><li><strong>Degaussing</strong>: uses magnetic field to permanently erase data from magnetic media</li><li>Good practice: 2–3 data classification labels — more creates complexity; fewer loses nuance</li></ul></div><div class="note-section"><div class="note-section-title">Data Classification Labels</div><ul class="note-list"><li><strong>Sensitivity</strong>: importance assigned by data owner — determines protection level needed</li><li><strong>Example civilian</strong>: Public, Internal, Confidential, Restricted</li><li><strong>Example government</strong>: Unclassified, Confidential, Secret, Top Secret</li><li><strong>PII (Personally Identifiable Information)</strong>: any data that can identify an individual — primarily a Confidentiality concern</li><li><strong>PHI (Protected Health Information)</strong>: health data protected under HIPAA — primarily a Confidentiality concern</li></ul></div><div class="note-section"><div class="note-section-title">Data Loss Prevention (DLP)</div><ul class="note-list"><li><strong>DLP</strong>: tools and policies preventing unauthorized data exfiltration</li><li><strong>Network DLP</strong>: monitors and blocks sensitive data leaving the network</li><li><strong>Endpoint DLP</strong>: controls data on devices — blocks copy to USB, email attachments</li><li><strong>Retention policies — common mistake</strong>: applying the LONGEST retention period to everything — increases storage, liability, and compliance cost</li></ul></div></div>
+</div><div class="topic-card">
+  <div class="topic-card-header" onclick="toggleTopic(this)">
+    <span class="topic-card-icon">🔧</span>
+    <span class="topic-card-title">System Hardening & Security Baselines</span>
+    <span class="topic-chevron">▼</span>
+  </div>
+  <div class="topic-card-body"><div class="note-intro">Hardening reduces the attack surface by eliminating unnecessary features and ensuring security configurations meet minimum acceptable standards.</div><div class="note-section"><div class="note-section-title">System Hardening Steps</div><ul class="note-list"><li><strong>Remove unnecessary software and services</strong>: every running service is a potential attack vector</li><li><strong>Change default credentials</strong>: default username/password combinations are publicly known and tried first</li><li><strong>Apply security patches and updates</strong>: patch management is the single most effective hardening action</li><li><strong>Enable host-based firewall</strong>: provides defense even if network perimeter is breached</li><li><strong>Apply minimum necessary permissions</strong>: least privilege at the OS and file level</li><li><strong>Disable unused ports</strong>: close attack surfaces that have no legitimate use</li><li><strong>CIS Benchmarks</strong>: industry standard hardening guides for specific operating systems and applications</li></ul></div><div class="note-section"><div class="note-section-title">Security Baseline</div><ul class="note-list"><li><strong>Definition</strong>: the minimum understood and ACCEPTABLE level of security requirements — the floor, not the ceiling</li><li><strong>Purpose</strong>: ensures consistent minimum security across all systems — non-compliant devices must be isolated</li><li><strong>Configuration management</strong>: SCCM elements are Inventory, Baselines, Updates — NOT audit logs</li></ul></div><div class="note-section"><div class="note-section-title">Patch Management Best Practices</div><ul class="note-list"><li><strong>Test patches first</strong>: deploy to test environment before production — patches can break things</li><li><strong>Risk-based prioritization</strong>: critical patches first (CVSS 9–10), especially those being actively exploited</li><li><strong>Rollback plan</strong>: always have a way to undo a patch that causes problems</li><li><strong>NOT a best practice</strong>: applying all patches as fast as possible without testing</li></ul></div></div>
+</div><div class="topic-card">
+  <div class="topic-card-header" onclick="toggleTopic(this)">
+    <span class="topic-card-icon">📜</span>
+    <span class="topic-card-title">Security Policies & Awareness</span>
+    <span class="topic-chevron">▼</span>
+  </div>
+  <div class="topic-card-body"><div class="note-intro">Security policies define the rules; awareness programs ensure users follow them. Both are administrative controls — and both are directly tested on the CC exam.</div><div class="note-section"><div class="note-section-title">Key Security Policies</div><ul class="note-list"><li><strong>AUP (Acceptable Use Policy)</strong>: defines permitted and prohibited uses of organizational IT resources</li><li><strong>Password policy</strong>: complexity requirements (length, character types), expiration, history, lockout</li><li><strong>BYOD policy</strong>: rules for personal devices used for work — containment vs full device management</li><li><strong>Privacy Policy</strong>: required if organization collects PII — explains collection, use, storage, protection</li><li><strong>Data handling policy</strong>: how data is classified, stored, transmitted, and destroyed</li><li><strong>Retention policy</strong>: how long data is kept — common mistake: applying longest period to everything</li><li><strong>Change management policy</strong>: ensures changes don't disrupt operations — not about patching specifically</li><li><strong>Incident response policy</strong>: defines IR process, team, reporting requirements</li></ul></div><div class="note-section"><div class="note-section-title">Security Awareness Framework (ISC2)</div><ul class="note-list"><li><strong>Awareness</strong>: posters, reminders, screensavers, emails — keeps security top of mind, no formal instruction. Lowest intensity.</li><li><strong>Training</strong>: structured instruction on specific skills — phishing simulation, secure coding, incident reporting. Role-specific.</li><li><strong>Education</strong>: comprehensive formal learning — degrees, certifications, deep domain knowledge. Highest intensity.</li><li><strong>NOT a category</strong>: Tutorial — not a recognized ISC2 security awareness category</li></ul></div><div class="callout exam"><span class="callout-icon">🎯</span><div class="callout-body"><strong>Exam tip:</strong> "A security poster about password practices" = Awareness. "A course on how to identify phishing" = Training. "A cybersecurity degree program" = Education. Posters are never Training.</div></div></div>
+</div><div class="topic-card">
+  <div class="topic-card-header" onclick="toggleTopic(this)">
+    <span class="topic-card-icon">🔑</span>
+    <span class="topic-card-title">Change Management & Configuration Management</span>
+    <span class="topic-chevron">▼</span>
+  </div>
+  <div class="topic-card-body"><div class="note-intro">Change and configuration management are how organizations maintain control over their IT environment. Know the components, the difference between them, and what belongs in each.</div><div class="note-section"><div class="note-section-title">Change Management Components</div><ul class="note-list"><li><strong>RFC (Request for Change)</strong>: formal documentation — what will change, why, when, who approves</li><li><strong>Approval process</strong>: review and authorization — Change Advisory Board (CAB) authorizes, not implements</li><li><strong>Rollback plan</strong>: documented procedure to undo the change — must exist BEFORE making the change</li><li><strong>Maintenance window</strong>: approved time for changes — minimizes business impact</li><li><strong>NOT a CM component</strong>: Governance — organizational oversight, not a specific CM step</li></ul></div><div class="note-section"><div class="note-section-title">SLA, MOU, MOA, ROE</div><div class="term-grid"><div class="term-card"><div class="term-name">SLA</div><div class="term-def">Service Level Agreement — contractual service guarantees including uptime, response time, AND data ownership/destruction instructions</div></div><div class="term-card"><div class="term-name">MOU</div><div class="term-def">Memorandum of Understanding — informal agreement between parties, less binding than contract</div></div><div class="term-card"><div class="term-name">MOA</div><div class="term-def">Memorandum of Agreement — more formal than MOU, establishes specific roles and responsibilities</div></div><div class="term-card"><div class="term-name">ROE</div><div class="term-def">Rules of Engagement — defines what actions are permitted with a system or its information — MOST directly related to what you can DO</div></div></div></div><div class="callout tip"><span class="callout-icon">💡</span><div class="callout-body"><strong>Exam hint:</strong> If a question asks about what can be DONE with a system or its information — the answer is ROE (Rules of Engagement). SLA = service guarantees + data destruction. MOU/MOA = less specific agreements.</div></div></div>
+</div>
+</section>
+  </main>
+</div>
+<footer><p>Built by <a href="https://blaborte.github.io" target="_blank">Baltazar Laborte</a> · BL Cert Hub · ISC2 Certified in Cybersecurity (CC)</p></footer>
+<script>
+// Toggle topic cards
+function toggleTopic(el){
+  const body=el.nextElementSibling;
+  const chev=el.querySelector(".topic-chevron");
+  const open=body.classList.contains("open");
+  body.classList.toggle("open",!open);
+  chev.classList.toggle("open",!open);
+}
+// TOC active tracking
+const sections=document.querySelectorAll(".domain-section");
+const tocLinks=document.querySelectorAll(".toc-domain-link");
+const prog=document.getElementById("read-progress");
+window.addEventListener("scroll",()=>{
+  const scrollPct=Math.min(100,Math.round((window.scrollY/(document.body.scrollHeight-window.innerHeight))*100));
+  if(prog)prog.style.width=scrollPct+"%";
+  let active=null;
+  sections.forEach(s=>{if(s.getBoundingClientRect().top<=120)active=s.id});
+  tocLinks.forEach(l=>{
+    const isActive=l.getAttribute("href")==="#"+active;
+    l.classList.toggle("active",isActive);
+    if(isActive){
+      const dc=l.getAttribute("data-color");
+      l.style.background=dc||"var(--accent)";
+    } else {l.style.background=""}
+  });
+});
+// Open first topic in each domain by default
+document.querySelectorAll(".domain-section").forEach(sec=>{
+  const first=sec.querySelector(".topic-card-header");
+  if(first){first.click()}
+});
+</script>
+</body>
+</html>
