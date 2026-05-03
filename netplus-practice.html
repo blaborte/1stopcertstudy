@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Practice Exams — Network+ N10-009 | BL Cert Hub</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    :root{
+      --navy:#0B1D3A;--blue:#1A5276;--accent:#2E86C1;--sky:#5DADE2;
+      --light:#EAF4FB;--mid:#D6EAF8;--white:#fff;--text:#0B1D3A;--muted:#5D7A8C;
+      --border:rgba(30,80,130,0.13);
+      --correct:#27AE60;--correct-bg:rgba(39,174,96,0.07);--correct-border:rgba(39,174,96,0.28);
+      --wrong:#E74C3C;--wrong-bg:rgba(231,76,60,0.07);--wrong-border:rgba(231,76,60,0.28);
+    }
+    html{scroll-behavior:smooth}
+    body{font-family:'DM Sans',sans-serif;background:var(--light);color:var(--text);min-height:100vh}
+
+    /* NAV */
+    nav{background:var(--navy);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:56px;position:sticky;top:0;z-index:100;border-bottom:1px solid rgba(93,173,226,0.15)}
+    .nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+    .bl-circle{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#2E86C1,#5DADE2);display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:#fff;flex-shrink:0}
+    .nav-brand span{font-size:13px;font-weight:500;color:rgba(255,255,255,0.85);letter-spacing:.02em}
+    .nav-links{display:flex;gap:6px}
+    .nav-links a{font-size:12px;font-weight:500;color:rgba(255,255,255,0.6);text-decoration:none;padding:6px 12px;border-radius:6px;transition:all .18s}
+    .nav-links a:hover{color:#fff;background:rgba(255,255,255,0.08)}
+    .nav-links a.active{color:var(--sky);background:rgba(93,173,226,0.12)}
+
+    /* HERO */
+    .hero{background:linear-gradient(135deg,#0B1D3A 0%,#1A5276 55%,#2E86C1 100%);padding:3rem 2rem 2.5rem;position:relative;overflow:hidden}
+    .hero-grid-pattern{position:absolute;inset:0;background-image:linear-gradient(rgba(93,173,226,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(93,173,226,0.04) 1px,transparent 1px);background-size:32px 32px;pointer-events:none}
+    .hero-bg-ring{position:absolute;border-radius:50%;border:40px solid rgba(93,173,226,0.08);pointer-events:none}
+    .hero-bg-ring.r1{width:300px;height:300px;top:-70px;right:-50px}
+    .hero-bg-ring.r2{width:180px;height:180px;bottom:-60px;left:40%;border-width:22px}
+    .hero-inner{position:relative;max-width:880px;margin:0 auto}
+    .exam-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.18);border-radius:20px;padding:5px 14px 5px 5px;margin-bottom:1.25rem}
+    .exam-badge .bl-circle{width:26px;height:26px;font-size:9px}
+    .exam-badge span{font-size:12px;color:rgba(255,255,255,0.8);font-weight:500}
+    .hero h1{font-family:'Space Mono',monospace;font-size:clamp(22px,3.5vw,38px);font-weight:700;color:#fff;line-height:1.2;margin-bottom:.5rem}
+    .hero h1 .accent{color:var(--sky)}
+    .hero-sub{font-size:14px;color:rgba(255,255,255,0.6);font-weight:300;line-height:1.7;max-width:500px}
+
+    /* WRAP */
+    .exam-wrap{max-width:880px;margin:0 auto;padding:2rem 2rem 3rem}
+
+    /* ── SETUP SCREEN ── */
+    #setup-screen{display:block}
+    .setup-title{font-family:'Space Mono',monospace;font-size:14px;font-weight:700;color:var(--navy);margin-bottom:1rem}
+    .setup-section{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:16px;box-shadow:0 2px 8px rgba(11,29,58,0.06)}
+    .setup-section-label{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+    .setup-section-label::after{content:'';flex:1;height:1px;background:var(--border)}
+    .option-grid{display:grid;gap:10px}
+    .option-grid.cols-3{grid-template-columns:repeat(3,1fr)}
+    .option-grid.cols-6{grid-template-columns:repeat(6,1fr)}
+    .opt-btn{
+      padding:12px 10px;border-radius:10px;border:1.5px solid var(--border);
+      background:var(--light);cursor:pointer;text-align:center;
+      transition:all .18s;font-family:'DM Sans',sans-serif;
+    }
+    .opt-btn:hover{border-color:var(--accent);background:rgba(46,134,193,0.05)}
+    .opt-btn.selected{border-color:var(--accent);background:rgba(46,134,193,0.1);color:var(--accent)}
+    .opt-btn .ob-val{font-family:'Space Mono',monospace;font-size:16px;font-weight:700;color:var(--navy);display:block;margin-bottom:2px}
+    .opt-btn.selected .ob-val{color:var(--accent)}
+    .opt-btn .ob-lbl{font-size:11px;color:var(--muted)}
+    .opt-btn.selected .ob-lbl{color:var(--accent)}
+    .start-btn{width:100%;padding:14px;border-radius:10px;background:var(--accent);border:none;color:#fff;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:all .18s;letter-spacing:.02em;margin-top:8px}
+    .start-btn:hover{background:var(--blue)}
+
+    /* ── EXAM SCREEN ── */
+    #exam-screen{display:none}
+
+    /* SESSION BAR */
+    .session-bar{background:var(--white);border:1px solid var(--border);border-radius:12px;margin-bottom:1.25rem;overflow:hidden;box-shadow:0 2px 8px rgba(11,29,58,0.06)}
+    .session-bar-head{display:flex;align-items:center;justify-content:space-between;padding:11px 18px;cursor:pointer;user-select:none;transition:background .15s}
+    .session-bar-head:hover{background:rgba(46,134,193,0.03)}
+    .session-bar-pills{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .s-pill{font-size:11px;font-weight:500;padding:4px 12px;border-radius:20px;background:rgba(46,134,193,0.08);color:var(--accent);border:1px solid rgba(46,134,193,0.18);white-space:nowrap}
+    .s-pill.timer-pill{background:var(--navy);color:var(--sky);border-color:transparent;font-family:'Space Mono',monospace;font-weight:700}
+    .s-pill.timer-pill.warning{color:#F39C12}
+    .s-pill.timer-pill.danger{color:#E74C3C;animation:pulse .8s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+    .bar-chevron{font-size:11px;color:var(--muted);transition:transform .25s;flex-shrink:0;margin-left:8px}
+    .bar-chevron.open{transform:rotate(180deg)}
+    .session-bar-body{max-height:0;overflow:hidden;transition:max-height .3s ease}
+    .session-bar-body.open{max-height:160px}
+    .session-bar-inner{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:0 18px 14px;border-top:1px solid var(--border);padding-top:12px;margin-top:0}
+    .sbi-item{text-align:center;background:var(--light);border-radius:8px;padding:10px}
+    .sbi-val{font-family:'Space Mono',monospace;font-size:15px;font-weight:700;color:var(--navy)}
+    .sbi-lbl{font-size:10px;color:var(--muted);margin-top:2px}
+
+    /* SCOREBOARD */
+    .scoreboard{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.5rem}
+    .score-card{background:var(--navy);border-radius:12px;padding:14px;text-align:center}
+    .score-val{font-family:'Space Mono',monospace;font-size:20px;font-weight:700;color:var(--sky)}
+    .score-lbl{font-size:10px;color:rgba(255,255,255,0.45);margin-top:4px}
+
+    /* PROGRESS */
+    .progress-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+    .progress-label{font-size:12px;font-weight:500;color:var(--text)}
+    .progress-pct{font-family:'Space Mono',monospace;font-size:12px;color:var(--accent);font-weight:700}
+    .progress-track{height:6px;background:var(--mid);border-radius:3px;overflow:hidden;margin-bottom:1.25rem}
+    .progress-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--blue),var(--sky));border-radius:3px;transition:width .4s}
+
+    /* Q NAV PILLS */
+    .section-label{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);display:flex;align-items:center;gap:10px;margin-bottom:.75rem}
+    .section-label::after{content:'';flex:1;height:1px;background:var(--border)}
+    .q-nav{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:1.25rem}
+    .q-pill{width:30px;height:30px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;border:1px solid var(--border);background:var(--white);color:var(--muted);cursor:pointer;transition:all .15s}
+    .q-pill:hover{border-color:var(--accent);color:var(--accent)}
+    .q-pill.current{background:var(--accent);border-color:var(--accent);color:#fff}
+    .q-pill.ans-correct{background:rgba(39,174,96,0.15);border-color:var(--correct);color:var(--correct)}
+    .q-pill.ans-wrong{background:rgba(231,76,60,0.15);border-color:var(--wrong);color:var(--wrong)}
+    .q-pill.ans-skip{background:var(--mid);border-color:var(--border);color:var(--muted)}
+
+    /* QUESTION */
+    .question-card{background:var(--white);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:1.5rem;box-shadow:0 2px 12px rgba(11,29,58,0.07)}
+    .q-body{padding:22px 22px 18px}
+    .q-text{font-size:14px;font-weight:500;color:var(--text);line-height:1.7;margin-bottom:12px}
+    .q-meta-row{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+    .q-num{font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:var(--muted)}
+    .q-domain-badge{font-size:10px;font-weight:500;padding:3px 10px;border-radius:10px;background:rgba(46,134,193,0.08);color:var(--accent);border:1px solid rgba(46,134,193,0.18)}
+    .q-multi-note{font-size:11px;color:var(--muted);font-style:italic;margin-bottom:12px}
+    .options{display:flex;flex-direction:column;gap:8px}
+    .option{display:flex;align-items:flex-start;gap:12px;padding:11px 16px;border-radius:9px;border:1px solid var(--border);background:var(--light);cursor:pointer;transition:all .16s;font-size:13px;color:var(--text);line-height:1.5;user-select:none}
+    .option:hover:not(.disabled){border-color:var(--accent);background:rgba(46,134,193,0.05)}
+    .option.selected{border-color:var(--accent);background:rgba(46,134,193,0.08)}
+    .option.correct{border-color:var(--correct);background:var(--correct-bg);color:#1A6B3A}
+    .option.wrong{border-color:var(--wrong);background:var(--wrong-bg);color:#A93226}
+    .option.disabled{pointer-events:none}
+    .opt-key{width:26px;height:26px;border-radius:50%;flex-shrink:0;background:var(--mid);display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:var(--blue);transition:all .16s;margin-top:1px}
+    .option.correct .opt-key{background:var(--correct);color:#fff}
+    .option.wrong .opt-key{background:var(--wrong);color:#fff}
+    .option.selected .opt-key{background:var(--accent);color:#fff}
+    .feedback{display:none;margin-top:14px;padding:13px 16px;border-radius:9px;font-size:13px;line-height:1.65;border:1px solid}
+    .feedback.show{display:block}
+    .feedback.correct-fb{background:rgba(39,174,96,0.08);border-color:var(--correct-border);color:#1A6B3A}
+    .feedback.wrong-fb{background:rgba(231,76,60,0.08);border-color:var(--wrong-border);color:#A93226}
+    .feedback strong{display:block;margin-bottom:4px;font-size:12px;letter-spacing:.03em}
+    .q-controls{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-top:1px solid var(--border);background:rgba(234,244,251,0.5)}
+    .btn{font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;padding:8px 18px;border-radius:8px;border:1px solid;cursor:pointer;transition:all .18s;letter-spacing:.02em}
+    .btn-primary{background:var(--accent);border-color:var(--accent);color:#fff}
+    .btn-primary:hover{background:var(--blue);border-color:var(--blue)}
+    .btn-primary:disabled{opacity:.4;pointer-events:none}
+    .btn-outline{background:transparent;border-color:var(--border);color:var(--text)}
+    .btn-outline:hover{border-color:var(--accent);color:var(--accent)}
+    .btn-danger{background:transparent;border-color:rgba(231,76,60,0.3);color:var(--wrong)}
+    .btn-danger:hover{background:rgba(231,76,60,0.07)}
+
+    /* RESULTS */
+    #results-screen{display:none;background:var(--white);border:1px solid var(--border);border-radius:14px;padding:3rem 2rem;text-align:center;box-shadow:0 2px 12px rgba(11,29,58,0.07)}
+    .result-score{font-family:'Space Mono',monospace;font-size:52px;font-weight:700;color:var(--accent);line-height:1}
+    .result-label{font-size:14px;color:var(--muted);margin-top:6px;margin-bottom:2rem}
+    .result-grade{display:inline-block;font-family:'Space Mono',monospace;font-size:13px;font-weight:700;padding:6px 20px;border-radius:8px;margin-bottom:2rem}
+    .result-grade.pass{background:rgba(39,174,96,0.1);color:var(--correct);border:1px solid var(--correct-border)}
+    .result-grade.fail{background:rgba(231,76,60,0.1);color:var(--wrong);border:1px solid var(--wrong-border)}
+    .result-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:2rem;max-width:400px;margin-left:auto;margin-right:auto}
+    .rs-item{background:var(--light);border-radius:10px;padding:12px}
+    .rs-val{font-family:'Space Mono',monospace;font-size:20px;font-weight:700}
+    .rs-lbl{font-size:10px;color:var(--muted);margin-top:3px}
+    .result-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+
+    /* FOOTER */
+    footer{background:var(--navy);padding:1.25rem 2rem;text-align:center;border-top:1px solid rgba(93,173,226,0.12)}
+    footer p{font-size:12px;color:rgba(255,255,255,0.3)}
+    footer a{color:var(--sky);text-decoration:none}
+
+    @media(max-width:600px){
+      .exam-wrap{padding:1.25rem}
+      .scoreboard{grid-template-columns:repeat(2,1fr)}
+      .option-grid.cols-6{grid-template-columns:repeat(3,1fr)}
+      .option-grid.cols-3{grid-template-columns:1fr}
+      nav{padding:0 1.25rem}
+      .hero{padding:2rem 1.25rem 2rem}
+    }
+
+    /* ── DARK MODE ── */
+    html.dark {
+      --light:  #131b27;
+      --mid:    #1a2535;
+      --white:  #1e2a3a;
+      --text:   #d4e6f7;
+      --muted:  #7aa3c0;
+      --border: rgba(93,173,226,0.14);
+      --shadow: 0 2px 12px rgba(0,0,0,0.35);
+    }
+    html.dark body { background: var(--light); color: var(--text); }
+    html.dark nav  { background: #0a1220; border-color: rgba(93,173,226,0.12); }
+    html.dark footer { background: #0a1220; }
+    html.dark .exam-card,
+    html.dark .tool-card,
+    html.dark .question-card,
+    html.dark .widget,
+    html.dark .session-bar,
+    html.dark .setup-section,
+    html.dark .domain-weights,
+    html.dark .mode-bar,
+    html.dark .controls-bar,
+    html.dark .fc-area + .grade-note,
+    html.dark .acronym-card,
+    html.dark .card-mini,
+    html.dark .score-card,
+    html.dark .stat-pill,
+    html.dark .sum-card,
+    html.dark .fc-nav-btn,
+    html.dark .domain-header,
+    html.dark .obj-header { background: var(--white); border-color: var(--border); }
+    html.dark .domain-body { background: var(--white); border-color: var(--border); }
+    html.dark .score-card,
+    html.dark .sum-card { background: #0e1929; }
+    html.dark .question-box,
+    html.dark .opt-btn,
+    html.dark .option,
+    html.dark .sbi-item,
+    html.dark .rs-item,
+    html.dark .setup-section { background: var(--mid); }
+    html.dark .option { border-color: var(--border); color: var(--text); }
+    html.dark .option:hover:not(.disabled) { background: rgba(93,173,226,0.08); }
+    html.dark .fc-scene .fc-front { background: #0d1929; }
+    html.dark .fc-scene .fc-back  { background: #122040; }
+    html.dark .progress-track,
+    html.dark .prog-track,
+    html.dark .mini-bar,
+    html.dark .dw-bar-track { background: var(--mid); }
+    html.dark .cert-name,
+    html.dark .tool-name,
+    html.dark .cs-val,
+    html.dark .stat-val,
+    html.dark .sbi-val,
+    html.dark .rs-val,
+    html.dark .obj-title,
+    html.dark .domain-title { color: var(--text); }
+    html.dark .cert-vendor,
+    html.dark .cert-desc,
+    html.dark .tool-desc,
+    html.dark .cs-lbl,
+    html.dark .stat-lbl,
+    html.dark .score-lbl,
+    html.dark .sum-lbl,
+    html.dark .ac-def,
+    html.dark .card-mini-term,
+    html.dark .card-mini-status { color: var(--muted); }
+    html.dark .section-label::after,
+    html.dark .card-stats { border-color: var(--border); }
+    html.dark .port-table td { background: var(--white); border-color: var(--border); color: var(--text); }
+    html.dark .port-table th { background: #0a1220; }
+    html.dark .alpha-heading { background: var(--mid); color: var(--text); }
+    html.dark .search-input { background: var(--mid); border-color: var(--border); color: var(--text); }
+    html.dark .search-input:focus { background: var(--white); }
+    html.dark .alpha-btn,
+    html.dark .filter-btn,
+    html.dark .mode-tab,
+    html.dark .grade-btn,
+    html.dark .btn-outline { background: var(--mid); border-color: var(--border); color: var(--muted); }
+    html.dark .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+    html.dark .q-controls { background: rgba(0,0,0,0.15); border-color: var(--border); }
+    html.dark .feedback.correct-fb { background: rgba(39,174,96,0.12); }
+    html.dark .feedback.wrong-fb   { background: rgba(231,76,60,0.12); }
+    html.dark #results-screen { background: var(--white); }
+    html.dark .result-label { color: var(--muted); }
+    html.dark .acronym-card.is-mastered { background: rgba(46,125,50,0.1); }
+    html.dark .card-mini.is-mastered { background: rgba(46,125,50,0.1); }
+    html.dark .card-mini.is-reviewing { background: rgba(184,134,11,0.1); }
+    html.dark .stat-pill { background: var(--white); border-color: var(--border); color: var(--muted); }
+    html.dark .fc-dot { background: rgba(93,173,226,0.2); }
+    html.dark .session-bar-inner { border-color: var(--border); }
+    html.dark .q-header { background: #0a1220; }
+    html.dark .q-meta-row .q-num { color: var(--muted); }
+
+    /* Dark-mode toggle button */
+    .theme-btn {
+      width: 34px; height: 34px; border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.08);
+      color: rgba(255,255,255,0.75);
+      cursor: pointer; font-size: 15px;
+      display: flex; align-items: center; justify-content: center;
+      transition: all .18s; flex-shrink: 0;
+    }
+    .theme-btn:hover { background: rgba(255,255,255,0.15); color: #fff; }
+
+
+    html.dark{--light:#131b27;--mid:#1a2535;--white:#1e2a3a;--text:#d4e6f7;--muted:#7aa3c0;--border:rgba(93,173,226,0.14)}
+    html.dark body{background:var(--light);color:var(--text)}
+    html.dark nav,html.dark footer{background:#0a1220}
+    html.dark .setup-section,html.dark .session-bar,html.dark .question-card,html.dark #results-screen{background:var(--white);border-color:var(--border)}
+    html.dark .question-box,html.dark .opt-btn,html.dark .option,html.dark .sbi-item,html.dark .rs-item{background:var(--mid)}
+    html.dark .option{border-color:var(--border);color:var(--text)}
+    html.dark .q-controls{background:rgba(0,0,0,0.15);border-color:var(--border)}
+    html.dark .q-meta-row .q-num{color:var(--muted)}
+    html.dark .q-header{background:#0a1220}
+    html.dark .score-card{background:#0e1929}
+    html.dark .section-label::after{background:var(--border)}
+    html.dark .q-pill{background:var(--white);border-color:var(--border)}
+    html.dark .session-bar-inner{border-color:var(--border)}
+    html.dark .setup-section-label::after{background:var(--border)}
+    .theme-btn{width:34px;height:34px;border-radius:8px;border:1px solid rgba(255,255,255,0.18);background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.75);cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;transition:all .18s;flex-shrink:0}
+    .theme-btn:hover{background:rgba(255,255,255,0.15);color:#fff}
+
+  </style>
+</head>
+<body>
+<script>
+(function(){const K="bl-theme";function apply(d){document.documentElement.classList.toggle("dark",d);const b=document.getElementById("theme-btn");if(b)b.textContent=d?"☀":"☾"}apply(localStorage.getItem(K)==="dark");window.__toggleTheme=function(){const d=!document.documentElement.classList.contains("dark");localStorage.setItem(K,d?"dark":"light");apply(d)};window.addEventListener("storage",function(e){if(e.key===K)apply(e.newValue==="dark")})})();
+</script>
+
+
+
+
+<nav>
+  <a class="nav-brand" href="index.html"><div class="bl-circle">BL</div><span>BL Cert Hub</span></a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="network-plus.html">Network+</a>
+    <a href="#" class="active">Practice Exams</a>
+    <button class="theme-btn" id="theme-btn" onclick="__toggleTheme()" title="Toggle dark mode">☾</button>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-grid-pattern"></div>
+  <div class="hero-bg-ring r1"></div>
+  <div class="hero-bg-ring r2"></div>
+  <div class="hero-inner">
+    <div class="exam-badge"><div class="bl-circle">BL</div><span>CompTIA Network+ N10-009</span></div>
+    <h1>Practice <span class="accent">Exams</span></h1>
+    <p class="hero-sub">Two full practice tests from the N10-009 question bank. Select a test, choose session length and timer, then start.</p>
+  </div>
+</div>
+
+<div class="exam-wrap">
+
+  <!-- SETUP SCREEN -->
+  <div id="setup-screen">
+    <div class="setup-section">
+      <div class="setup-section-label">Select Practice Test</div>
+      <div class="option-grid cols-3" id="test-select-grid">
+        <div class="opt-btn selected" data-test="1" onclick="selectTest(this,1)">
+          <span class="ob-val">Test 1</span>
+          <span class="ob-lbl">129 Questions</span>
+        </div>
+        <div class="opt-btn" data-test="2" onclick="selectTest(this,2)">
+          <span class="ob-val">Test 2</span>
+          <span class="ob-lbl">100 Questions</span>
+        </div>
+        <div class="opt-btn" data-test="both" onclick="selectTest(this,'both')">
+          <span class="ob-val">Both</span>
+          <span class="ob-lbl">229 Questions</span>
+        </div>
+      </div>
+    </div>
+    <div class="setup-section">
+      <div class="setup-section-label">Number of Questions</div>
+      <div class="option-grid cols-6" id="q-count-grid">
+        <div class="opt-btn selected" data-count="10" onclick="selectCount(this,10)"><span class="ob-val">10</span><span class="ob-lbl">Quick</span></div>
+        <div class="opt-btn" data-count="20" onclick="selectCount(this,20)"><span class="ob-val">20</span><span class="ob-lbl">Short</span></div>
+        <div class="opt-btn" data-count="30" onclick="selectCount(this,30)"><span class="ob-val">30</span><span class="ob-lbl">Medium</span></div>
+        <div class="opt-btn" data-count="50" onclick="selectCount(this,50)"><span class="ob-val">50</span><span class="ob-lbl">Standard</span></div>
+        <div class="opt-btn" data-count="100" onclick="selectCount(this,100)"><span class="ob-val">100</span><span class="ob-lbl">Extended</span></div>
+        <div class="opt-btn" id="all-q-btn" data-count="129" onclick="selectCount(this, parseInt(this.dataset.count))"><span class="ob-val">All</span><span class="ob-lbl">129 Qs</span></div>
+      </div>
+    </div>
+    <div class="setup-section">
+      <div class="setup-section-label">Timer</div>
+      <div class="option-grid cols-3" id="timer-grid">
+        <div class="opt-btn selected" data-time="0" onclick="selectTimer(this,0)"><span class="ob-val">None</span><span class="ob-lbl">Untimed</span></div>
+        <div class="opt-btn" data-time="600" onclick="selectTimer(this,600)"><span class="ob-val">10m</span><span class="ob-lbl">10 Minutes</span></div>
+        <div class="opt-btn" data-time="1200" onclick="selectTimer(this,1200)"><span class="ob-val">20m</span><span class="ob-lbl">20 Minutes</span></div>
+        <div class="opt-btn" data-time="1800" onclick="selectTimer(this,1800)"><span class="ob-val">30m</span><span class="ob-lbl">30 Minutes</span></div>
+        <div class="opt-btn" data-time="3600" onclick="selectTimer(this,3600)"><span class="ob-val">1h</span><span class="ob-lbl">1 Hour</span></div>
+        <div class="opt-btn" data-time="5400" onclick="selectTimer(this,5400)"><span class="ob-val">1.5h</span><span class="ob-lbl">1.5 Hours</span></div>
+      </div>
+    </div>
+    <button class="start-btn" onclick="startExam()">Start Practice Exam →</button>
+  </div>
+
+  <!-- EXAM SCREEN -->
+  <div id="exam-screen">
+    <div class="session-bar">
+      <div class="session-bar-head" onclick="toggleSessionBar()">
+        <div class="session-bar-pills">
+          <span class="s-pill" id="session-q-pill">10 Questions</span>
+          <span class="s-pill" id="session-t-pill">Untimed</span>
+          <span class="s-pill timer-pill" id="timer-pill" style="display:none">00:00</span>
+        </div>
+        <span class="bar-chevron" id="bar-chevron">▼</span>
+      </div>
+      <div class="session-bar-body" id="session-bar-body">
+        <div class="session-bar-inner">
+          <div class="sbi-item"><div class="sbi-val" id="sbi-total">—</div><div class="sbi-lbl">Total Questions</div></div>
+          <div class="sbi-item"><div class="sbi-val" id="sbi-timer">—</div><div class="sbi-lbl">Time Limit</div></div>
+          <div class="sbi-item"><div class="sbi-val" id="sbi-mode">Untimed</div><div class="sbi-lbl">Mode</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="scoreboard">
+      <div class="score-card"><div class="score-val" id="sc-total">—</div><div class="score-lbl">Questions</div></div>
+      <div class="score-card"><div class="score-val" id="sc-answered">0</div><div class="score-lbl">Answered</div></div>
+      <div class="score-card"><div class="score-val" id="sc-correct">0</div><div class="score-lbl">Correct</div></div>
+      <div class="score-card"><div class="score-val" id="sc-pct">0%</div><div class="score-lbl">Score</div></div>
+    </div>
+    <div class="progress-row">
+      <span class="progress-label" id="prog-label">Question 1</span>
+      <span class="progress-pct" id="prog-pct">0%</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="prog-bar"></div></div>
+    <div class="section-label">Jump to Question</div>
+    <div class="q-nav" id="q-nav"></div>
+    <div class="question-card" id="q-card">
+      <div class="q-body">
+        <div class="q-text" id="q-text"></div>
+        <div class="q-meta-row">
+          <span class="q-num" id="q-num-label">Question 1</span>
+          <span class="q-domain-badge" id="q-domain-label"></span>
+        </div>
+        <div class="q-multi-note" id="q-multi-note" style="display:none">Select all that apply</div>
+        <div class="options" id="q-options"></div>
+        <div class="feedback" id="q-feedback"></div>
+      </div>
+      <div class="q-controls">
+        <button class="btn btn-outline" onclick="goTo(curQ-1)" id="btn-prev">← Prev</button>
+        <button class="btn btn-danger" onclick="endExam()">End Exam</button>
+        <button class="btn btn-primary" id="btn-next" onclick="handleNext()" disabled>Next →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULTS SCREEN -->
+  <div id="results-screen">
+    <div class="result-score" id="res-score">0/0</div>
+    <div class="result-label" id="res-label">Practice Exam Complete</div>
+    <div class="result-grade" id="res-grade">—</div>
+    <div class="result-stats">
+      <div class="rs-item"><div class="rs-val" id="res-correct" style="color:var(--correct)">0</div><div class="rs-lbl">Correct</div></div>
+      <div class="rs-item"><div class="rs-val" id="res-wrong" style="color:var(--wrong)">0</div><div class="rs-lbl">Incorrect</div></div>
+      <div class="rs-item"><div class="rs-val" id="res-skip" style="color:var(--muted)">0</div><div class="rs-lbl">Skipped</div></div>
+    </div>
+    <div class="result-actions">
+      <button class="btn btn-primary" onclick="backToSetup()">↺ New Session</button>
+      <button class="btn btn-outline" onclick="location.href='network-plus.html'">← Back to Hub</button>
+    </div>
+  </div>
+
+</div>
+<footer><p>Built by <a href="https://blaborte.github.io" target="_blank">Baltazar Laborte</a> · BL Cert Hub · CompTIA Network+ N10-009 · Practice Exams 1 &amp; 2</p></footer>
+
+<script>
+
+/* ══════════════════════════════════════
+   ALL 129 QUESTIONS
+══════════════════════════════════════ */
+const ALL_Q = [
+  {q:'A network administrator needs to connect two routers in a point-to-point configuration and conserve IP space. Which of the following subnets should the administrator use?',opts:['A. /24','B. /26','C. /28','D. /30'],ans:[3],exp:'A /30 subnet provides exactly 4 IPs — 2 usable — ideal for point-to-point router links with minimal address waste.',domain:'Network Implementation'},
+  {q:'Which of the following IP transmission types encrypts all of the transmitted data?',opts:['A. ESP','B. AH','C. GRE','D. UDP','E. TCP'],ans:[0],exp:'ESP (Encapsulating Security Payload) is part of IPsec and encrypts the payload providing data confidentiality. AH provides integrity but no encryption; GRE, UDP, and TCP do not encrypt.',domain:'Network Security'},
+  {q:'An organization has a security requirement that all network connections can be traced back to a user. A network administrator needs to identify a solution to implement on the wireless network. Which of the following is the best solution?',opts:['A. Implementing enterprise authentication','B. Requiring the use of PSKs','C. Configuring a captive portal for users','D. Enforcing wired equivalent protection'],ans:[0],exp:'WPA2-Enterprise uses unique per-user credentials via RADIUS, allowing all connections to be traced. PSKs are shared and provide no per-user accountability.',domain:'Network Security'},
+  {q:'A network administrator notices interference with industrial equipment in the 2.4GHz range. Which of the following technologies would most likely mitigate this issue? (Select two).',opts:['A. Mesh network','B. 5GHz frequency','C. Omnidirectional antenna','D. Non-overlapping channel','E. Captive portal','F. Ad hoc network'],ans:[1,3],multi:true,exp:'5GHz has less interference from industrial equipment. Non-overlapping channels (1, 6, 11) on 2.4GHz also reduce co-channel interference.',domain:'Network Implementation'},
+  {q:'To reduce costs and increase mobility, a CTO wants key services to run from the on-site data center and enterprise services to run in the cloud. Which of the following deployment models is the best choice?',opts:['A. Public','B. Hybrid','C. SaaS','D. Private'],ans:[1],exp:'A hybrid cloud combines on-premises and cloud environments, allowing key services locally while leveraging cloud for enterprise services.',domain:'Networking Concepts'},
+  {q:'After installing Cat 8 keystones, a data center architect notices higher than normal interference. Which of the following steps should the architect take to troubleshoot the issue?',opts:['A. Check if end connections were wrapped in copper tape before terminating','B. Use passthrough modular crimping plugs instead of traditional crimping plugs','C. Connect the RX/TX wires to different pins','D. Run a speed test on a device that can only achieve 100Mbps speeds'],ans:[0],exp:'Cat 8 cabling requires end connections wrapped in copper tape to maintain shielding continuity and reduce EMI.',domain:'Network Implementation'},
+  {q:'An administrator is configuring a switch placed in an area accessible to customers. Which of the following is the best way to mitigate unknown devices from connecting to the network?',opts:['A. SSE','B. ACL','C. Perimeter network','D. 802.1X'],ans:[3],exp:'802.1X is a network access control protocol requiring devices to authenticate via RADIUS before gaining network access.',domain:'Network Security'},
+  {q:'A user is unable to navigate to a website because the provided URL is not resolving to the correct IP address. Other users can navigate to it without issue. Which of the following is most likely causing this issue?',opts:['A. Hosts file','B. Self-signed certificate','C. Nameserver record','D. IP helper'],ans:[0],exp:'The local hosts file overrides DNS. If it maps a hostname to a wrong IP, only that computer is affected while others using DNS work fine.',domain:'Network Troubleshooting'},
+  {q:'Which of the following is most likely responsible for the security and handling of personal data in Europe?',opts:['A. GDPR','B. SCADA','C. SAML','D. PCI DSS'],ans:[0],exp:'GDPR (General Data Protection Regulation) is EU law governing data protection and privacy for individuals within the EU and EEA.',domain:'Network Operations'},
+  {q:'Which of the following most likely requires the use of subinterfaces?',opts:['A. A router with only one available LAN port','B. A firewall performing deep packet inspection','C. A hub utilizing jumbo frames','D. A switch using Spanning Tree Protocol'],ans:[0],exp:'Subinterfaces allow a single physical router interface to handle multiple VLANs — essential when a router has only one LAN port but must route between multiple VLANs.',domain:'Network Implementation'},
+  {q:'A network administrator is connecting two Layer 2 switches that must transfer data for multiple networks. Which of the following would fulfill this requirement?',opts:['A. Jumbo frames','B. 802.1Q tagging','C. Native VLAN','D. Link aggregation'],ans:[1],exp:'802.1Q tagging adds a 4-byte VLAN tag to Ethernet frames, allowing multiple VLANs to traverse a single trunk link between switches.',domain:'Network Implementation'},
+  {q:'Which of the following most likely determines the size of a rack for installation? (Select two).',opts:['A. KVM size','B. Switch depth','C. Hard drive size','D. Cooling fan speed','E. Outlet amperage','F. Server height'],ans:[1,5],multi:true,exp:'Rack size is determined by the depth of equipment (switch depth) and height measured in rack units (U). Server height dictates the rack units required.',domain:'Network Operations'},
+  {q:'Which of the following devices can operate in multiple layers of the OSI model?',opts:['A. Hub','B. Switch','C. Transceiver','D. Modem'],ans:[1],exp:'A multilayer (Layer 3) switch operates at both Layer 2 (MAC-based forwarding) and Layer 3 (IP routing). Hubs and transceivers are Layer 1 only.',domain:'Networking Concepts'},
+  {q:'A network engineer wants to implement an IDS without introducing latency, ensuring the IDS sees all packets without loss. Which is the best implementation?',opts:['A. Use a network tap','B. Use Nmap software','C. Use a protocol analyzer','D. Use a port mirror'],ans:[3],exp:'Port mirroring (SPAN) copies all traffic from monitored ports to the IDS port without being inline, eliminating latency impact.',domain:'Network Security'},
+  {q:'A technician terminates multimode fiber to a patch panel. After connecting the patch cable, the indicator light does not turn on. Which should the technician try first?',opts:['A. Reverse the fibers','B. Reterminate the fibers','C. Verify the fiber size','D. Examine the cable runs for visual faults'],ans:[0],exp:'Reversing TX/RX is the most common fiber issue. Swapping the fiber connections is the first troubleshooting step before more complex fixes.',domain:'Network Troubleshooting'},
+  {q:'A network engineer must use an SNMP version that does not utilize plaintext data. Which is the minimum version that supports this requirement?',opts:['A. v1','B. v2c','C. v2u','D. v3'],ans:[3],exp:'SNMPv3 is the first version to support authentication and encryption. SNMPv1 and v2c transmit community strings in plaintext.',domain:'Network Operations'},
+  {q:'Which of the following describes the best reason for using BGP?',opts:['A. Preventing a loop within a LAN','B. Improving reconvergence times','C. Exchanging router updates with a different ISP','D. Sharing routes with a Layer 3 switch'],ans:[2],exp:'BGP is designed to exchange routing information between different autonomous systems (ISPs). STP prevents LAN loops; OSPF/EIGRP handle internal reconvergence.',domain:'Networking Concepts'},
+  {q:'Which of the following steps in the troubleshooting methodology includes checking logs for recent changes?',opts:['A. Identify the problem','B. Document the findings and outcomes','C. Test the theory to determine cause','D. Establish a plan of action'],ans:[0],exp:'Identifying the problem includes gathering information such as questioning users and reviewing logs for recent changes.',domain:'Network Troubleshooting'},
+  {q:'Which of the following is the correct order of components in a bottom-up approach for the three-tier hierarchical model?',opts:['A. Access, distribution, and core','B. Core, root, and distribution','C. Core, spine, and leaf','D. Access, core, and roof'],ans:[0],exp:'The three-tier hierarchical model: Access → Distribution → Core. Bottom-up starts from device connection layer (access) up to the backbone (core).',domain:'Networking Concepts'},
+  {q:'Which of the following is the next step to take after successfully testing a root cause theory?',opts:['A. Determine resolution steps','B. Duplicate the problem in a lab','C. Present the theory for approval','D. Implement the solution to the problem'],ans:[0],exp:'After confirming root cause, the next CompTIA step is to establish a plan of action (determine resolution steps) before implementing.',domain:'Network Troubleshooting'},
+  {q:'A network manager wants to implement a SIEM system to correlate system events. Which of the following protocols should the manager verify?',opts:['A. NTP','B. DNS','C. LDAP','D. DHCP'],ans:[0],exp:'NTP is critical for SIEM — accurate timestamps across all devices are essential for correlating events and forensic analysis.',domain:'Network Operations'},
+  {q:'Which of the following is an XML-based security concept that works by passing sensitive information about users to providers?',opts:['A. IAM','B. MFA','C. RADIUS','D. SAML'],ans:[3],exp:'SAML (Security Assertion Markup Language) is an XML-based open standard for exchanging authentication/authorization data, enabling SSO.',domain:'Network Security'},
+  {q:'Which of the following attacks would most likely cause duplicate IP addresses in a network?',opts:['A. Rogue DHCP server','B. DNS poisoning','C. Social engineering','D. Denial-of-service'],ans:[0],exp:'A rogue DHCP server assigns IPs from its own pool which may overlap with the legitimate server\'s assignments, causing duplicate IPs.',domain:'Network Security'},
+  {q:'After running Cat 8 cable using passthrough plugs, an electrician notices a lot of crosstalk. Which troubleshooting step should be taken first?',opts:['A. Inspect the connectors for any wires that are touching or exposed','B. Restore default settings on the connected devices','C. Terminate the connections again','D. Check for radio frequency interference in the area'],ans:[0],exp:'Crosstalk is often caused by improper termination where wires are touching or exposed. Inspect connectors visually first.',domain:'Network Troubleshooting'},
+  {q:'A network administrator is planning device monitoring that provides authentication and encryption. Which of the following meets these requirements?',opts:['A. SIEM','B. Syslog','C. NetFlow','D. SNMPv3'],ans:[3],exp:'SNMPv3 adds authentication (MD5/SHA) and encryption (DES/AES) to device monitoring. SIEM, Syslog, and NetFlow do not provide authenticated encrypted monitoring.',domain:'Network Operations'},
+  {q:'A company requires all connections to a web server to be encrypted. Which of the following ports should be disabled?',opts:['A. 22','B. 80','C. 443','D. 587'],ans:[1],exp:'Port 80 (HTTP) transmits data in plaintext. Disabling it forces all traffic through port 443 (HTTPS). Port 22 (SSH) and 587 (SMTPS) are already encrypted.',domain:'Network Security'},
+  {q:'Which of the following is a cost-effective advantage of a split-tunnel VPN?',opts:['A. Web traffic is filtered through a web filter','B. More bandwidth is required on the company\'s internet connection','C. Monitoring detects insecure machines on the company\'s network','D. Cloud-based traffic flows outside of the company\'s network'],ans:[3],exp:'Split tunneling allows cloud/internet traffic to bypass the VPN, reducing bandwidth consumption on the company\'s connection.',domain:'Networking Concepts'},
+  {q:'Which of the following disaster recovery concepts is calculated by dividing the total hours of operation by the total number of failures?',opts:['A. MTTR','B. MTBF','C. RPO','D. RTO'],ans:[1],exp:'MTBF (Mean Time Between Failures) = Total Operational Time ÷ Number of Failures. MTTR is repair time, RPO is max data loss, RTO is target recovery time.',domain:'Network Operations'},
+  {q:'A network interface\'s indicator lights are not blinking on either the computer or the switch, though Ethernet is properly connected. Which is the most likely cause?',opts:['A. The switch failed','B. The default gateway is wrong','C. The port is shut down','D. The VLAN assignment is incorrect'],ans:[2],exp:'No link lights on both ends despite proper cable connection indicates the switch port is administratively shut down.',domain:'Network Troubleshooting'},
+  {q:'Which of the following disaster recovery metrics describes the amount of data that is lost since the last backup?',opts:['A. MTTR','B. RTO','C. RPO','D. MTBF'],ans:[2],exp:'RPO (Recovery Point Objective) defines the maximum acceptable data loss measured in time — how far back the last backup can be.',domain:'Network Operations'},
+  {q:'Which of the following are the best device-hardening techniques for network security? (Select two).',opts:['A. Disabling unused ports','B. Performing regular scanning of unauthorized devices','C. Monitoring system logs for irregularities','D. Enabling logical security such as SSO','E. Changing default passwords','F. Ensuring least privilege concepts are in place'],ans:[0,4],multi:true,exp:'Disabling unused ports eliminates unmonitored entry points. Changing default passwords removes well-known credentials attackers exploit.',domain:'Network Security'},
+  {q:'A network administrator for a small office is adding a passive IDS to its network switch. Which of the following should the administrator use?',opts:['A. SNMP trap','B. Port mirroring','C. Syslog collection','D. API integration'],ans:[1],exp:'Port mirroring (SPAN) copies traffic from monitored ports to the IDS port passively without affecting actual traffic flow.',domain:'Network Security'},
+  {q:'A network administrator is configuring a wireless network with an ESSID. Which of the following is a user benefit of ESSID compared to SSID?',opts:['A. Stronger wireless connection','B. Roaming between access points','C. Advanced security','D. Increased throughput'],ans:[1],exp:'ESSID allows multiple APs to share the same SSID, enabling seamless client roaming without reauthentication.',domain:'Network Implementation'},
+  {q:'Which of the following technologies are X.509 certificates most commonly associated with?',opts:['A. PKI','B. VLAN tagging','C. LDAP','D. MFA'],ans:[0],exp:'X.509 is the standard format for digital certificates used in PKI for SSL/TLS encryption, digital signatures, and authentication.',domain:'Network Security'},
+  {q:'Which of the following is the most likely reason an insurance brokerage would enforce VPN usage?',opts:['A. To encrypt sensitive data in transit','B. To secure the endpoint','C. To maintain contractual agreements','D. To comply with data retention requirements'],ans:[0],exp:'VPNs encrypt data in transit using tunneling protocols, protecting sensitive customer/financial data from interception.',domain:'Network Security'},
+  {q:'Which of the following steps of the troubleshooting methodology would most likely include checking through each level of the OSI model after the problem has been identified?',opts:['A. Establish a theory','B. Implement the solution','C. Create a plan of action','D. Verify functionality'],ans:[3],exp:'Verifying functionality after implementing a solution often involves checking each OSI layer to confirm the issue is fully resolved.',domain:'Network Troubleshooting'},
+  {q:'A network engineer is designing a secure communication link between two sites. The entire data stream needs to remain confidential. Which of the following will achieve this goal?',opts:['A. GRE','B. IKE','C. ESP','D. AH'],ans:[2],exp:'ESP encrypts the data payload ensuring confidentiality. GRE tunnels but does not encrypt; IKE negotiates keys but doesn\'t encrypt data; AH provides integrity only.',domain:'Network Security'},
+  {q:'A tracert output shows hops 1–3 respond normally then hops 4–7 show *. Which command-line tool is being used?',opts:['A. tracert','B. netstat','C. tcpdump','D. nmap'],ans:[0],exp:'Sequential hops with RTTs and asterisks (*) for non-responding hops is characteristic of tracert/traceroute. Asterisks indicate ICMP is blocked.',domain:'Network Troubleshooting'},
+  {q:'Which of the following best describes a group of devices used to lure unsuspecting attackers and study their activities?',opts:['A. Geofencing','B. Honeynet','C. Jumpbox','D. Screened subnet'],ans:[1],exp:'A honeynet is a network of honeypot systems designed to attract attackers, allowing security teams to study attack methods.',domain:'Network Security'},
+  {q:'A user connects to a corporate VPN via a web browser using TLS to access an internal system. Which of the following best describes how the VPN is being used?',opts:['A. Clientless','B. Client-to-site','C. Full tunnel','D. Site-to-site'],ans:[0],exp:'A clientless VPN is accessed through a web browser using SSL/TLS — no dedicated VPN client software needed.',domain:'Networking Concepts'},
+  {q:'A VoIP phone is plugged into a port but cannot receive calls. Which of the following needs to be done on the port to address the issue?',opts:['A. Trunk all VLANs on the port','B. Configure the native VLAN','C. Tag the traffic to voice VLAN','D. Disable VLANs'],ans:[2],exp:'VoIP phones require the switch port configured with a voice VLAN tag to separate voice from data traffic and apply QoS priority.',domain:'Network Implementation'},
+  {q:'A user\'s VoIP phone intermittently reboots but the workstation on the same port is unaffected. Which is the most likely cause?',opts:['A. The PoE power budget is exceeded','B. Port security is violated','C. The signal is degraded','D. The Ethernet cable is not working'],ans:[0],exp:'PoE delivers power through the cable. If total PoE demand exceeds the switch power budget, devices may intermittently lose power and reboot.',domain:'Network Troubleshooting'},
+  {q:'A network administrator\'s device constantly drops off corporate Wi-Fi due to severe interference. Which is most likely the cause?',opts:['A. Too much wireless reflection','B. Too much wireless absorption','C. Too many wireless repeaters','D. Too many client connections'],ans:[0],exp:'Wireless reflection (multipath interference) occurs when signals bounce off surfaces and arrive at the receiver at different times, causing interference.',domain:'Network Troubleshooting'},
+  {q:'A network administrator wants to verify the default STP bridge priority value on a new switch. Which value would the administrator expect to see?',opts:['A. 4096','B. 8192','C. 32768','D. 36684'],ans:[2],exp:'The default STP bridge priority is 32768 on most switches, configurable in increments of 4096 (0–61440).',domain:'Network Implementation'},
+  {q:'Which of the following routing protocols uses an autonomous system number?',opts:['A. IS-IS','B. EIGRP','C. OSPF','D. BGP'],ans:[3],exp:'BGP (Border Gateway Protocol) uses Autonomous System (AS) numbers. It is the only EGP among the choices; OSPF, EIGRP, and IS-IS are IGPs.',domain:'Networking Concepts'},
+  {q:'Which of the following panels would best facilitate a central termination point for all network cables on the floor of a building?',opts:['A. Patch','B. UPS','C. MDF','D. Rack'],ans:[0],exp:'A patch panel provides a central, organized termination point for all horizontal cable runs on a floor.',domain:'Network Implementation'},
+  {q:'A technician suspects a routing issue is causing a user\'s laptop to fail to connect to a corporate server. Which command should the technician use?',opts:['A. tcpdump','B. dig','C. tracert','D. arp'],ans:[2],exp:'tracert/traceroute traces the hop-by-hop path to the destination, ideal for identifying routing failures or where connectivity breaks.',domain:'Network Troubleshooting'},
+  {q:'Before using a guest network, an administrator requires users to accept the terms of use. Which of the following is the best way to accomplish this goal?',opts:['A. Pre-shared key','B. Autonomous access point','C. Captive portal','D. WPA2 encryption'],ans:[2],exp:'A captive portal redirects guest users to a web page where they must accept terms of use before being granted internet access.',domain:'Network Security'},
+  {q:'Which of the following are environmental factors that should be considered when installing equipment in a building? (Select two).',opts:['A. Fire suppression system','B. UPS location','C. Humidity control','D. Power load','E. Floor construction type','F. Proximity to nearest MDF'],ans:[0,2],multi:true,exp:'Fire suppression protects equipment from fire damage; humidity control prevents moisture-related corrosion and short circuits.',domain:'Network Operations'},
+  {q:'Which of the following network topologies contains a direct connection between every node in the network?',opts:['A. Mesh','B. Hub-and-spoke','C. Star','D. Point-to-point'],ans:[0],exp:'In a full mesh topology, every node is directly connected to every other node, providing maximum redundancy.',domain:'Networking Concepts'},
+  {q:'A network administrator needs to change where the outside DNS records are hosted. Which of the following records should the administrator change at the registrar?',opts:['A. NS','B. SOA','C. PTR','D. CNAME'],ans:[0],exp:'NS (Name Server) records at the registrar specify which DNS servers are authoritative for the domain. Changing these redirects all DNS queries.',domain:'Networking Concepts'},
+  {q:'Users cannot reach a Linux web server via browser but can ping its IP. The server is online and the web process is running. Which command should the administrator run on the server first?',opts:['A. traceroute','B. netstat','C. tcpdump','D. arp'],ans:[1],exp:'netstat shows which ports a process is listening on, confirming whether the web server is actually bound to port 80/443.',domain:'Network Troubleshooting'},
+  {q:'A customer needs six usable IP addresses. Which of the following best meets this requirement?',opts:['A. 255.255.255.128','B. 255.255.255.192','C. 255.255.255.224','D. 255.255.255.240'],ans:[3],exp:'/28 (255.255.255.240) provides 16 IPs with 14 usable. /29 (255.255.255.248) provides 8 IPs with 6 usable — the minimum to fit 6 hosts.',domain:'Network Implementation'},
+  {q:'Which of the following connectors provides console access to a switch?',opts:['A. ST','B. RJ45','C. BNC','D. SFP'],ans:[1],exp:'RJ45 is used for console connections to network devices via rollover/console cable. ST is fiber; BNC is coaxial; SFP is for transceivers.',domain:'Network Implementation'},
+  {q:'Which of the following best describes the transmission format at the transport layer over connectionless communication?',opts:['A. Datagram','B. Segment','C. Frames','D. Packets'],ans:[0],exp:'UDP (connectionless) transmits data as datagrams at the transport layer. TCP (connection-oriented) uses segments.',domain:'Networking Concepts'},
+  {q:'Which of the following does a full-tunnel VPN provide?',opts:['A. Lower bandwidth requirements','B. The ability to reset local computer passwords','C. Corporate inspection of all network traffic','D. Access to blocked sites'],ans:[2],exp:'A full-tunnel VPN routes all user traffic through the corporate network, enabling comprehensive inspection and monitoring of all data.',domain:'Networking Concepts'},
+  {q:'Which of the following network cables involves bounding light off of protective cladding?',opts:['A. Twinaxial','B. Coaxial','C. Single-mode','D. Multimode'],ans:[3],exp:'Multimode fiber has a larger core allowing multiple light modes to propagate, bouncing off the core-cladding boundary. Single-mode fiber has a narrow core where light travels straight.',domain:'Network Implementation'},
+  {q:'A company is implementing a wireless solution in a high-density environment. Which 802.11 standard is used when concerned about device saturation and coverage?',opts:['A. 802.11ac','B. 802.11ax','C. 802.11g','D. 802.11n'],ans:[1],exp:'802.11ax (Wi-Fi 6) introduces OFDMA, MU-MIMO, and BSS Coloring designed specifically for high-density environments.',domain:'Network Implementation'},
+  {q:'A network engineer performed a migration to a new mail server and changed the MX record, but users are not receiving email. Which of the following should the engineer have done to prevent the issue?',opts:['A. Change the email client configuration to match the MX record','B. Reduce the TTL record prior to the MX record change','C. Perform a DNS zone transfer prior to the MX record change','D. Update the NS record to reflect the IP address change'],ans:[1],exp:'Reducing TTL before DNS changes ensures cached records expire quickly, allowing the new MX record to propagate faster.',domain:'Network Operations'},
+  {q:'A network architect needs to create a wireless field network to provide reliable service to public safety vehicles. Which type of network is the best solution?',opts:['A. Mesh','B. Ad hoc','C. Point-to-point','D. Infrastructure'],ans:[0],exp:'A mesh network provides multiple paths between nodes (vehicles), enhancing reliability and redundancy — ideal for mobile public safety environments.',domain:'Networking Concepts'},
+  {q:'Which of the following network traffic types is sent to all nodes on the network?',opts:['A. Unicast','B. Broadcast','C. Multicast','D. Anycast'],ans:[1],exp:'Broadcast traffic is sent to all nodes in the network segment (e.g., ARP requests use IPv4 broadcast 255.255.255.255).',domain:'Networking Concepts'},
+  {q:'A client wants to increase overall security after a recent breach. Which of the following would be best to implement? (Select two).',opts:['A. Least privilege network access','B. Dynamic inventories','C. Central policy management','D. Zero-touch provisioning','E. Configuration drift prevention','F. Subnet range limits'],ans:[0,2],multi:true,exp:'Least privilege limits access to only what users need, minimizing breach impact. Central policy management ensures consistent security across the network.',domain:'Network Security'},
+  {q:'A customer moves into a new office and notices some wall plates are not working and not labeled. Which of the following tools would be best to identify the proper wiring in the IDF?',opts:['A. Toner and probe','B. Cable tester','C. Visual fault locator','D. Network tap'],ans:[0],exp:'A toner and probe (tone generator and probe) traces individual cables in bundles, quickly identifying and labeling wall plates and wiring terminations.',domain:'Network Troubleshooting'},
+  {q:'Which of the following steps of the troubleshooting methodology should a technician take to confirm a theory?',opts:['A. Duplicate the problem','B. Identify the symptoms','C. Gather information','D. Determine any changes'],ans:[0],exp:'To confirm a theory, duplicate the problem in a controlled environment to verify the identified cause actually leads to the observed issue.',domain:'Network Troubleshooting'},
+  {q:'Which of the following is most closely associated with segmenting compute resources within a single cloud account?',opts:['A. Network security group','B. IaaS','C. VPC','D. Hybrid cloud'],ans:[2],exp:'A VPC (Virtual Private Cloud) allows segmentation of compute resources within a single cloud account into isolated virtual network segments.',domain:'Networking Concepts'},
+  {q:'A network administrator wants users to authenticate to the corporate network using a port-based authentication framework for both wired and wireless devices. Which is the best security feature?',opts:['A. 802.1X','B. Access control list','C. Port security','D. MAC filtering'],ans:[0],exp:'802.1X is a port-based network access control (PNAC) protocol that authenticates devices via RADIUS for both wired and wireless access.',domain:'Network Security'},
+  {q:'A network administrator needs to set up a multicast network for audio and video broadcasting. Which of the following networks would be most appropriate?',opts:['A. 172.16.0.0/24','B. 192.168.0.0/24','C. 224.0.0.0/24','D. 240.0.0.0/24'],ans:[2],exp:'The multicast address range is 224.0.0.0 to 239.255.255.255. 224.0.0.0/24 is within this range and appropriate for multicast.',domain:'Networking Concepts'},
+  {q:'A network administrator is planning to host a company application in the cloud for all internal and third-party users. Which of the following concepts describes this arrangement?',opts:['A. Multitenancy','B. VPC','C. NFV','D. SaaS'],ans:[0],exp:'Multitenancy is where a single software instance serves multiple customers/tenants with isolated data — appropriate for shared cloud applications.',domain:'Networking Concepts'},
+  {q:'Which of the following cloud service models most likely requires the greatest up-front expense by the customer when migrating a data center to the cloud?',opts:['A. Infrastructure as a service','B. Software as a service','C. Platform as a service','D. Network as a service'],ans:[0],exp:'IaaS requires the customer to manage the most (OS, middleware, apps), leading to the greatest migration effort and up-front expense.',domain:'Networking Concepts'},
+  {q:'Early in the morning, an administrator installs a new DHCP server. In the afternoon, some users report network outages. Which is the most likely issue?',opts:['A. The administrator did not provision enough IP addresses','B. The administrator configured an incorrect default gateway','C. The administrator did not provision enough routes','D. The administrator did not provision enough MAC addresses'],ans:[0],exp:'When the DHCP pool is too small, new devices or those renewing leases fail to obtain an IP, resulting in connectivity issues as the pool is exhausted.',domain:'Network Troubleshooting'},
+  {q:'A network administrator is configuring access points in a dense environment with overlapping coverage. Which channel width should the administrator choose to minimize interference in the 2.4GHz spectrum?',opts:['A. 11MHz','B. 20MHz','C. 40MHz','D. 80MHz','E. 160MHz'],ans:[1],exp:'20MHz channels minimize overlap in the 2.4GHz band where only 3 non-overlapping channels (1, 6, 11) exist. Wider channels cause more interference.',domain:'Network Implementation'},
+  {q:'Which of the following fiber connector types is most likely to be used on a network interface card?',opts:['A. LC','B. SC','C. ST','D. MPO'],ans:[0],exp:'LC connectors are small form-factor and widely used in NICs and high-density environments like data centers due to space efficiency.',domain:'Network Implementation'},
+  {q:'Which of the following is used to estimate the average life span of a device?',opts:['A. RTO','B. RPO','C. MTBF','D. MTTR'],ans:[2],exp:'MTBF (Mean Time Between Failures) estimates average time between failures, used to predict device lifespan and plan maintenance.',domain:'Network Operations'},
+  {q:'Which of the following appliances provides users with an extended footprint that allows connections from multiple devices within a designated WLAN?',opts:['A. Router','B. Switch','C. Access point','D. Firewall'],ans:[2],exp:'An access point (AP) extends wireless network coverage, allowing multiple wireless devices to connect to the WLAN.',domain:'Network Implementation'},
+  {q:'Which of the following protocols provides remote access utilizing port 22?',opts:['A. SSH','B. Telnet','C. TLS','D. RDP'],ans:[0],exp:'SSH (Secure Shell) operates on port 22 and provides encrypted remote access. Telnet uses port 23 (unencrypted); RDP uses port 3389.',domain:'Networking Concepts'},
+  {q:'A research facility utilizes 2.5Gbps fiber connections but is only using 1Gbps. Which of the following would need to be configured to use the full ISP connection speed?',opts:['A. 802.1Q tagging','B. Network address translation','C. Port duplex','D. Link aggregation'],ans:[3],exp:'Link aggregation (LACP) combines multiple physical links into one logical link, enabling use of the full 2.5Gbps bandwidth.',domain:'Network Implementation'},
+  {q:'A critical infrastructure switch is identified as end-of-support. Which of the following is the best next step to ensure security?',opts:['A. Apply the latest patches and bug fixes','B. Decommission and replace the switch','C. Ensure the current firmware has no issues','D. Isolate the switch from the network'],ans:[1],exp:'End-of-support means no further security updates. The most secure action is to replace the switch with a supported model.',domain:'Network Security'},
+  {q:'As part of an attack, a threat actor purposefully overflows the content-addressable memory (CAM) table on a switch. Which type of attack is this?',opts:['A. ARP spoofing','B. Evil twin','C. MAC flooding','D. DNS poisoning'],ans:[2],exp:'MAC flooding overwhelms the switch CAM table with fake MAC addresses, causing the switch to broadcast traffic to all ports (fail-open mode).',domain:'Network Security'},
+  {q:'A network administrator is installing 35 PoE security cameras. After installing and testing cables, a small number of cameras do not work. Which is the most likely reason?',opts:['A. Incorrect wiring standard','B. Power budget exceeded','C. Signal attenuation','D. Wrong voltage'],ans:[1],exp:'When total PoE power demand exceeds the switch\'s power budget, some devices fail to receive power. This is common when adding many PoE devices.',domain:'Network Troubleshooting'},
+  {q:'A network administrator is implementing security zones for each department. Which of the following should the administrator use?',opts:['A. ACLs','B. Port security','C. Content filtering','D. NAC'],ans:[0],exp:'ACLs (Access Control Lists) control network traffic between security zones by filtering packets based on IP addresses, protocols, or ports.',domain:'Network Security'},
+  {q:'A remote user\'s wired devices are constantly disconnecting with a coaxial modem signal power of -97dB. Which action should be taken?',opts:['A. Removing any splitters connected to the line','B. Switching the devices to wireless','C. Moving the devices closer to the modem','D. Lowering the network speed'],ans:[0],exp:'Splitters on a coaxial line degrade signal quality further. Removing them maximizes signal strength and improves the weak -97dB signal.',domain:'Network Troubleshooting'},
+  {q:'A network administrator wants to configure a backup route without a dynamic routing protocol. Which of the following routing features should be used?',opts:['A. Neighbor adjacency','B. Link state flooding','C. Administrative distance','D. Hop count'],ans:[2],exp:'Administrative distance values on static routes create floating static routes — higher AD acts as backup when the primary (lower AD) route fails.',domain:'Network Implementation'},
+  {q:'Which of the following should a network administrator configure when adding OT devices to an organization\'s architecture?',opts:['A. Honeynet','B. Data-at-rest encryption','C. Time-based authentication','D. Network segmentation'],ans:[3],exp:'Network segmentation isolates OT devices from IT networks, protecting them from threats and minimizing security incident impact.',domain:'Network Security'},
+  {q:'Which of the following network devices converts wireless signals to electronic signals?',opts:['A. Router','B. Firewall','C. Access point','D. Load balancer'],ans:[2],exp:'An access point converts wireless radio signals from Wi-Fi devices into electronic signals for the wired network, bridging wireless and wired segments.',domain:'Network Implementation'},
+  {q:'A company\'s marketing team created a new application and wants DNS record newapplication.comptia.org to always resolve to the same address as www.comptia.org. Which DNS record should be used?',opts:['A. SOA','B. MX','C. CNAME','D. NS'],ans:[2],exp:'A CNAME (Canonical Name) record aliases one domain name to another, making newapplication.comptia.org resolve to www.comptia.org\'s IP.',domain:'Networking Concepts'},
+  {q:'Which of the following requires network devices to be managed using a different set of IP addresses?',opts:['A. Console','B. Split tunnel','C. Jump box','D. Out of band'],ans:[3],exp:'Out-of-band (OOB) management uses a dedicated, physically separate management network with different IP addresses, isolated from data traffic.',domain:'Network Operations'},
+  {q:'Which of the following is most closely associated with a dedicated link to a cloud environment that may not include encryption?',opts:['A. Direct Connect','B. Internet gateway','C. Captive portal','D. VPN'],ans:[0],exp:'Direct Connect (AWS) is a dedicated physical connection to cloud providers that bypasses the public internet and may not inherently include encryption.',domain:'Networking Concepts'},
+  {q:'Which of the following can support a jumbo frame?',opts:['A. Access point','B. Bridge','C. Hub','D. Switch'],ans:[3],exp:'Switches can be configured to support jumbo frames (>1500 byte payload up to 9000 bytes). Hubs, bridges, and APs typically operate at standard frame sizes.',domain:'Network Implementation'},
+  {q:'Which of the following ports is used for secure email?',opts:['A. 25','B. 110','C. 143','D. 587'],ans:[3],exp:'Port 587 is for authenticated SMTP email submission with STARTTLS encryption. Port 25 is SMTP relay (unencrypted); 110 is POP3; 143 is IMAP.',domain:'Networking Concepts'},
+  {q:'A network administrator needs to create an SVI on a Layer 3-capable device to separate voice and data traffic. Which of the following best explains this use case?',opts:['A. A physical interface used for trunking logical ports','B. A physical interface used for management access','C. A logical interface used for the routing of VLANs','D. A logical interface used when the number of physical ports is insufficient'],ans:[2],exp:'SVI (Switched Virtual Interface) is a logical interface on a Layer 3 switch used for inter-VLAN routing, enabling voice and data VLAN separation.',domain:'Network Implementation'},
+  {q:'Which of the following protocols has a default administrative distance value of 90?',opts:['A. RIP','B. EIGRP','C. OSPF','D. BGP'],ans:[1],exp:'EIGRP has a default AD of 90 for internal routes. RIP is 120, OSPF is 110, BGP is 20 (eBGP) — lower AD is more preferred.',domain:'Networking Concepts'},
+  {q:'A network technician needs to identify the appropriate patch panel port. The patch panel is not labeled. Which tool provides the easiest way?',opts:['A. Toner','B. Laptop','C. Cable tester','D. Visual fault locator'],ans:[0],exp:'A toner probe sends an audible tone through the cable detected at the other end, quickly identifying the correct patch panel port without labels.',domain:'Network Troubleshooting'},
+  {q:'Which of the following attacks can cause users attempting to access a company website to be directed to an entirely different website?',opts:['A. DNS poisoning','B. Denial-of-service','C. Social engineering','D. ARP spoofing'],ans:[0],exp:'DNS poisoning (cache poisoning) corrupts DNS records to redirect traffic from legitimate websites to malicious sites.',domain:'Network Security'},
+  {q:'A router interface is configured as 10.0.0.95 255.255.255.240. The router is not routing packets to a web server at 10.0.0.81/28. Which is the best explanation?',opts:['A. The web server is in a different subnet','B. The router interface is a broadcast address','C. The IP address space is a class A network','D. The subnet is in a private address space'],ans:[1],exp:'10.0.0.95 is the broadcast address for the 10.0.0.80/28 subnet. Configuring a router interface with the broadcast address causes routing failures.',domain:'Network Implementation'},
+  {q:'A network administrator needs to set up a multicast network for audio and video broadcasting. Which network is most appropriate?',opts:['A. 172.16.0.0/24','B. 192.168.0.0/24','C. 224.0.0.0/24','D. 240.0.0.0/24'],ans:[2],exp:'Multicast addresses range from 224.0.0.0 to 239.255.255.255. 224.0.0.0/24 is the correct range for multicast applications.',domain:'Networking Concepts'},
+  {q:'A user loses access to a remote file server. The admin can ping the server and firewall rules don\'t block access. Which tool would help identify which ports are open on the remote file server?',opts:['A. Dig','B. Nmap','C. Tracert','D. nslookup'],ans:[1],exp:'Nmap (Network Mapper) performs comprehensive port scans to determine which ports are open and what services are running on a host.',domain:'Network Troubleshooting'},
+  {q:'A storage network requires reduced overhead and increased efficiency for the amount of data being sent. Which of the following should an engineer configure?',opts:['A. Link speed','B. Jumbo frames','C. QoS','D. 802.1Q tagging'],ans:[1],exp:'Jumbo frames (>1500 byte MTU) reduce overhead by transmitting more data per frame, improving efficiency in storage network environments.',domain:'Network Implementation'},
+  {q:'A technician is installing equipment into a rack in a data center that practices hot aisle/cold aisle ventilation. Which direction should the equipment exhaust face?',opts:['A. Sides','B. Top','C. Front','D. Rear'],ans:[3],exp:'In hot aisle/cold aisle design, equipment intake faces the cold aisle and exhaust faces the hot aisle (rear), maintaining proper airflow.',domain:'Network Operations'},
+  {q:'Which of the following is the most secure way to provide site-to-site connectivity?',opts:['A. VXLAN','B. IKE','C. GRE','D. IPsec'],ans:[3],exp:'IPsec provides data integrity, authentication, and encryption at the network layer — the most comprehensive security for site-to-site VPNs.',domain:'Network Security'},
+  {q:'Which of the following attacks utilizes a network packet that contains multiple network tags?',opts:['A. MAC flooding','B. VLAN hopping','C. DNS spoofing','D. ARP poisoning'],ans:[1],exp:'VLAN hopping uses double-tagged packets to traverse VLAN boundaries, gaining unauthorized access to isolated network segments.',domain:'Network Security'},
+  {q:'A company wants to implement data loss prevention by restricting access to social media platforms and personal cloud storage. Which type of filtering should the company deploy?',opts:['A. Port','B. DNS','C. MAC','D. Content'],ans:[3],exp:'Content filtering blocks or allows access to specific categories of websites/services, appropriate for blocking social media and personal cloud storage.',domain:'Network Security'},
+  {q:'A network administrator is configuring a new switch and wants to ensure only assigned devices can connect. Which of the following should the administrator do?',opts:['A. Configure ACLs','B. Implement a captive portal','C. Enable port security','D. Disable unnecessary services'],ans:[2],exp:'Port security limits the number and/or specific MAC addresses that can connect to a switch port, preventing unauthorized device connections.',domain:'Network Security'},
+  {q:'A network engineer receives a vendor alert regarding a vulnerability in a router CPU. Which of the following should the engineer do to resolve the issue?',opts:['A. Update the firmware','B. Replace the system board','C. Patch the OS','D. Isolate the system'],ans:[0],exp:'Firmware updates from the vendor address hardware-level vulnerabilities including CPU vulnerabilities in routers. This is the correct remediation path.',domain:'Network Operations'},
+  {q:'A company wants to implement a disaster recovery site for non-critical applications that can tolerate a short period of downtime. Which type of site should the company implement?',opts:['A. Hot','B. Cold','C. Warm','D. Passive'],ans:[2],exp:'A warm site is partially equipped and can be operational within hours, balancing cost and recovery time — suitable for non-critical applications.',domain:'Network Operations'},
+  {q:'A network technician is troubleshooting a web application\'s poor performance. The office has two internet links that share traffic load. Which tool should the technician use to determine which link is being used?',opts:['A. netstat','B. nslookup','C. ping','D. tracert'],ans:[3],exp:'tracert traces the hop-by-hop path to the destination, revealing which internet link is handling the web application traffic.',domain:'Network Troubleshooting'},
+  {q:'Which of the following is a characteristic of the application layer?',opts:['A. It relies upon other layers for packet delivery','B. It checks independently for packet loss','C. It encrypts data in transit','D. It performs address translation'],ans:[0],exp:'The application layer (Layer 7) relies on the transport, network, data link, and physical layers for actual packet delivery. Packet loss detection is Layer 4; encryption is Layer 6; NAT is Layer 3.',domain:'Networking Concepts'},
+  {q:'A network administrator performed upgrades on a server, installing a new NIC. Following upgrades, users are unable to reach the server. Which is the most likely reason?',opts:['A. The PoE power budget was exceeded','B. TX/RX was transposed','C. A port security violation occurred','D. An incorrect cable type was installed'],ans:[3],exp:'A new NIC may require a specific cable type or standard. Using an incompatible cable type can result in connectivity failures after hardware upgrades.',domain:'Network Troubleshooting'},
+  {q:'Which of the following is created to illustrate the effectiveness of wireless networking coverage in a building?',opts:['A. Logical diagram','B. Layer 3 network diagram','C. Service-level agreement','D. Heat map'],ans:[3],exp:'A heat map is a graphical representation using colors to show wireless signal strength throughout a building, identifying coverage areas and dead zones.',domain:'Network Operations'},
+  {q:'A network administrator wants to implement security zones in the corporate network to control access to only individuals inside the corporation. Which security zone is the best solution?',opts:['A. Extranet','B. Trusted','C. VPN','D. Public'],ans:[1],exp:'A trusted zone is the most secure zone for internal corporate users. Extranet allows external partners; public is least secure; VPN is a connectivity method.',domain:'Network Security'},
+  {q:'A company is most likely enacting which of the following if an accountant can only see the financial department\'s shared folders?',opts:['A. General Data Protection Regulation','B. Least privilege network access','C. Acceptable use policy','D. End user license agreement'],ans:[1],exp:'Least privilege restricts users\' access to only what is necessary for their job function, limiting the accountant to only the financial department\'s folders.',domain:'Network Security'},
+  {q:'A company receives a cease-and-desist order from its ISP regarding prohibited torrent activity. Which of the following should be implemented to comply?',opts:['A. MAC security','B. Content filtering','C. Screened subnet','D. Perimeter network'],ans:[1],exp:'Content filtering blocks access to torrent sites and services that facilitate prohibited activities, enabling compliance with the ISP cease-and-desist order.',domain:'Network Security'},
+];
+
+/* ══════════════════════════════════════
+   PRACTICE TEST 2 — 100 QUESTIONS (Craig Zacker)
+══════════════════════════════════════ */
+const PT2_Q = [
+  {q:'Which of the following definitions best describes the function of a firewall?',opts:['A. A device that connects two networks forwarding traffic between them','B. A device between two networks that restricts incoming and outgoing traffic','C. A device that caches Internet data for subsequent use by internal clients','D. A device that enables clients with private IPs to access the Internet'],ans:[1],exp:'A firewall restricts traffic between networks. A router forwards traffic, a caching engine stores Internet data, and a NAT router enables private IP clients to reach the Internet.',domain:'Network Security'},
+  {q:'A switched network has 3 switches each with 3 half-duplex computer ports and 1 full-duplex switch-to-switch port. Which statement is true?',opts:['A. There is one collision domain.','B. There are three collision domains.','C. There are nine collision domains, one per half-duplex connection.','D. There are twelve collision domains.'],ans:[2],exp:'Each half-duplex port on a switch is its own collision domain — nine computers means nine collision domains. Full-duplex links are not subject to collisions.',domain:'Network Implementation'},
+  {q:'Which network device provides authentication, authorization, and accounting for multiple remote access servers using its own account database?',opts:['A. NAS','B. IDS','C. NGFW','D. RADIUS'],ans:[3],exp:'A RADIUS server provides AAA services for remote access servers. NAS, IDS, and NGFW do not provide this type of centralized authentication service.',domain:'Network Security'},
+  {q:'You need a device that can create VLANs AND forward traffic between them. Which device can do this?',opts:['A. Virtual router','B. Multilayer switch','C. Broadband router','D. Load balancer'],ans:[1],exp:'A multilayer switch operates at Layer 2 (creating VLANs) and Layer 3 (routing between VLANs). Virtual routers, broadband routers, and load balancers are Layer 3 only.',domain:'Network Implementation'},
+  {q:'You have network address 10.61.0.0/19. How many bits are allocated to the host identifier?',opts:['A. 5','B. 8','C. 13','D. 21'],ans:[2],exp:'IPv4 addresses have 32 bits. With /19 prefix, 19 bits are network identifier, leaving 32 - 19 = 13 bits for the host identifier.',domain:'Networking Concepts'},
+  {q:'At which OSI layer do protocols responsible for delivering packets to final destinations operate?',opts:['A. Application','B. Session','C. Transport','D. Network','E. Data link'],ans:[3],exp:'IP at the Network layer is responsible for routing data to its final destination. Data link protocols only handle local communications.',domain:'Networking Concepts'},
+  {q:'Which SAN protocols can share a network medium with standard LAN traffic? (Choose all that apply.)',opts:['A. Fibre Channel','B. InfiniBand','C. iSCSI','D. FCoE'],ans:[2,3],multi:true,exp:'iSCSI runs on standard IP networks and FCoE runs on standard Ethernet — both can coexist with LAN traffic. Fibre Channel and InfiniBand require dedicated network media.',domain:'Network Implementation'},
+  {q:'Which Application layer protocols do NOT include a character-based remote login interface? (Choose all that apply.)',opts:['A. Telnet','B. SMTP','C. FTP','D. DNS'],ans:[1,3],multi:true,exp:'SMTP and DNS are Application layer protocols but neither provides a character-based login interface. Telnet provides terminal emulation and FTP provides a command-line file transfer interface.',domain:'Networking Concepts'},
+  {q:'Which statements about switches are true? (Choose all that apply.)',opts:['A. Switches provide internal crossover circuits and uplink ports for hierarchical star topology.','B. Switches are Data link layer devices connecting devices in a star topology.','C. Switches amplify signals out all ports regardless of destination.','D. Switches use IP addresses to identify devices on specific ports.'],ans:[0,1],multi:true,exp:'Switches are Layer 2 devices that connect devices in a star topology using MAC addresses. They provide crossover circuits and uplink ports. They do NOT broadcast to all ports or use IP addresses.',domain:'Networking Concepts'},
+  {q:'For PXE boot deployment using DHCP and TFTP, which firewall ports must be open? (Choose all that apply.)',opts:['A. 64','B. 65','C. 66','D. 67','E. 68','F. 69'],ans:[3,4,5],multi:true,exp:'DHCP uses ports 67 (server) and 68 (client). TFTP uses port 69. Ports 64, 65, and 66 are not used by these protocols.',domain:'Networking Concepts'},
+  {q:'Which tasks will most likely be the change management team\'s responsibility? (Choose all that apply.)',opts:['A. Notifying users of exact change timing','B. Documenting all modifications afterward','C. Authorizing any downtime needed','D. Designating a maintenance window'],ans:[2,3],multi:true,exp:'Change management teams are not responsible for directly implementing changes. They authorize downtime and designate maintenance windows. Notification and documentation are handled by implementers.',domain:'Network Operations'},
+  {q:'In which mode must dual power supplies be running for a server to be fault tolerant?',opts:['A. Individual mode','B. Combined mode','C. Redundant mode','D. Hot backup mode'],ans:[2],exp:'In redundant mode each power supply can provide 100% of the server\'s power, so the server survives a single power supply failure. In combined mode both are needed and failure causes downtime.',domain:'Network Operations'},
+  {q:'In the FQDN www.paris.mydomain.org, which word represents the bottommost layer in the DNS domain hierarchy?',opts:['A. www','B. paris','C. mydomain','D. org'],ans:[1],exp:'Paris is a subdomain within mydomain. Org is the top-level domain. Www is a hostname, not a domain. Paris is the bottommost domain in the hierarchy.',domain:'Network Operations'},
+  {q:'Which protocols use the term "datagram" to describe their data transfer unit? (Choose all that apply.)',opts:['A. TCP','B. IP','C. UDP','D. Ethernet'],ans:[1,2],multi:true,exp:'IP and UDP are connectionless and use the term "datagram." Ethernet uses "frame" and TCP uses "segment."',domain:'Networking Concepts'},
+  {q:'Which element of the CIA triad prevents unauthorized viewing of protected data?',opts:['A. Confidentiality','B. Integrity','C. Availability','D. None of the above'],ans:[0],exp:'Confidentiality prevents unauthorized access to data. Integrity protects against unauthorized modification. Availability ensures authorized users can access data when needed.',domain:'Network Security'},
+  {q:'What is the correct term for a small software release that fixes one specific security vulnerability?',opts:['A. An upgrade','B. A patch','C. A service pack','D. An update'],ans:[1],exp:'A patch is a small targeted fix for a specific issue such as a security vulnerability. Updates, upgrades, and service packs are larger and may include new features.',domain:'Network Operations'},
+  {q:'Why are wires twisted together in twisted-pair cable? (Choose all that apply.)',opts:['A. The twists prevent crosstalk between adjacent wire pairs.','B. The twists make it easier to attach connectors.','C. The twists extend the bend radius.','D. The twists limit EMI effects on signals.','E. The twists prevent data collisions.'],ans:[0,3],multi:true,exp:'Twisting wire pairs prevents crosstalk between adjacent pairs and provides resistance to electromagnetic interference (EMI). Twists have no effect on connectors, bend radius, or collisions.',domain:'Network Implementation'},
+  {q:'Which Linux/Unix tool displays performance information about currently running processes?',opts:['A. netstat','B. dig','C. perfmon','D. top'],ans:[3],exp:'The "top" utility displays performance info about running processes. Netstat shows network connections. Dig generates DNS queries. Perfmon is Windows-only.',domain:'Network Troubleshooting'},
+  {q:'You need email services hosted on a provider\'s public cloud servers. Which service model applies?',opts:['A. PaaS','B. SaaS','C. IaaS','D. All of the above'],ans:[1],exp:'SaaS provides access to a specific application (email) running on the provider\'s servers. You manage nothing except some application settings.',domain:'Networking Concepts'},
+  {q:'Which SIEM process searches logs on multiple computers for specific criteria during specific time frames?',opts:['A. Data aggregation','B. Correlation','C. Retention','D. Forensic analysis'],ans:[3],exp:'Forensic analysis in SIEM searches logs across multiple systems for specific information based on criteria and time periods. Aggregation consolidates logs, correlation links events, retention stores data.',domain:'Network Operations'},
+  {q:'When a DHCP client starts, which type of transmission does it use to locate DHCP servers?',opts:['A. Broadcast','B. Unicast','C. Multicast','D. Anycast'],ans:[0],exp:'DHCP clients broadcast DHCPDISCOVER messages because they have no way to know DHCP server addresses yet. Unicast, multicast, and anycast cannot be used for initial DHCP contact.',domain:'Networking Concepts'},
+  {q:'Which technology enables VPN users to connect using only a web browser?',opts:['A. VPN concentrator','B. DMVPN','C. SIP trunk','D. MPLS','E. Clientless VPN'],ans:[4],exp:'A clientless VPN uses a browser to create an encrypted tunnel without client software. VPN concentrators handle multiple client connections. DMVPN creates mesh topologies.',domain:'Networking Concepts'},
+  {q:'You are installing wireless where 2.4GHz phones are common. Which wireless technologies avoid 2.4GHz interference? (Choose all that apply.)',opts:['A. 802.11b','B. 802.11g','C. 802.11ac','D. 802.11a','E. 802.11n'],ans:[2,3],multi:true,exp:'802.11ac and 802.11a both use only 5GHz and will not experience 2.4GHz phone interference. 802.11b, g, and n can use 2.4GHz and would be affected.',domain:'Network Implementation'},
+  {q:'Which of the following is another term for a switch?',opts:['A. Multicast hub','B. Multiport repeater','C. Multiport bridge','D. Multihomed router'],ans:[2],exp:'A switch is essentially a multiport bridge — it processes frames by MAC address per port. Multiport repeater means a hub. Multihomed router is redundant since all routers are multihomed.',domain:'Networking Concepts'},
+  {q:'You connect a laptop to a router console port to manage it. What type of access is this?',opts:['A. Client-to-site','B. In-band','C. BYOD','D. Out-of-band'],ans:[3],exp:'Out-of-band management does not go through the production network. Console port access bypasses the network entirely. In-band management goes through the production network.',domain:'Network Operations'},
+  {q:'What is the primary difference between single sign-on (SSO) and same sign-on?',opts:['A. SSO uses one username/password; same sign-on uses one username and multiple passwords.','B. SSO requires credentials only once; same sign-on requires credentials for each resource.','C. SSO requires MFA; same sign-on requires only a password.','D. SSO uses one credential set; same sign-on requires multiple credential sets.'],ans:[1],exp:'SSO requires credentials only once to access multiple resources. Same sign-on uses a single credential set but requires the user to log on separately for each resource.',domain:'Network Security'},
+  {q:'A laptop requires a fingerprint scan before use as part of MFA. Which type of technology is this?',opts:['A. Tamper detection','B. Biometrics','C. Hand geometry','D. Pattern recognition'],ans:[1],exp:'Biometrics identifies users by physical characteristics such as fingerprints, retinal patterns, and voice prints. This is the technology used by the fingerprint scanner.',domain:'Network Security'},
+  {q:'Which of the following are NOT correctly formatted IPv6 addresses? (Choose all that apply.)',opts:['A. fe00::c955:c944:acdd:3fcb','B. fe00::b491:cf79:p493:23ff','C. 2001:0:44ef68:23eb:99fe:72bec6:ea5f','D. 2001:0:49e6:39ff:8cf5:6812:ef56'],ans:[1,2],multi:true,exp:'Option B contains "p", a non-hex digit. Option C has blocks larger than 16 bits. Option A is valid with double colon replacing three zero blocks. Option D has 7 blocks which is valid.',domain:'Networking Concepts'},
+  {q:'Which physical security mechanism can either fail close or fail open during a power failure?',opts:['A. Door locks','B. Motion detectors','C. Honeypots','D. Video cameras'],ans:[0],exp:'Fail close and fail open refer to the default position of door locks during a power failure — a critical safety trade-off. These terms do not apply to motion detectors, cameras, or honeypots.',domain:'Network Security'},
+  {q:'After terminating a disgruntled employee, the IT director has you disable accounts and change passwords. Which term describes this concern?',opts:['A. Logic bombs','B. Internal threats','C. Rogue devices','D. Social engineering','E. External threats'],ans:[1],exp:'An insider threat describes when an individual exploits access or knowledge gained during their employment. External threats come from outside the organization.',domain:'Network Security'},
+  {q:'Ralph pings 127.0.0.1 and it succeeds. What has he proven?',opts:['A. The network adapter is functioning.','B. The computer IP address is correct.','C. The TCP/IP stack is loaded and functioning.','D. Nothing at all.'],ans:[2],exp:'127.0.0.1 is the loopback address. Success confirms the TCP/IP stack is functioning. Traffic never reaches the adapter or network so it does not confirm adapter function or correct IP.',domain:'Network Troubleshooting'},
+  {q:'Which of the following are NOT examples of MFA? (Choose all that apply.)',opts:['A. A system requiring a smartcard and a PIN','B. A system using an external RADIUS server','C. A system requiring two passwords','D. A system requiring a password and retinal scan'],ans:[1,2],multi:true,exp:'Using a RADIUS server does not constitute MFA. Requiring two passwords is not MFA because both factors are the same type. MFA requires two different authentication methods.',domain:'Network Security'},
+  {q:'A user can access local systems but not the Internet. The routing table has no default gateway. What explains this?',opts:['A. No loopback address specified.','B. No DNS server address specified.','C. No default gateway address specified.','D. Two routes to the 224.0.0.0 network.'],ans:[2],exp:'Internet access requires a default gateway entry (0.0.0.0) in the routing table. Without it, the workstation cannot route traffic to external networks.',domain:'Network Troubleshooting'},
+  {q:'Which statements about single-mode vs multimode fiber are true? (Choose all that apply.)',opts:['A. Multimode uses LED; single-mode uses laser.','B. Multimode spans longer distances than single-mode.','C. Multimode has smaller core than single-mode.','D. Multimode has smaller bend radius than single-mode.','E. Multimode requires ground; single-mode does not.'],ans:[0,3],multi:true,exp:'Multimode uses LED light and has a smaller bend radius. Single-mode uses laser, has a smaller core, and spans longer distances. Fiber is non-conductive and needs no ground.',domain:'Network Implementation'},
+  {q:'A user swipes a smartcard and types a password to log on. Which action is the user performing?',opts:['A. Auditing','B. Accounting','C. Authorization','D. Authentication'],ans:[3],exp:'Authentication confirms a user\'s identity. The user is presenting two factors — a smartcard (something they have) and a password (something they know).',domain:'Network Security'},
+  {q:'Which cabling topologies have never been used by standard Ethernet? (Choose all that apply.)',opts:['A. Bus','B. Ring','C. Star/hub and spoke','D. Mesh'],ans:[1,3],multi:true,exp:'Ethernet has never used ring or mesh topologies. Early Ethernet used bus topology with coaxial cable. Later standards use star/hub-and-spoke with twisted-pair or fiber.',domain:'Network Implementation'},
+  {q:'Which steps can prevent unauthorized wireless access? (Choose all that apply.)',opts:['A. Use RADIUS authentication.','B. Place AP in screened subnet.','C. Disable SSID broadcasting.','D. Implement MAC address filtering.'],ans:[2,3],multi:true,exp:'Disabling SSID broadcasts hides the network from discovery. MAC filtering allows only known devices to connect. RADIUS is for remote access servers. Moving AP to screened subnet does not prevent wireless access.',domain:'Network Security'},
+  {q:'Which is a fault tolerance mechanism for the default gateway on a TCP/IP LAN?',opts:['A. OSPF','B. FHRP','C. STP','D. NAT'],ans:[1],exp:'FHRP (First Hop Redundancy Protocol) allows other routers to take over the default gateway IP if the primary router fails. OSPF is routing, STP prevents loops, NAT translates addresses.',domain:'Network Implementation'},
+  {q:'Multiprotocol switches perform functions at which two OSI layers? (Choose all that apply.)',opts:['A. Application','B. Presentation','C. Session','D. Transport','E. Network','F. Data link','G. Physical'],ans:[4,5],multi:true,exp:'Switches primarily operate at the Data link layer using MAC addresses. Multilayer switches also provide routing at the Network layer using IP addresses.',domain:'Networking Concepts'},
+  {q:'An AP has a hidden SSID and uses WPA3. What must you do to connect?',opts:['A. Select SSID from list; auto-detect security.','B. Type SSID manually; select WPA3 from options.','C. Type SSID manually; auto-detect security.','D. Select SSID from list; select WPA3 from options.'],ans:[1],exp:'A hidden SSID does not appear in available network lists so you must type it manually. Security protocols are also not auto-detected for hidden networks so you must select WPA3.',domain:'Network Implementation'},
+  {q:'Which IEEE standard uses CSMA/CA for media access control?',opts:['A. 802.3','B. 802.1X','C. 802.11ac','D. All of the above'],ans:[2],exp:'All 802.11 wireless standards use CSMA/CA. IEEE 802.3 (Ethernet) uses CSMA/CD. 802.1X defines an authentication mechanism and has no media access control requirement.',domain:'Network Implementation'},
+  {q:'Which term describes the equipment room housing backbone switches and demarcation points?',opts:['A. MTBF','B. IDF','C. RDP','D. MDF'],ans:[3],exp:'The Main Distribution Frame (MDF) contains demarcation points and backbone switches. An IDF is for localized horizontal cabling to backbone connections.',domain:'Network Implementation'},
+  {q:'You allow wireless authentication only when signal exceeds a specified level. Which security term applies?',opts:['A. Geofencing','B. Local authentication','C. Motion detection','D. Port security'],ans:[0],exp:'Geofencing limits network access based on the client\'s physical location. Requiring strong signal strength to connect is signal-strength-based geofencing that prevents outside users.',domain:'Network Security'},
+  {q:'Which is the most effective method to prevent social engineering attacks?',opts:['A. Install a firewall.','B. Install antivirus software.','C. Implement user education and corporate policies.','D. Use IPsec to encrypt all traffic.'],ans:[2],exp:'Social engineering exploits human psychology — no hardware or software can stop it. Only user education and strong policies are effective countermeasures.',domain:'Network Security'},
+  {q:'What is the default subnet mask for an IPv4 Class B network?',opts:['A. 255.255.255.255','B. 255.255.255.0','C. 255.255.0.0','D. 255.0.0.0'],ans:[2],exp:'Class B uses the first two octets as the network identifier giving a default mask of 255.255.0.0. Class A uses 255.0.0.0 and Class C uses 255.255.255.0.',domain:'Networking Concepts'},
+  {q:'Alice added crimped metal tags, locked clear cabinets, and transparent conduits. Which security measure is this?',opts:['A. Geofencing','B. Tamper detection','C. Port security','D. Asset tracking'],ans:[1],exp:'These measures make physical tampering immediately visible — this is tamper detection. Asset tracking locates hardware. Geofencing is wireless-based. Port security protects switch ports.',domain:'Network Security'},
+  {q:'An admin site uses encryption and port 12354. Which URL accesses it from the Internet?',opts:['A. http://www.adatum.com:12354','B. www.adatum.com','C. www.adatum.com:80','D. https://www.adatum.com:12354'],ans:[3],exp:'The HTTPS prefix is required because the site uses encryption. The non-standard port 12354 must be appended to the domain name.',domain:'Networking Concepts'},
+  {q:'You disable SSID broadcast but outsiders still access the network. Why is SSID suppression weak?',opts:['A. Every AP has the SSID printed on its label.','B. Attackers can guess SSIDs easily.','C. Attackers can read the SSID from captured packets.','D. Attackers can connect without the SSID.'],ans:[2],exp:'Wireless devices transmit the SSID in their packets. Attackers can capture these packets and read the SSID. SSID suppression only prevents casual discovery.',domain:'Network Security'},
+  {q:'In which cloud model does one organization function as both provider and consumer?',opts:['A. Private cloud','B. Public cloud','C. Ad hoc cloud','D. Hybrid cloud'],ans:[0],exp:'In a private cloud the organization that uses cloud services also owns the infrastructure. In public cloud one organization provides and another consumes. Hybrid combines both.',domain:'Networking Concepts'},
+  {q:'The terms on-boarding and off-boarding are typically associated with which type of policy?',opts:['A. Incident response','B. Identity management','C. Inventory management','D. Data loss prevention'],ans:[1],exp:'On-boarding and off-boarding are identity management processes that add or remove users from the IAM system, granting or revoking their access privileges.',domain:'Network Operations'},
+  {q:'Split tunneling in VPNs provides which advantages? (Choose all that apply.)',opts:['A. Additional data integrity protection','B. Access to local network devices while on VPN','C. Faster transmission through multiplexing','D. Conservation of VPN bandwidth'],ans:[1,3],multi:true,exp:'Split tunneling routes only VPN-bound traffic through the tunnel, conserving bandwidth. It also allows access to local network resources. It does not improve integrity or add multiplexing.',domain:'Networking Concepts'},
+  {q:'Which are valid reasons NOT to disable unused switch ports? (Choose all that apply.)',opts:['A. Unused ports are not patched into wall jacks.','B. The datacenter is secured from unauthorized access.','C. The switch uses a MAC-based ACL.','D. Leaving ports enabled helps on-board new users.'],ans:[1,2],multi:true,exp:'If the datacenter is physically secure, no one can plug into unused ports. A MAC-based ACL blocks unknown devices. The other options are not valid justifications.',domain:'Network Security'},
+  {q:'Which security mechanisms fall into the category of deception technologies?',opts:['A. Honeypots and honeynets','B. Root guards','C. Screened subnets','D. Geofencing'],ans:[0],exp:'Honeypots and honeynets are deception technologies designed to lure attackers. Root guards, screened subnets, and geofencing are real defensive mechanisms, not deceptions.',domain:'Network Security'},
+  {q:'Which network devices can employ ACLs to restrict access? (Choose all that apply.)',opts:['A. Routers','B. Servers','C. Switches','D. Hubs','E. Wireless access points'],ans:[0,1,2,4],multi:true,exp:'Routers, servers, switches, and wireless APs can all use ACLs to control access. Hubs are Physical layer devices with no access control capability.',domain:'Network Security'},
+  {q:'Which term is NOT associated with Data link layer communications?',opts:['A. Administrative distance','B. Spanning Tree Protocol','C. Maximum transmission unit','D. Jumbo frames'],ans:[0],exp:'Administrative distance is a Network layer (Layer 3) routing concept. STP, MTU, and jumbo frames are all Data link layer concepts.',domain:'Networking Concepts'},
+  {q:'Which statements about DHCP snooping are true? (Choose all that apply.)',opts:['A. DHCP snooping is implemented in network switches.','B. DHCP snooping prevents DNS cache poisoning.','C. DHCP snooping detects rogue DHCP servers.','D. DHCP snooping drops DHCP messages on incorrect ports.'],ans:[0,2,3],multi:true,exp:'DHCP snooping runs on switches, detects rogue DHCP servers, and drops DHCP messages on untrusted ports. It does not prevent DNS cache poisoning.',domain:'Network Security'},
+  {q:'A user cannot reach a server but no others are affected. You reproduce the issue. What is the next step?',opts:['A. Examine the server\'s configuration.','B. Verify the local router is forwarding traffic.','C. Confirm the client switch is functioning.','D. Test another computer on the same segment.'],ans:[3],exp:'Since the problem is isolated to one user, test another computer on the same segment to determine whether the issue is client-specific or segment-wide.',domain:'Network Troubleshooting'},
+  {q:'What best describes a captive portal on a wireless network?',opts:['A. A ransomware page demanding payment to unlock data','B. A dedicated switch port for switch-to-switch connections','C. A web page users interact with before gaining wireless access','D. Two doors with an airlock for physical security'],ans:[2],exp:'A captive portal is a web page that wireless users must interact with before gaining network access — typically used for guest networks requiring terms acceptance.',domain:'Network Security'},
+  {q:'After identifying a problem, which step comes next in the troubleshooting methodology?',opts:['A. Verify full system functionality.','B. Establish a theory of probable cause.','C. Establish a plan of action.','D. Implement the solution.'],ans:[1],exp:'CompTIA troubleshooting: 1-Identify, 2-Establish theory, 3-Test theory, 4-Plan of action, 5-Implement, 6-Verify, 7-Document.',domain:'Network Troubleshooting'},
+  {q:'Which ports are used by HTTP and HTTPS by default? (Choose all that apply.)',opts:['A. 25','B. 80','C. 110','D. 443'],ans:[1,3],multi:true,exp:'HTTP uses port 80 and HTTPS uses port 443. Port 25 is SMTP and port 110 is POP3.',domain:'Networking Concepts'},
+  {q:'Which criteria do load balancers typically use to direct traffic? (Choose all that apply.)',opts:['A. Fastest response time','B. Fastest processor','C. Lightest load','D. Next in rotation'],ans:[0,2,3],multi:true,exp:'Load balancers use response time, current load, and round-robin rotation. Processor speed is a fixed hardware attribute and is not typically used.',domain:'Network Implementation'},
+  {q:'A user cannot reach local or Internet hosts but no one else is affected. Where is the problem most likely?',opts:['A. The router','B. The DNS server','C. The proxy server','D. The user\'s computer configuration'],ans:[3],exp:'When only one user is affected across all network destinations, the problem is almost certainly the user\'s own computer configuration rather than any shared infrastructure.',domain:'Network Troubleshooting'},
+  {q:'How does VLAN hopping enable an attacker to access different VLANs?',opts:['A. Using 802.1Q spoofing to access different VLANs','B. Scrambling switch patch panel connections','C. Changing the native VLAN on a switch','D. Renaming the default VLAN on a switch'],ans:[0],exp:'VLAN hopping uses 802.1Q double-tagging or switch spoofing to send traffic across VLAN boundaries that should be isolated.',domain:'Network Security'},
+  {q:'Which problem should receive the LOWEST priority at the help desk?',opts:['A. A fatal error causing a single computer to fail','B. A mission-critical backbone router failure affecting entire network','C. An application server problem affecting a single LAN','D. A call center problem affecting an entire department'],ans:[0],exp:'Priority is based on scope and impact. A single computer failure has the smallest impact. Mission-critical network-wide failures receive highest priority.',domain:'Network Troubleshooting'},
+  {q:'You cannot reach a DNS server on UDP 53 but ping succeeds. What are possible causes? (Choose all that apply.)',opts:['A. Your TCP/IP host settings are misconfigured.','B. The router will not forward this datagram.','C. A firewall is blocking UDP port 53.','D. The DNS process on the server is not running.','E. The DNS server TCP/IP settings are misconfigured.'],ans:[2,3],multi:true,exp:'Since ping succeeds the server is reachable. A firewall blocking UDP 53 or the DNS service not running are valid causes. TCP/IP misconfiguration would prevent ping from working.',domain:'Network Troubleshooting'},
+  {q:'Which switch type performs a CRC check on the entire frame before forwarding?',opts:['A. Packet filtering','B. Cut-through','C. Source route','D. Store-and-forward'],ans:[3],exp:'Store-and-forward switches receive the entire frame and perform CRC verification before forwarding. Cut-through switches read only the destination MAC address without CRC checking.',domain:'Network Implementation'},
+  {q:'Which attack type does NOT specifically target wireless clients?',opts:['A. Logic bomb','B. Deauthentication','C. Evil twin','D. Rogue AP'],ans:[0],exp:'A logic bomb is malicious code triggered by conditions — not a wireless attack. Deauthentication attacks, evil twin APs, and rogue APs all specifically target wireless clients.',domain:'Network Security'},
+  {q:'All 2.4GHz channels are congested. What should you do to fix wireless performance?',opts:['A. Configure the AP to suppress SSID broadcasts.','B. Configure all devices to use 5GHz.','C. Upgrade all devices to latest firmware.','D. Configure all devices to use WPA3 with AES.'],ans:[1],exp:'Moving to the less congested 5GHz band is the correct solution. SSID suppression, firmware upgrades, and changing encryption do not address channel congestion.',domain:'Network Implementation'},
+  {q:'Which Windows command produced ARP table output showing IP-to-MAC address mappings?',opts:['A. arp','B. ping','C. tracert','D. netstat'],ans:[0],exp:'The "arp" command displays the ARP cache mapping IP addresses to MAC (Physical) addresses. Ping tests reachability, tracert traces paths, netstat shows connections.',domain:'Network Troubleshooting'},
+  {q:'Your boss asks for pliers but you hand him the butt set. What does a butt set actually do?',opts:['A. Connects to punchdown block pins to test telephone circuits or place calls.','B. Generates a tone at one end detectable at the other end.','C. Crimps RJ-45 connectors onto cable ends.','D. Detects and measures electrical current in copper cable.'],ans:[0],exp:'A butt set connects to punchdown block pins for testing telephone circuits or placing calls. A toner generates tones, a crimper attaches connectors, and a multimeter measures current.',domain:'Network Troubleshooting'},
+  {q:'What is the name of the tool used to terminate wires into punchdown blocks?',opts:['A. Crimper','B. Punchdown tool','C. Butt set','D. Toner and probe'],ans:[1],exp:'A punchdown tool terminates wire into punchdown blocks like 110 or 66 blocks in patch panels. A crimper attaches connectors. A butt set tests phone circuits. A toner traces cables.',domain:'Network Troubleshooting'},
+  {q:'Which wireless standard is faster than 802.11g and backward compatible with 802.11g?',opts:['A. 802.11','B. Bluetooth','C. 802.11ac','D. 802.11a','E. 802.11n'],ans:[4],exp:'802.11n is faster than 802.11g\'s 54 Mbps and backward compatible with it on 2.4GHz. 802.11ac is faster but 5GHz-only and not backward compatible with 802.11g.',domain:'Network Implementation'},
+  {q:'On which systems can you run the traceroute command? (Choose all that apply.)',opts:['A. A Cisco router','B. A Linux web server','C. A CSU/DSU console','D. A Windows firewall'],ans:[0,1],multi:true,exp:'"traceroute" runs on Cisco routers (IOS) and Linux systems. Windows uses "tracert". A CSU/DSU has its own management interface. A Windows firewall uses tracert not traceroute.',domain:'Network Troubleshooting'},
+  {q:'Which topologies are used by IEEE 802.11 wireless LANs? (Choose all that apply.)',opts:['A. Bus','B. Spine and leaf','C. Ad hoc','D. Star/hub and spoke','E. Infrastructure'],ans:[2,3,4],multi:true,exp:'802.11 uses ad hoc (peer-to-peer), infrastructure (clients to AP), and star/hub-and-spoke (multiple clients to central AP) topologies. Bus and spine-and-leaf are not wireless topologies.',domain:'Networking Concepts'},
+  {q:'Which SNMP version uses two separate unencrypted community strings?',opts:['A. SNMPv1','B. SNMPv2','C. SNMPv2c','D. SNMPv3'],ans:[2],exp:'SNMPv2c uses two unencrypted community strings (read and write). SNMPv3 adds authentication and encryption. SNMPv1 uses a single community string.',domain:'Network Operations'},
+  {q:'A home user has a valid IP, mask, and gateway but cannot reach the network or Internet. Most likely cause?',opts:['A. Network address cannot include zero.','B. Incorrect subnet mask.','C. Network cable is damaged or unplugged.','D. Incorrect default gateway address.'],ans:[2],exp:'The IP configuration appears correct. When settings are correct but connectivity fails entirely, a damaged or unplugged cable is the most likely physical cause.',domain:'Network Troubleshooting'},
+  {q:'Which protocol prevents switching loops by placing redundant ports into blocking state?',opts:['A. NAT','B. RIP','C. VLAN','D. STP'],ans:[3],exp:'Spanning Tree Protocol (STP) prevents Layer 2 loops by blocking redundant switch ports. NAT translates addresses, RIP routes traffic, VLANs segment networks.',domain:'Network Implementation'},
+  {q:'Users on one LAN cannot access other LANs or the Internet but can reach their own LAN. What is the most likely failure?',opts:['A. The switch on the problem LAN','B. The Internet router','C. The router connecting the LAN to the backbone','D. The backbone cable'],ans:[2],exp:'Local communication works (switch is fine) but inter-network communication fails. The router connecting that LAN to the backbone is the most likely failure point.',domain:'Network Troubleshooting'},
+  {q:'You agree on 99.9% service reliability with a provider. Which document includes this language?',opts:['A. AUP','B. SLA','C. BYOD','D. NDA'],ans:[1],exp:'A Service Level Agreement (SLA) defines the agreed-upon service reliability level between provider and customer. AUP covers acceptable use, BYOD covers device policies, NDA covers confidentiality.',domain:'Network Operations'},
+  {q:'Which devices split a network into multiple collision domains while keeping a single broadcast domain? (Choose all that apply.)',opts:['A. Switch','B. Bridge','C. Router','D. Firewall'],ans:[0,1],multi:true,exp:'Switches and bridges create separate collision domains per port while maintaining a single broadcast domain. Routers and firewalls create separate broadcast domains.',domain:'Networking Concepts'},
+  {q:'You set up a screened subnet but cannot access it from internal network. Which task is NOT required?',opts:['A. Change MAC addresses.','B. Change IP addresses.','C. Update DNS records.','D. Change default gateway addresses.'],ans:[0],exp:'MAC addresses do not need to change for a screened subnet. You need correct IP addresses, updated DNS records, and correct default gateway configurations.',domain:'Network Implementation'},
+  {q:'Using a toner and probe, you detect a tone on two pins when applying the toner to one pin. What fault is this?',opts:['A. Split pair','B. Open','C. Short','D. Crosstalk'],ans:[2],exp:'A short occurs when two wires are in contact, making a signal appear on both pins. An open means no continuity. Crosstalk is interference between adjacent pairs.',domain:'Network Troubleshooting'},
+  {q:'A user calls every time an elevator motor activates nearby. What is causing the network problem?',opts:['A. Bottleneck','B. EMI','C. Latency','D. Crosstalk'],ans:[1],exp:'Electromagnetic interference (EMI) from the elevator motor is causing intermittent network disruption. Network equipment near elevator machinery rooms commonly experiences EMI.',domain:'Network Troubleshooting'},
+  {q:'Active-active server configuration provides which advantages over active-passive? (Choose all that apply.)',opts:['A. Fault tolerance','B. Load balancing','C. Data encapsulation','D. Increased performance'],ans:[1,3],multi:true,exp:'Active-active provides load balancing and increased performance because both servers handle requests simultaneously. Both configurations provide fault tolerance. Neither relates to data encapsulation.',domain:'Network Operations'},
+  {q:'The SSID is not visible but other networks are. The network uses WPA3. What should you do first?',opts:['A. Move closer to the access point.','B. Move away from microwave interference.','C. Type in the WPA3 passphrase.','D. Type the SSID manually.'],ans:[3],exp:'You must type the SSID manually before anything else because it is hidden. Proximity and interference are not issues since other networks are visible.',domain:'Network Implementation'},
+  {q:'You switch an AP to 5GHz. Some 802.11g laptops cannot connect. What is the fix?',opts:['A. 802.11g does not support 5GHz. Replace the adapters in those laptops.','B. 5GHz does not support auto channel selection. Configure each laptop manually.','C. 5GHz does not support MIMO. Replace the AP with an 802.11g unit.','D. 802.11g does not support 5GHz. Configure the AP to also support 2.4GHz.'],ans:[3],exp:'802.11g only operates on 2.4GHz so those laptops cannot connect to a 5GHz-only AP. The fix is enabling 2.4GHz support on the access point (dual-band), not replacing laptop adapters.',domain:'Network Implementation'},
+  {q:'Which DNS record type specifies authoritative DNS servers for a zone?',opts:['A. PTR','B. SRV','C. MX','D. NS'],ans:[3],exp:'NS (Name Server) records identify the authoritative DNS servers for a zone. PTR is for reverse DNS lookups, SRV is for service location, MX is for mail servers.',domain:'Networking Concepts'},
+  {q:'All non-overlapping 2.4GHz channels are congested and 5GHz is not an option. What should you do?',opts:['A. Use channel 10.','B. Use channel 9.','C. Use channel 5.','D. Use channel 2.'],ans:[3],exp:'When all non-overlapping channels are congested, choosing a less-used adjacent channel like 2 may help. No channel will be fully interference-free but a less populated one is better.',domain:'Network Implementation'},
+  {q:'A fire inspector asks for documentation on chemicals and equipment in the datacenter. Which document is this?',opts:['A. MSDS','B. ESD','C. NDA','D. BYOD'],ans:[0],exp:'Material Safety Data Sheets (MSDS) document chemicals and hazardous materials including datacenter equipment. ESD is electrostatic discharge, NDA is non-disclosure, BYOD covers device policies.',domain:'Network Operations'},
+  {q:'Which PoE specification supplies power using spare wire pairs on a 100Base-TX network?',opts:['A. Alternative A','B. 4PPoE','C. Alternative B','D. All of the above'],ans:[2],exp:'PoE Alternative B uses spare wire pairs (pairs 1 and 2) in 100Base-TX cable for power delivery. Alternative A uses data pairs. 4PPoE uses all four pairs.',domain:'Network Implementation'},
+  {q:'Which statements about SAN vs NAS differences are NOT true? (Choose all that apply.)',opts:['A. NAS provides a filesystem; SAN does not.','B. NAS devices typically contain integrated iSCSI targets.','C. NAS provides file-level access; SAN provides block-level access.','D. SAN has an OS; NAS does not.'],ans:[1,3],multi:true,exp:'NAS devices do NOT typically contain iSCSI targets. NAS devices DO have an operating system. The other statements correctly describe differences between NAS and SAN.',domain:'Network Implementation'},
+  {q:'You deploy WPA-PSK and MAC filtering without additional servers. What is true about this arrangement?',opts:['A. Do not disable SSID broadcasts — it prevents users from connecting.','B. The configuration is as secure as possible with this equipment.','C. Use WPA3 instead — it is more resistant to dictionary attacks.','D. Do not use MAC filtering — it exposes MAC addresses.'],ans:[2],exp:'WPA3 uses SAE which resists dictionary attacks better than WPA-PSK. With no additional servers, WPA3-PSK is a better choice than WPA2-PSK.',domain:'Network Security'},
+  {q:'Which connector types are used with fiber-optic cables? (Choose all that apply.)',opts:['A. DB-9','B. SC','C. BNC','D. ST','E. MPO','F. RJ-11'],ans:[1,3,4],multi:true,exp:'SC (Subscriber Connector), ST (Straight Tip), and MPO (Multi-fiber Push On) are fiber connectors. DB-9 is serial, BNC is coaxial, RJ-11 is telephone.',domain:'Network Implementation'},
+  {q:'Which of the following are available as IoT devices?',opts:['A. Refrigerators','B. Doorbells','C. Thermostats','D. Speakers','E. All of the above'],ans:[4],exp:'IoT devices include virtually any internet-connected device. Refrigerators, doorbells, thermostats, and speakers are all available as IoT devices.',domain:'Networking Concepts'},
+  {q:'Which OSI layers apply to cabling and network topology?',opts:['A. Application and Transport','B. Transport and Network','C. Network and Data link','D. Data link and Physical'],ans:[3],exp:'Cabling is defined at the Physical layer. Network topology is defined at the Data link layer. Together they govern cabling and topology.',domain:'Networking Concepts'},
+  {q:'A workstation shows IPv4 address 169.254.x.x in ipconfig. What is the most likely explanation?',opts:['A. DNS server addresses are incorrect.','B. Default Gateway address is missing.','C. Subnet Mask value is incorrect.','D. The DHCP scope is exhausted.'],ans:[3],exp:'169.254.x.x is APIPA — assigned when a DHCP client cannot reach a DHCP server. When one client shows APIPA and others are fine, the DHCP scope is likely exhausted.',domain:'Network Troubleshooting'},
+  {q:'A user has intermittent problems accessing local servers and websites. Which potential problem can you rule out immediately?',opts:['A. Malfunctioning DNS server','B. Duplicate MAC addresses','C. Duplicate IP addresses','D. Malfunctioning router'],ans:[0],exp:'If the user accesses local servers by IP (not name) and still has issues, DNS is not the cause. Duplicate MACs, IPs, or router failure could cause intermittent problems.',domain:'Network Troubleshooting'},
+  {q:'After disabling a rogue DHCP server, which commands must you run on clients? (Choose all that apply.)',opts:['A. ipconfig /dump','B. ipconfig /lease','C. ipconfig /release','D. ipconfig /renew','E. ipconfig /discard'],ans:[2,3],multi:true,exp:'Run "ipconfig /release" to drop the rogue lease, then "ipconfig /renew" to get a new lease from the authorized server. The other options are not valid ipconfig commands.',domain:'Network Troubleshooting'},
+  {q:'What best describes the difference between east-west and north-south datacenter traffic?',opts:['A. East-west is switch-to-switch; north-south is switch-to-router.','B. East-west is between same OSI layers; north-south is between OSI layers.','C. East-west stays within the datacenter; north-south does not.','D. East-west is backbone traffic; north-south is traffic to end systems.'],ans:[2],exp:'East-west traffic flows between servers within the datacenter. North-south traffic flows between the datacenter and external users or networks.',domain:'Networking Concepts'},
+  {q:'Which Windows command produced the output showing active TCP connections with local and foreign addresses?',opts:['A. arp','B. ping','C. tracert','D. netstat','E. hostname'],ans:[3],exp:'"netstat" displays active connections with protocol, local address, foreign address, and state. ARP shows MAC mappings, ping tests reachability, tracert traces paths, hostname shows computer name.',domain:'Network Troubleshooting'},
+];
+
+
+/* ══════════════════════════════════════
+   STATE
+══════════════════════════════════════ */
+let sessionQ = [];
+let curQ = 0;
+let answers = [];
+let revealed = [];
+let correct = 0, wrong = 0;
+let selectedTest = 1;
+let selectedCount = 10;
+let selectedTime = 0;
+let timerInterval = null;
+let timeLeft = 0;
+
+/* ══════════════════════════════════════
+   SETUP
+══════════════════════════════════════ */
+function selectCount(el, n) {
+  document.querySelectorAll('#q-count-grid .opt-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedCount = n;
+}
+function selectTimer(el, t) {
+  document.querySelectorAll('#timer-grid .opt-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedTime = t;
+}
+function selectTest(el, t) {
+  selectedTest = t;
+  document.querySelectorAll('#test-select-grid .opt-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  // Update question count options based on pool size
+  const poolSize = t === 1 ? 129 : t === 2 ? 100 : 229;
+  // Update "All" button label
+  const allBtn = document.getElementById('all-q-btn');
+  if (allBtn) {
+    allBtn.querySelector('.ob-val').textContent = 'All';
+    allBtn.querySelector('.ob-lbl').textContent = poolSize + ' Qs';
+    allBtn.dataset.count = poolSize;
+  }
+  // Update session title label on results
+  const lbl = document.getElementById('res-label');
+  if (lbl) lbl.textContent = t === 'both' ? 'Combined Practice Exam Complete' : `Practice Test ${t} Complete`;
+}
+
+function toggleSessionBar() {
+  const body = document.getElementById('session-bar-body');
+  const chev = document.getElementById('bar-chevron');
+  body.classList.toggle('open');
+  chev.classList.toggle('open');
+}
+
+function startExam() {
+  const pool = selectedTest === 1 ? ALL_Q : selectedTest === 2 ? PT2_Q : [...ALL_Q, ...PT2_Q];
+  const shuffled = [...pool].sort(() => Math.random() - 0.5);
+  sessionQ = shuffled.slice(0, Math.min(selectedCount, pool.length));
+  curQ = 0;
+  answers = new Array(sessionQ.length).fill(null);
+  revealed = new Array(sessionQ.length).fill(false);
+  correct = 0; wrong = 0;
+
+  document.getElementById('sc-total').textContent = sessionQ.length;
+  document.getElementById('session-q-pill').textContent = sessionQ.length + ' Qs';
+  document.getElementById('sbi-total').textContent = sessionQ.length;
+
+  if (selectedTime > 0) {
+    timeLeft = selectedTime;
+    const tLabel = formatTime(selectedTime);
+    document.getElementById('session-t-pill').textContent = '⏱ ' + tLabel;
+    document.getElementById('sbi-timer').textContent = tLabel;
+    document.getElementById('sbi-mode').textContent = 'Timed';
+    document.getElementById('timer-pill').style.display = 'inline-block';
+    document.getElementById('timer-pill').textContent = tLabel;
+    startTimer();
+  } else {
+    document.getElementById('session-t-pill').textContent = 'Untimed';
+    document.getElementById('sbi-timer').textContent = '∞';
+    document.getElementById('sbi-mode').textContent = 'Untimed';
+    document.getElementById('timer-pill').style.display = 'none';
+  }
+
+  document.getElementById('setup-screen').style.display = 'none';
+  document.getElementById('exam-screen').style.display = 'block';
+  renderQuestion();
+  updateScoreboard();
+}
+
+/* ══════════════════════════════════════
+   TIMER
+══════════════════════════════════════ */
+function startTimer() {
+  clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    const pill = document.getElementById('timer-pill');
+    const tStr = formatTime(timeLeft);
+    pill.textContent = tStr;
+    document.getElementById('session-t-pill').textContent = '⏱ ' + tStr;
+    pill.className = 's-pill timer-pill';
+    if (timeLeft <= 60) pill.classList.add('danger');
+    else if (timeLeft <= 180) pill.classList.add('warning');
+    if (timeLeft <= 0) { clearInterval(timerInterval); endExam(); }
+  }, 1000);
+}
+function formatTime(s) {
+  const h = Math.floor(s / 3600);
+  const m = Math.floor((s % 3600) / 60);
+  const sec = s % 60;
+  if (h > 0) return `${h}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+  return `${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+}
+
+/* ══════════════════════════════════════
+   RENDER QUESTION
+══════════════════════════════════════ */
+function renderQuestion() {
+  const q = sessionQ[curQ];
+  document.getElementById('q-num-label').textContent = `Question ${curQ + 1}`;
+  document.getElementById('q-domain-label').textContent = q.domain;
+  document.getElementById('q-text').textContent = q.q;
+  document.getElementById('q-multi-note').style.display = q.multi ? 'block' : 'none';
+
+  const pct = Math.round(((curQ + 1) / sessionQ.length) * 100);
+  document.getElementById('prog-label').textContent = `Question ${curQ + 1} of ${sessionQ.length}`;
+  document.getElementById('prog-pct').textContent = pct + '%';
+  document.getElementById('prog-bar').style.width = pct + '%';
+
+  const fb = document.getElementById('q-feedback');
+  fb.className = 'feedback'; fb.innerHTML = '';
+
+  const opts = document.getElementById('q-options');
+  opts.innerHTML = '';
+  q.opts.forEach((o, i) => {
+    const el = document.createElement('div');
+    el.className = 'option';
+    el.dataset.idx = i;
+    el.innerHTML = `<div class="opt-key">${o.charAt(0)}</div><span>${o.slice(3)}</span>`;
+    el.onclick = () => selectOpt(i, el);
+    if (revealed[curQ]) {
+      el.classList.add('disabled');
+      if (q.ans.includes(i)) el.classList.add('correct');
+      else if (answers[curQ] && answers[curQ].includes(i)) el.classList.add('wrong');
+    } else if (answers[curQ] && answers[curQ].includes(i)) {
+      el.classList.add('selected');
+    }
+    opts.appendChild(el);
+  });
+
+  if (revealed[curQ] && answers[curQ] && answers[curQ].length > 0) showFeedback(q);
+
+  const btnNext = document.getElementById('btn-next');
+  btnNext.disabled = !(answers[curQ] && answers[curQ].length > 0);
+  btnNext.textContent = curQ === sessionQ.length - 1 ? 'Finish →' : 'Next →';
+  document.getElementById('btn-prev').disabled = curQ === 0;
+
+  buildNav();
+}
+
+function selectOpt(idx, el) {
+  if (revealed[curQ]) return;
+  const q = sessionQ[curQ];
+  if (!answers[curQ]) answers[curQ] = [];
+
+  if (q.multi) {
+    if (answers[curQ].includes(idx)) {
+      answers[curQ] = answers[curQ].filter(i => i !== idx);
+      el.classList.remove('selected');
+    } else {
+      answers[curQ].push(idx);
+      el.classList.add('selected');
+    }
+    document.getElementById('btn-next').disabled = answers[curQ].length === 0;
+    if (answers[curQ].length === q.ans.length) revealAnswer();
+  } else {
+    document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+    answers[curQ] = [idx];
+    el.classList.add('selected');
+    revealAnswer();
+  }
+}
+
+function revealAnswer() {
+  if (revealed[curQ]) return;
+  revealed[curQ] = true;
+  const q = sessionQ[curQ];
+  const isCorrect = q.ans.slice().sort().join(',') === answers[curQ].slice().sort().join(',');
+  if (isCorrect) correct++; else wrong++;
+
+  document.querySelectorAll('.option').forEach(el => {
+    el.classList.add('disabled');
+    const i = parseInt(el.dataset.idx);
+    if (q.ans.includes(i)) el.classList.add('correct');
+    else if (answers[curQ].includes(i)) el.classList.add('wrong');
+    el.classList.remove('selected');
+  });
+
+  showFeedback(q);
+  document.getElementById('btn-next').disabled = false;
+  updateScoreboard();
+  buildNav();
+}
+
+function showFeedback(q) {
+  const isCorrect = q.ans.slice().sort().join(',') === (answers[curQ] || []).slice().sort().join(',');
+  const fb = document.getElementById('q-feedback');
+  fb.className = 'feedback show ' + (isCorrect ? 'correct-fb' : 'wrong-fb');
+  fb.innerHTML = `<strong>${isCorrect ? '✓ Correct!' : '✗ Incorrect'}</strong>${q.exp}`;
+}
+
+function handleNext() {
+  if (!revealed[curQ] && answers[curQ] && answers[curQ].length > 0) { revealAnswer(); return; }
+  if (curQ < sessionQ.length - 1) { goTo(curQ + 1); }
+  else { endExam(); }
+}
+
+function goTo(i) {
+  if (i < 0 || i >= sessionQ.length) return;
+  curQ = i;
+  renderQuestion();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function buildNav() {
+  const nav = document.getElementById('q-nav');
+  nav.innerHTML = '';
+  sessionQ.forEach((_, i) => {
+    const pill = document.createElement('div');
+    pill.className = 'q-pill';
+    pill.textContent = i + 1;
+    pill.onclick = () => goTo(i);
+    if (i === curQ) pill.classList.add('current');
+    else if (revealed[i]) {
+      const q = sessionQ[i];
+      const isCorr = q.ans.slice().sort().join(',') === (answers[i]||[]).slice().sort().join(',');
+      pill.classList.add(isCorr ? 'ans-correct' : 'ans-wrong');
+    } else if (answers[i] && answers[i].length > 0) pill.classList.add('ans-skip');
+    nav.appendChild(pill);
+  });
+}
+
+function updateScoreboard() {
+  const answered = revealed.filter(Boolean).length;
+  const pct = answered > 0 ? Math.round((correct / answered) * 100) : 0;
+  document.getElementById('sc-answered').textContent = answered;
+  document.getElementById('sc-correct').textContent = correct;
+  document.getElementById('sc-pct').textContent = pct + '%';
+}
+
+/* ══════════════════════════════════════
+   END / RESULTS
+══════════════════════════════════════ */
+function endExam() {
+  clearInterval(timerInterval);
+  const total = sessionQ.length;
+  const skipped = total - correct - wrong;
+  const pct = Math.round((correct / total) * 100);
+
+  document.getElementById('exam-screen').style.display = 'none';
+  document.getElementById('res-score').textContent = `${correct}/${total}`;
+  document.getElementById('res-correct').textContent = correct;
+  document.getElementById('res-wrong').textContent = wrong;
+  document.getElementById('res-skip').textContent = skipped;
+
+  const grade = document.getElementById('res-grade');
+  const resLbl = document.getElementById('res-label');
+  if (resLbl) resLbl.textContent = selectedTest === 'both' ? 'Combined Practice Exam Complete' : `Practice Test ${selectedTest} Complete`;
+  if (pct >= 72) { grade.className = 'result-grade pass'; grade.textContent = `${pct}% — PASS 🎉`; }
+  else { grade.className = 'result-grade fail'; grade.textContent = `${pct}% — Keep Studying`; }
+
+  document.getElementById('results-screen').style.display = 'block';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function backToSetup() {
+  clearInterval(timerInterval);
+  document.getElementById('results-screen').style.display = 'none';
+  document.getElementById('exam-screen').style.display = 'none';
+  document.getElementById('setup-screen').style.display = 'block';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+</script>
+</body>
+</html>

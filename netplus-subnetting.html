@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Subnetting — Network+ N10-009 | BL Cert Hub</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    :root{--navy:#0B1D3A;--blue:#1A5276;--accent:#2E86C1;--sky:#5DADE2;--light:#EAF4FB;--mid:#D6EAF8;--white:#fff;--text:#0B1D3A;--muted:#5D7A8C;--border:rgba(30,80,130,0.13);--shadow:0 2px 12px rgba(11,29,58,0.08)}
+    html{scroll-behavior:smooth}
+    body{font-family:"DM Sans",sans-serif;background:var(--light);color:var(--text);min-height:100vh;display:flex;flex-direction:column}
+    nav{background:var(--navy);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:56px;position:sticky;top:0;z-index:100;border-bottom:1px solid rgba(93,173,226,0.15)}
+    .nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+    .bl-circle{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#2E86C1,#5DADE2);display:flex;align-items:center;justify-content:center;font-family:"Space Mono",monospace;font-size:10px;font-weight:700;color:#fff;flex-shrink:0}
+    .nav-brand span{font-size:13px;font-weight:500;color:rgba(255,255,255,0.85);letter-spacing:.02em}
+    .nav-links{display:flex;gap:6px}
+    .nav-links a{font-size:12px;font-weight:500;color:rgba(255,255,255,0.6);text-decoration:none;padding:6px 12px;border-radius:6px;transition:all .18s}
+    .nav-links a:hover{color:#fff;background:rgba(255,255,255,0.08)}
+    .nav-links a.active{color:var(--sky);background:rgba(93,173,226,0.12)}
+    .theme-btn{width:34px;height:34px;border-radius:8px;border:1px solid rgba(255,255,255,0.18);background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.75);cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;transition:all .18s;flex-shrink:0}
+    .theme-btn:hover{background:rgba(255,255,255,0.15);color:#fff}
+    .hero{background:linear-gradient(135deg,#0B1D3A 0%,#1A5276 55%,#2E86C1 100%);padding:3rem 2rem 2.5rem;position:relative;overflow:hidden}
+    .hero-grid-pattern{position:absolute;inset:0;background-image:linear-gradient(rgba(93,173,226,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(93,173,226,0.04) 1px,transparent 1px);background-size:32px 32px;pointer-events:none}
+    .hero-bg-ring{position:absolute;border-radius:50%;border:40px solid rgba(93,173,226,0.08);pointer-events:none}
+    .hero-bg-ring.r1{width:300px;height:300px;top:-70px;right:-50px}
+    .hero-bg-ring.r2{width:180px;height:180px;bottom:-60px;left:40%;border-width:22px}
+    .hero-inner{position:relative;max-width:860px;margin:0 auto}
+    .exam-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.18);border-radius:20px;padding:5px 14px 5px 5px;margin-bottom:1.25rem}
+    .exam-badge .bl-circle{width:26px;height:26px;font-size:9px}
+    .exam-badge span{font-size:12px;color:rgba(255,255,255,0.8);font-weight:500}
+    .hero h1{font-family:"Space Mono",monospace;font-size:clamp(22px,3.5vw,38px);font-weight:700;color:#fff;line-height:1.2;margin-bottom:.5rem}
+    .hero h1 .accent{color:var(--sky)}
+    .hero-sub{font-size:14px;color:rgba(255,255,255,0.6);font-weight:300;line-height:1.7;max-width:520px}
+    .main{max-width:860px;margin:0 auto;padding:2rem 2rem 3rem;flex:1}
+    .section-label{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);display:flex;align-items:center;gap:10px;margin-bottom:1rem}
+    .section-label::after{content:"";flex:1;height:1px;background:var(--border)}
+    /* CALCULATOR */
+    .calc-box{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:22px;margin-bottom:1.5rem;box-shadow:var(--shadow)}
+    .calc-input-row{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;align-items:flex-end}
+    .calc-field{display:flex;flex-direction:column;gap:5px;flex:1;min-width:140px}
+    .calc-label{font-size:11px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+    .calc-input{padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-family:"Space Mono",monospace;font-size:14px;font-weight:700;color:var(--text);background:var(--light);outline:none;transition:border-color .18s;width:100%}
+    .calc-input:focus{border-color:var(--accent);background:var(--white)}
+    .btn-calc{padding:10px 24px;background:var(--accent);border:none;border-radius:8px;color:#fff;font-family:"DM Sans",sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .18s;white-space:nowrap}
+    .btn-calc:hover{background:var(--blue)}
+    .calc-results{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding-top:16px;border-top:1px solid var(--border)}
+    .calc-result-item{background:var(--light);border-radius:10px;padding:12px 14px;border:1px solid var(--border)}
+    .cr-val{font-family:"Space Mono",monospace;font-size:13px;font-weight:700;color:var(--accent);word-break:break-all}
+    .cr-lbl{font-size:10px;color:var(--muted);margin-top:3px}
+    .calc-error{color:#E74C3C;font-size:13px;margin-top:10px;display:none}
+    /* CIDR TABLE */
+    .cidr-wrap{background:var(--white);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:1.5rem;box-shadow:var(--shadow)}
+    table{width:100%;border-collapse:collapse}
+    thead tr{background:var(--navy)}
+    th{text-align:left;padding:11px 14px;font-size:11px;font-weight:600;color:rgba(255,255,255,0.65);letter-spacing:.06em;text-transform:uppercase}
+    td{padding:10px 14px;border-bottom:1px solid var(--border);font-size:12px;vertical-align:middle}
+    tr:last-child td{border-bottom:none}
+    tr:hover td{background:rgba(46,134,193,0.04)}
+    .cidr-prefix{font-family:"Space Mono",monospace;font-size:13px;font-weight:700;color:var(--accent)}
+    .mask-val{font-family:"Space Mono",monospace;font-size:11px;color:var(--text)}
+    .host-badge{font-size:11px;font-weight:600;padding:2px 8px;border-radius:4px;background:rgba(46,134,193,0.1);color:var(--accent)}
+    .use-tag{font-size:10px;font-weight:500;padding:2px 8px;border-radius:10px;background:var(--mid);color:var(--blue)}
+    /* QUIZ */
+    .quiz-box{background:var(--white);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:1.5rem;box-shadow:var(--shadow)}
+    .quiz-header{background:var(--navy);padding:13px 20px;display:flex;align-items:center;justify-content:space-between}
+    .quiz-title{font-family:"Space Mono",monospace;font-size:13px;font-weight:700;color:#fff}
+    .quiz-badge{font-size:10px;font-weight:500;padding:3px 10px;border-radius:10px;background:rgba(93,173,226,0.2);color:var(--sky);border:1px solid rgba(93,173,226,0.3)}
+    .quiz-body{padding:20px}
+    .quiz-q-box{background:var(--light);border:1px solid var(--border);border-radius:10px;padding:16px 18px;margin-bottom:14px}
+    .quiz-q-lbl{font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+    .quiz-q-text{font-size:14px;font-weight:600;color:var(--text);font-family:"Space Mono",monospace}
+    .quiz-sub{font-size:12px;color:var(--muted);margin-top:4px;font-family:"DM Sans",sans-serif}
+    .quiz-opts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+    .quiz-opt{padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--light);cursor:pointer;font-size:12px;font-weight:600;color:var(--text);transition:all .16s;text-align:center;font-family:"Space Mono",monospace}
+    .quiz-opt:hover:not(.disabled){border-color:var(--accent);background:rgba(46,134,193,0.06);color:var(--accent)}
+    .quiz-opt.correct{border-color:#27AE60;background:rgba(39,174,96,0.1);color:#1A6B3A}
+    .quiz-opt.wrong{border-color:#E74C3C;background:rgba(231,76,60,0.1);color:#A93226}
+    .quiz-opt.disabled{pointer-events:none}
+    .quiz-fb{display:none;padding:11px 14px;border-radius:8px;font-size:13px;margin-bottom:14px;border:1px solid}
+    .quiz-fb.show{display:block}
+    .quiz-fb.ok{background:rgba(39,174,96,0.08);border-color:rgba(39,174,96,0.28);color:#1A6B3A}
+    .quiz-fb.bad{background:rgba(231,76,60,0.08);border-color:rgba(231,76,60,0.28);color:#A93226}
+    .quiz-ctrl{display:flex;align-items:center;justify-content:space-between}
+    .quiz-score-lbl{font-family:"Space Mono",monospace;font-size:12px;color:var(--muted)}
+    .btn-primary{background:var(--accent);border:1px solid var(--accent);color:#fff;padding:8px 18px;border-radius:8px;font-family:"DM Sans",sans-serif;font-size:12px;font-weight:500;cursor:pointer;transition:all .18s}
+    .btn-primary:hover{background:var(--blue)}
+    .btn-primary:disabled{opacity:.4;pointer-events:none}
+    .btn-outline{background:transparent;border:1px solid var(--border);color:var(--text);padding:8px 18px;border-radius:8px;font-family:"DM Sans",sans-serif;font-size:12px;font-weight:500;cursor:pointer;transition:all .18s}
+    .btn-outline:hover{border-color:var(--accent);color:var(--accent)}
+    /* CLASS TABLE */
+    .class-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:1.5rem}
+    .class-card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:14px;text-align:center;box-shadow:var(--shadow)}
+    .class-letter{font-family:"Space Mono",monospace;font-size:20px;font-weight:700}
+    .class-range{font-size:10px;color:var(--muted);margin-top:4px;font-family:"Space Mono",monospace}
+    .class-default{font-size:10px;margin-top:6px;color:var(--muted)}
+    .class-use{font-size:10px;font-weight:500;margin-top:4px}
+    /* DARK MODE */
+    html.dark{--light:#131b27;--mid:#1a2535;--white:#1e2a3a;--text:#d4e6f7;--muted:#7aa3c0;--border:rgba(93,173,226,0.14)}
+    html.dark body{background:var(--light);color:var(--text)}
+    html.dark nav,html.dark footer{background:#0a1220}
+    html.dark .calc-box,html.dark .cidr-wrap,html.dark .quiz-box,html.dark .class-card{background:var(--white);border-color:var(--border)}
+    html.dark thead tr,html.dark .quiz-header{background:#0a1220}
+    html.dark td{border-color:var(--border);color:var(--text)}
+    html.dark tr:hover td{background:rgba(93,173,226,0.04)}
+    html.dark .calc-input{background:var(--mid);border-color:var(--border);color:var(--text)}
+    html.dark .calc-input:focus{background:var(--white)}
+    html.dark .calc-result-item,html.dark .quiz-q-box{background:var(--mid);border-color:var(--border)}
+    html.dark .quiz-opt{background:var(--mid);border-color:var(--border);color:var(--text)}
+    html.dark .section-label::after{background:var(--border)}
+    footer{background:var(--navy);padding:1.25rem 2rem;text-align:center;border-top:1px solid rgba(93,173,226,0.12)}
+    footer p{font-size:12px;color:rgba(255,255,255,0.3)}
+    footer a{color:var(--sky);text-decoration:none}
+    @media(max-width:600px){.main{padding:1.25rem};nav{padding:0 1.25rem};.hero{padding:2rem 1.25rem 2rem};.calc-results{grid-template-columns:1fr 1fr};.quiz-opts{grid-template-columns:1fr};.class-grid{grid-template-columns:repeat(3,1fr)}}
+  </style>
+</head>
+<body>
+<script>
+(function(){const K="bl-theme";function apply(d){document.documentElement.classList.toggle("dark",d);const b=document.getElementById("theme-btn");if(b)b.textContent=d?"☀":"☾"}apply(localStorage.getItem(K)==="dark");window.__toggleTheme=function(){const d=!document.documentElement.classList.contains("dark");localStorage.setItem(K,d?"dark":"light");apply(d)};window.addEventListener("storage",function(e){if(e.key===K)apply(e.newValue==="dark")})})();
+</script>
+<nav>
+  <a class="nav-brand" href="index.html"><div class="bl-circle">BL</div><span>BL Cert Hub</span></a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="network-plus.html">Network+</a>
+    <a href="#" class="active">Subnetting</a>
+    <button class="theme-btn" id="theme-btn" onclick="__toggleTheme()">☾</button>
+  </div>
+</nav>
+<div class="hero">
+  <div class="hero-grid-pattern"></div>
+  <div class="hero-bg-ring r1"></div>
+  <div class="hero-bg-ring r2"></div>
+  <div class="hero-inner">
+    <div class="exam-badge"><div class="bl-circle">BL</div><span>CompTIA Network+ N10-009</span></div>
+    <h1>Sub<span class="accent">netting</span></h1>
+    <p class="hero-sub">IPv4 subnet calculator, CIDR reference table, address classes, and practice questions for the N10-009 exam.</p>
+  </div>
+</div>
+<div class="main">
+
+  <!-- CALCULATOR -->
+  <div class="section-label">Subnet Calculator</div>
+  <div class="calc-box">
+    <div class="calc-input-row">
+      <div class="calc-field">
+        <span class="calc-label">IP Address</span>
+        <input class="calc-input" id="calc-ip" type="text" placeholder="192.168.1.0" value="192.168.1.0">
+      </div>
+      <div class="calc-field" style="max-width:100px">
+        <span class="calc-label">CIDR Prefix</span>
+        <input class="calc-input" id="calc-cidr" type="number" min="0" max="32" placeholder="24" value="24">
+      </div>
+      <button class="btn-calc" onclick="calculate()">Calculate</button>
+    </div>
+    <div class="calc-error" id="calc-err">⚠ Invalid IP address. Use format like 192.168.1.0</div>
+    <div class="calc-results" id="calc-results">
+      <div class="calc-result-item"><div class="cr-val" id="r-mask">255.255.255.0</div><div class="cr-lbl">Subnet Mask</div></div>
+      <div class="calc-result-item"><div class="cr-val" id="r-network">192.168.1.0</div><div class="cr-lbl">Network Address</div></div>
+      <div class="calc-result-item"><div class="cr-val" id="r-broadcast">192.168.1.255</div><div class="cr-lbl">Broadcast Address</div></div>
+      <div class="calc-result-item"><div class="cr-val" id="r-first">192.168.1.1</div><div class="cr-lbl">First Usable Host</div></div>
+      <div class="calc-result-item"><div class="cr-val" id="r-last">192.168.1.254</div><div class="cr-lbl">Last Usable Host</div></div>
+      <div class="calc-result-item"><div class="cr-val" id="r-hosts">254</div><div class="cr-lbl">Usable Hosts</div></div>
+    </div>
+  </div>
+
+  <!-- IPv4 ADDRESS CLASSES -->
+  <div class="section-label">IPv4 Address Classes</div>
+  <div class="class-grid">
+    <div class="class-card"><div class="class-letter" style="color:#C0392B">A</div><div class="class-range">1–126</div><div class="class-default">/8 default</div><div class="class-use" style="color:#C0392B">Large networks</div></div>
+    <div class="class-card"><div class="class-letter" style="color:#D68910">B</div><div class="class-range">128–191</div><div class="class-default">/16 default</div><div class="class-use" style="color:#D68910">Medium networks</div></div>
+    <div class="class-card"><div class="class-letter" style="color:#117A65">C</div><div class="class-range">192–223</div><div class="class-default">/24 default</div><div class="class-use" style="color:#117A65">Small networks</div></div>
+    <div class="class-card"><div class="class-letter" style="color:#6B3FA0">D</div><div class="class-range">224–239</div><div class="class-default">N/A</div><div class="class-use" style="color:#6B3FA0">Multicast</div></div>
+    <div class="class-card"><div class="class-letter" style="color:#5D6D7E">E</div><div class="class-range">240–255</div><div class="class-default">N/A</div><div class="class-use" style="color:#5D6D7E">Reserved / Research</div></div>
+  </div>
+
+  <!-- CIDR TABLE -->
+  <div class="section-label">CIDR Quick Reference</div>
+  <div class="cidr-wrap">
+    <table>
+      <thead><tr><th>Prefix</th><th>Subnet Mask</th><th>Hosts</th><th>Subnets (from /24)</th><th>Common Use</th></tr></thead>
+      <tbody id="cidr-tbody"></tbody>
+    </table>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="section-label">Subnetting Quiz</div>
+  <div class="quiz-box">
+    <div class="quiz-header">
+      <span class="quiz-title">Subnet Challenge</span>
+      <span class="quiz-badge" id="sq-badge">0 / 0</span>
+    </div>
+    <div class="quiz-body">
+      <div class="quiz-q-box">
+        <div class="quiz-q-lbl" id="sq-lbl">Question</div>
+        <div class="quiz-q-text" id="sq-text">—</div>
+        <div class="quiz-sub" id="sq-sub"></div>
+      </div>
+      <div class="quiz-opts" id="sq-opts"></div>
+      <div class="quiz-fb" id="sq-fb"></div>
+      <div class="quiz-ctrl">
+        <span class="quiz-score-lbl" id="sq-score">Score: 0 / 0</span>
+        <div style="display:flex;gap:8px">
+          <button class="btn-outline" onclick="initSQ()">↺ New Quiz</button>
+          <button class="btn-primary" id="sq-next" onclick="nextSQ()" disabled>Next →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+<footer><p>Built by <a href="https://blaborte.github.io" target="_blank">Baltazar Laborte</a> · BL Cert Hub · CompTIA Network+ N10-009</p></footer>
+
+<script>
+/* ── CIDR DATA ── */
+const CIDR_TABLE = [
+  {pre:'/8', mask:'255.0.0.0',       hosts:16777214, subnets:1,    use:'Class A default'},
+  {pre:'/16',mask:'255.255.0.0',     hosts:65534,    subnets:1,    use:'Class B default'},
+  {pre:'/24',mask:'255.255.255.0',   hosts:254,      subnets:1,    use:'Class C default'},
+  {pre:'/25',mask:'255.255.255.128', hosts:126,      subnets:2,    use:'Split /24 in 2'},
+  {pre:'/26',mask:'255.255.255.192', hosts:62,       subnets:4,    use:'Split /24 in 4'},
+  {pre:'/27',mask:'255.255.255.224', hosts:30,       subnets:8,    use:'Split /24 in 8'},
+  {pre:'/28',mask:'255.255.255.240', hosts:14,       subnets:16,   use:'Small office / VLAN'},
+  {pre:'/29',mask:'255.255.255.248', hosts:6,        subnets:32,   use:'Small links'},
+  {pre:'/30',mask:'255.255.255.252', hosts:2,        subnets:64,   use:'Point-to-point links'},
+  {pre:'/31',mask:'255.255.255.254', hosts:0,        subnets:128,  use:'P2P (RFC 3021)'},
+  {pre:'/32',mask:'255.255.255.255', hosts:1,        subnets:256,  use:'Host route / loopback'},
+];
+
+const tbody = document.getElementById('cidr-tbody');
+CIDR_TABLE.forEach(r => {
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<td><span class="cidr-prefix">${r.pre}</span></td>
+    <td><span class="mask-val">${r.mask}</span></td>
+    <td><span class="host-badge">${r.hosts.toLocaleString()}</span></td>
+    <td>${r.subnets}</td>
+    <td><span class="use-tag">${r.use}</span></td>`;
+  tbody.appendChild(tr);
+});
+
+/* ── SUBNET CALCULATOR ── */
+function ipToInt(ip) {
+  const parts = ip.trim().split('.');
+  if (parts.length !== 4) return null;
+  if (parts.some(p => isNaN(p) || parseInt(p) < 0 || parseInt(p) > 255)) return null;
+  return parts.reduce((acc, p) => (acc << 8) + parseInt(p), 0) >>> 0;
+}
+
+function intToIp(n) {
+  return [24,16,8,0].map(b => (n >>> b) & 0xff).join('.');
+}
+
+function calculate() {
+  const ipStr = document.getElementById('calc-ip').value.trim();
+  const prefix = parseInt(document.getElementById('calc-cidr').value);
+  const err = document.getElementById('calc-err');
+
+  if (!ipStr || isNaN(prefix) || prefix < 0 || prefix > 32) {
+    err.style.display = 'block'; err.textContent = '⚠ Enter a valid IP address and prefix (0–32)';
+    return;
+  }
+  const ipInt = ipToInt(ipStr);
+  if (ipInt === null) { err.style.display = 'block'; err.textContent = '⚠ Invalid IP format. Use x.x.x.x'; return; }
+  err.style.display = 'none';
+
+  const maskInt = prefix === 0 ? 0 : (0xffffffff << (32 - prefix)) >>> 0;
+  const networkInt = (ipInt & maskInt) >>> 0;
+  const broadcastInt = (networkInt | (~maskInt >>> 0)) >>> 0;
+  const hosts = prefix >= 31 ? (prefix === 32 ? 1 : 2) : Math.pow(2, 32 - prefix) - 2;
+
+  document.getElementById('r-mask').textContent = intToIp(maskInt);
+  document.getElementById('r-network').textContent = intToIp(networkInt);
+  document.getElementById('r-broadcast').textContent = intToIp(broadcastInt);
+  document.getElementById('r-first').textContent = prefix >= 31 ? intToIp(networkInt) : intToIp(networkInt + 1);
+  document.getElementById('r-last').textContent = prefix >= 31 ? intToIp(broadcastInt) : intToIp(broadcastInt - 1);
+  document.getElementById('r-hosts').textContent = hosts.toLocaleString();
+}
+
+/* ── SUBNET QUIZ ── */
+const SQ_QUESTIONS = [
+  {lbl:'How many usable hosts does this subnet provide?', text:'/24', sub:'Class C default subnet',ans:'254',opts:['254','255','256','252']},
+  {lbl:'How many usable hosts does this subnet provide?', text:'/25', sub:'Half of a /24',ans:'126',opts:['126','128','127','124']},
+  {lbl:'How many usable hosts does this subnet provide?', text:'/26', sub:'Quarter of a /24',ans:'62',opts:['62','64','60','63']},
+  {lbl:'How many usable hosts does this subnet provide?', text:'/27', sub:'Eighth of a /24',ans:'30',opts:['30','32','28','14']},
+  {lbl:'How many usable hosts does this subnet provide?', text:'/28', sub:'',ans:'14',opts:['14','16','30','12']},
+  {lbl:'How many usable hosts does this subnet provide?', text:'/29', sub:'',ans:'6',opts:['6','8','14','4']},
+  {lbl:'How many usable hosts does this subnet provide?', text:'/30', sub:'Point-to-point link',ans:'2',opts:['2','4','6','0']},
+  {lbl:'What is the subnet mask for this CIDR prefix?', text:'/24', sub:'',ans:'255.255.255.0',opts:['255.255.255.0','255.255.0.0','255.255.255.128','255.0.0.0']},
+  {lbl:'What is the subnet mask for this CIDR prefix?', text:'/25', sub:'',ans:'255.255.255.128',opts:['255.255.255.128','255.255.255.0','255.255.255.192','255.255.255.224']},
+  {lbl:'What is the subnet mask for this CIDR prefix?', text:'/26', sub:'',ans:'255.255.255.192',opts:['255.255.255.192','255.255.255.128','255.255.255.224','255.255.255.0']},
+  {lbl:'What is the subnet mask for this CIDR prefix?', text:'/27', sub:'',ans:'255.255.255.224',opts:['255.255.255.224','255.255.255.192','255.255.255.240','255.255.255.128']},
+  {lbl:'What is the subnet mask for this CIDR prefix?', text:'/28', sub:'',ans:'255.255.255.240',opts:['255.255.255.240','255.255.255.224','255.255.255.248','255.255.255.192']},
+  {lbl:'What is the subnet mask for this CIDR prefix?', text:'/30', sub:'',ans:'255.255.255.252',opts:['255.255.255.252','255.255.255.248','255.255.255.240','255.255.255.254']},
+  {lbl:'How many subnets can you create by splitting a /24 with this prefix?', text:'/25', sub:'',ans:'2',opts:['2','4','8','16']},
+  {lbl:'How many subnets can you create by splitting a /24 with this prefix?', text:'/26', sub:'',ans:'4',opts:['4','2','8','16']},
+  {lbl:'How many subnets can you create by splitting a /24 with this prefix?', text:'/27', sub:'',ans:'8',opts:['8','4','16','32']},
+  {lbl:'How many subnets can you create by splitting a /24 with this prefix?', text:'/28', sub:'',ans:'16',opts:['16','8','32','64']},
+  {lbl:'What CIDR prefix is typically used for point-to-point WAN links?', text:'Point-to-Point Link', sub:'Only 2 usable hosts needed',ans:'/30',opts:['/30','/29','/31','/28']},
+  {lbl:'What is the broadcast address for this network?', text:'192.168.1.0/24', sub:'',ans:'192.168.1.255',opts:['192.168.1.255','192.168.1.254','192.168.0.255','192.168.1.128']},
+  {lbl:'What is the network address for this host?', text:'10.0.0.130/25', sub:'Hint: /25 = 255.255.255.128',ans:'10.0.0.128',opts:['10.0.0.128','10.0.0.0','10.0.0.130','10.0.1.0']},
+];
+
+let sqDeck=[], sqIdx=0, sqScore=0, sqAnswered=0;
+
+function initSQ() {
+  sqDeck = [...SQ_QUESTIONS].sort(()=>Math.random()-0.5).slice(0,10);
+  sqIdx=0; sqScore=0; sqAnswered=0;
+  document.getElementById('sq-score').textContent='Score: 0 / 0';
+  document.getElementById('sq-badge').textContent='0 / 0';
+  document.getElementById('sq-next').disabled=true;
+  renderSQ();
+}
+
+function renderSQ() {
+  if (sqIdx >= sqDeck.length) { showSQResult(); return; }
+  const q = sqDeck[sqIdx];
+  document.getElementById('sq-fb').className='quiz-fb';
+  document.getElementById('sq-next').disabled=true;
+  document.getElementById('sq-lbl').textContent = q.lbl;
+  document.getElementById('sq-text').textContent = q.text;
+  document.getElementById('sq-sub').textContent = q.sub;
+  const optsDiv = document.getElementById('sq-opts');
+  optsDiv.innerHTML='';
+  const shuffled = [...q.opts].sort(()=>Math.random()-0.5);
+  shuffled.forEach(o => {
+    const btn = document.createElement('button');
+    btn.className='quiz-opt'; btn.textContent=o;
+    btn.onclick=()=>checkSQ(o, q.ans);
+    optsDiv.appendChild(btn);
+  });
+}
+
+function checkSQ(chosen, correct) {
+  document.querySelectorAll('.quiz-opt').forEach(b=>b.classList.add('disabled'));
+  document.querySelectorAll('.quiz-opt').forEach(b=>{if(b.textContent===correct)b.classList.add('correct')});
+  sqAnswered++;
+  const fb=document.getElementById('sq-fb');
+  if(chosen===correct){
+    sqScore++;
+    document.querySelectorAll('.quiz-opt').forEach(b=>{if(b.textContent===chosen)b.classList.add('correct')});
+    fb.className='quiz-fb show ok'; fb.textContent='✓ Correct!';
+  } else {
+    document.querySelectorAll('.quiz-opt').forEach(b=>{if(b.textContent===chosen)b.classList.add('wrong')});
+    fb.className='quiz-fb show bad'; fb.textContent=`✗ Incorrect. The answer is: ${correct}`;
+  }
+  document.getElementById('sq-score').textContent=`Score: ${sqScore} / ${sqAnswered}`;
+  document.getElementById('sq-badge').textContent=`${sqScore} / ${sqAnswered}`;
+  document.getElementById('sq-next').disabled=false;
+}
+
+function nextSQ(){sqIdx++;renderSQ()}
+
+function showSQResult(){
+  const pct=Math.round(sqScore/sqDeck.length*100);
+  document.getElementById('sq-opts').innerHTML='';
+  document.querySelector('.quiz-q-box').innerHTML=`<div style="text-align:center;padding:1rem"><div style="font-family:'Space Mono',monospace;font-size:30px;font-weight:700;color:var(--accent)">${sqScore}/${sqDeck.length}</div><div style="font-size:13px;color:var(--muted);margin-top:6px">${pct>=70?'Strong subnetting skills! 🎉':'Keep practicing — subnetting takes repetition.'}</div></div>`;
+  document.getElementById('sq-fb').className='quiz-fb';
+  document.getElementById('sq-next').disabled=true;
+}
+
+calculate();
+initSQ();
+</script>
+</body>
+</html>

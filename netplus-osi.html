@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OSI Model — Network+ N10-009 | BL Cert Hub</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    :root{--navy:#0B1D3A;--blue:#1A5276;--accent:#2E86C1;--sky:#5DADE2;--light:#EAF4FB;--mid:#D6EAF8;--white:#fff;--text:#0B1D3A;--muted:#5D7A8C;--border:rgba(30,80,130,0.13);--shadow:0 2px 12px rgba(11,29,58,0.08)}
+    html{scroll-behavior:smooth}
+    body{font-family:"DM Sans",sans-serif;background:var(--light);color:var(--text);min-height:100vh;display:flex;flex-direction:column}
+    nav{background:var(--navy);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:56px;position:sticky;top:0;z-index:100;border-bottom:1px solid rgba(93,173,226,0.15)}
+    .nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+    .bl-circle{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#2E86C1,#5DADE2);display:flex;align-items:center;justify-content:center;font-family:"Space Mono",monospace;font-size:10px;font-weight:700;color:#fff;flex-shrink:0}
+    .nav-brand span{font-size:13px;font-weight:500;color:rgba(255,255,255,0.85);letter-spacing:.02em}
+    .nav-links{display:flex;gap:6px}
+    .nav-links a{font-size:12px;font-weight:500;color:rgba(255,255,255,0.6);text-decoration:none;padding:6px 12px;border-radius:6px;transition:all .18s}
+    .nav-links a:hover{color:#fff;background:rgba(255,255,255,0.08)}
+    .nav-links a.active{color:var(--sky);background:rgba(93,173,226,0.12)}
+    .theme-btn{width:34px;height:34px;border-radius:8px;border:1px solid rgba(255,255,255,0.18);background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.75);cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;transition:all .18s;flex-shrink:0}
+    .theme-btn:hover{background:rgba(255,255,255,0.15);color:#fff}
+    .hero{background:linear-gradient(135deg,#0B1D3A 0%,#1A5276 55%,#2E86C1 100%);padding:3rem 2rem 2.5rem;position:relative;overflow:hidden}
+    .hero-grid-pattern{position:absolute;inset:0;background-image:linear-gradient(rgba(93,173,226,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(93,173,226,0.04) 1px,transparent 1px);background-size:32px 32px;pointer-events:none}
+    .hero-bg-ring{position:absolute;border-radius:50%;border:40px solid rgba(93,173,226,0.08);pointer-events:none}
+    .hero-bg-ring.r1{width:300px;height:300px;top:-70px;right:-50px}
+    .hero-bg-ring.r2{width:180px;height:180px;bottom:-60px;left:40%;border-width:22px}
+    .hero-inner{position:relative;max-width:860px;margin:0 auto}
+    .exam-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.18);border-radius:20px;padding:5px 14px 5px 5px;margin-bottom:1.25rem}
+    .exam-badge .bl-circle{width:26px;height:26px;font-size:9px}
+    .exam-badge span{font-size:12px;color:rgba(255,255,255,0.8);font-weight:500}
+    .hero h1{font-family:"Space Mono",monospace;font-size:clamp(22px,3.5vw,38px);font-weight:700;color:#fff;line-height:1.2;margin-bottom:.5rem}
+    .hero h1 .accent{color:var(--sky)}
+    .hero-sub{font-size:14px;color:rgba(255,255,255,0.6);font-weight:300;line-height:1.7;max-width:520px}
+    .main{max-width:860px;margin:0 auto;padding:2rem 2rem 3rem;flex:1}
+    .section-label{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);display:flex;align-items:center;gap:10px;margin-bottom:1rem}
+    .section-label::after{content:"";flex:1;height:1px;background:var(--border)}
+    /* OSI STACK */
+    .osi-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;background:var(--white);border:1px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);margin-bottom:1.5rem}
+    .osi-col-header{background:var(--navy);padding:12px 20px;font-size:11px;font-weight:600;color:rgba(255,255,255,0.6);text-transform:uppercase;letter-spacing:.08em}
+    .osi-layer{display:flex;gap:0;border-bottom:1px solid var(--border);cursor:pointer;transition:all .18s}
+    .osi-layer:last-child{border-bottom:none}
+    .osi-layer:hover{background:rgba(46,134,193,0.04)}
+    .osi-layer.active{background:rgba(46,134,193,0.08)}
+    .osi-num{width:42px;display:flex;align-items:center;justify-content:center;font-family:"Space Mono",monospace;font-size:13px;font-weight:700;color:#fff;flex-shrink:0}
+    .osi-name-col{flex:1;padding:12px 16px;border-right:1px solid var(--border)}
+    .osi-layer-name{font-size:13px;font-weight:600;color:var(--text)}
+    .osi-pdu{font-size:10px;color:var(--muted);margin-top:2px}
+    .osi-right{flex:1;padding:12px 16px}
+    .osi-devices{font-size:11px;color:var(--muted)}
+    .osi-protocols{font-size:11px;color:var(--accent);margin-top:2px;font-weight:500}
+    /* DETAIL PANEL */
+    .detail-panel{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:1.5rem;box-shadow:var(--shadow);min-height:120px}
+    .detail-title{font-family:"Space Mono",monospace;font-size:15px;font-weight:700;margin-bottom:10px}
+    .detail-desc{font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:12px}
+    .detail-chips{display:flex;gap:6px;flex-wrap:wrap}
+    .chip{font-size:11px;font-weight:500;padding:3px 10px;border-radius:20px;background:var(--mid);color:var(--blue);border:1px solid var(--border)}
+    .chip.protocol{background:rgba(46,134,193,0.1);color:var(--accent);border-color:rgba(46,134,193,0.2)}
+    .chip.device{background:rgba(17,122,101,0.1);color:#117A65;border-color:rgba(17,122,101,0.2)}
+    /* TCP/IP COMPARISON */
+    .compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:1.5rem}
+    .compare-card{background:var(--white);border:1px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:var(--shadow)}
+    .compare-header{padding:13px 18px;font-family:"Space Mono",monospace;font-size:13px;font-weight:700;color:#fff}
+    .compare-body{padding:0}
+    .compare-row{padding:10px 18px;border-bottom:1px solid var(--border);font-size:13px;display:flex;align-items:center;gap:10px}
+    .compare-row:last-child{border-bottom:none}
+    .compare-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+    /* MNEMONIC WIDGET */
+    .mnemonic-box{background:var(--navy);border-radius:14px;padding:20px 24px;margin-bottom:1.5rem}
+    .mnemonic-title{font-size:11px;font-weight:600;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:.08em;margin-bottom:14px}
+    .mnemonic-row{display:flex;gap:0;margin-bottom:8px;align-items:center}
+    .mnemonic-row:last-child{margin-bottom:0}
+    .mnemonic-letter{font-family:"Space Mono",monospace;font-size:18px;font-weight:700;width:28px;flex-shrink:0}
+    .mnemonic-word{font-size:14px;font-weight:500;color:rgba(255,255,255,0.85);flex:1}
+    .mnemonic-layer{font-size:11px;color:rgba(255,255,255,0.4);text-align:right}
+    /* DARK MODE */
+    html.dark{--light:#131b27;--mid:#1a2535;--white:#1e2a3a;--text:#d4e6f7;--muted:#7aa3c0;--border:rgba(93,173,226,0.14)}
+    html.dark body{background:var(--light);color:var(--text)}
+    html.dark nav,html.dark footer{background:#0a1220}
+    html.dark .osi-grid,html.dark .detail-panel,html.dark .compare-card{background:var(--white);border-color:var(--border)}
+    html.dark .osi-layer-name,html.dark .detail-title{color:var(--text)}
+    html.dark .osi-layer:hover{background:rgba(93,173,226,0.05)}
+    html.dark .osi-layer.active{background:rgba(93,173,226,0.1)}
+    html.dark .compare-row{border-color:var(--border)}
+    html.dark .section-label::after{background:var(--border)}
+    html.dark .chip{background:var(--mid);border-color:var(--border)}
+    footer{background:var(--navy);padding:1.25rem 2rem;text-align:center;border-top:1px solid rgba(93,173,226,0.12)}
+    footer p{font-size:12px;color:rgba(255,255,255,0.3)}
+    footer a{color:var(--sky);text-decoration:none}
+    @media(max-width:640px){.osi-grid{grid-template-columns:1fr};.compare-grid{grid-template-columns:1fr};.main{padding:1.25rem};nav{padding:0 1.25rem};.hero{padding:2rem 1.25rem 2rem}}
+  </style>
+</head>
+<body>
+<script>
+(function(){const K="bl-theme";function apply(d){document.documentElement.classList.toggle("dark",d);const b=document.getElementById("theme-btn");if(b)b.textContent=d?"☀":"☾"}apply(localStorage.getItem(K)==="dark");window.__toggleTheme=function(){const d=!document.documentElement.classList.contains("dark");localStorage.setItem(K,d?"dark":"light");apply(d)};window.addEventListener("storage",function(e){if(e.key===K)apply(e.newValue==="dark")})})();
+</script>
+<nav>
+  <a class="nav-brand" href="index.html"><div class="bl-circle">BL</div><span>BL Cert Hub</span></a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="network-plus.html">Network+</a>
+    <a href="#" class="active">OSI Model</a>
+    <button class="theme-btn" id="theme-btn" onclick="__toggleTheme()">☾</button>
+  </div>
+</nav>
+<div class="hero">
+  <div class="hero-grid-pattern"></div>
+  <div class="hero-bg-ring r1"></div>
+  <div class="hero-bg-ring r2"></div>
+  <div class="hero-inner">
+    <div class="exam-badge"><div class="bl-circle">BL</div><span>CompTIA Network+ N10-009</span></div>
+    <h1>OSI <span class="accent">Model</span></h1>
+    <p class="hero-sub">Interactive reference for all 7 OSI layers and the TCP/IP model. Click any layer for protocols, devices, and PDU names.</p>
+  </div>
+</div>
+<div class="main">
+
+  <!-- DETAIL PANEL -->
+  <div class="detail-panel" id="detail-panel">
+    <div class="detail-title" id="d-title" style="color:var(--accent)">Click any layer to explore</div>
+    <div class="detail-desc" id="d-desc">Select a layer from the OSI stack below to see its function, PDU name, protocols, and devices.</div>
+    <div class="detail-chips" id="d-chips"></div>
+  </div>
+
+  <!-- OSI STACK -->
+  <div class="section-label">OSI Reference Model — 7 Layers</div>
+  <div class="osi-grid">
+    <div class="osi-col-header" style="border-right:1px solid rgba(93,173,226,0.2)">Layer / PDU</div>
+    <div class="osi-col-header">Devices & Protocols</div>
+    <div id="osi-layers"></div>
+    <div id="osi-right-col"></div>
+  </div>
+
+  <!-- TCP/IP COMPARISON -->
+  <div class="section-label">TCP/IP Model vs OSI Model</div>
+  <div class="compare-grid">
+    <div class="compare-card">
+      <div class="compare-header" style="background:var(--navy)">OSI Model (7 Layers)</div>
+      <div class="compare-body" id="osi-list"></div>
+    </div>
+    <div class="compare-card">
+      <div class="compare-header" style="background:#1A5276">TCP/IP Model (4 Layers)</div>
+      <div class="compare-body">
+        <div class="compare-row"><div class="compare-dot" style="background:#6B3FA0"></div><span><strong>Application</strong> — HTTP, FTP, SMTP, DNS, SNMP</span></div>
+        <div class="compare-row"><div class="compare-dot" style="background:#C0531A"></div><span><strong>Transport</strong> — TCP, UDP</span></div>
+        <div class="compare-row"><div class="compare-dot" style="background:#0E7A8A"></div><span><strong>Internet</strong> — IP, ICMP, ARP</span></div>
+        <div class="compare-row"><div class="compare-dot" style="background:#2E7D32"></div><span><strong>Network Access</strong> — Ethernet, Wi-Fi, MAC</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MNEMONIC -->
+  <div class="section-label">Memory Aids</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:1.5rem">
+    <div class="mnemonic-box">
+      <div class="mnemonic-title">Top-down (7 → 1)</div>
+      <div id="mnemonic-top"></div>
+    </div>
+    <div class="mnemonic-box">
+      <div class="mnemonic-title">Bottom-up (1 → 7)</div>
+      <div id="mnemonic-bottom"></div>
+    </div>
+  </div>
+
+</div>
+<footer><p>Built by <a href="https://blaborte.github.io" target="_blank">Baltazar Laborte</a> · BL Cert Hub · CompTIA Network+ N10-009</p></footer>
+<script>
+const LAYERS = [
+  { num:7, name:'Application',   pdu:'Data',    color:'#6B3FA0',
+    desc:'Provides network services directly to end-user applications. Handles user interface and application-level protocols. This is the layer users interact with.',
+    protocols:['HTTP','HTTPS','FTP','SFTP','SMTP','DNS','DHCP','Telnet','SSH','SNMP','LDAP','RDP'],
+    devices:['Proxy server','Firewall (App layer)','Load balancer'] },
+  { num:6, name:'Presentation',  pdu:'Data',    color:'#8E44AD',
+    desc:'Translates data between the application layer and the network. Responsible for data encoding, encryption/decryption, and compression. Ensures data is in a readable format.',
+    protocols:['SSL/TLS','JPEG','MPEG','ASCII','Unicode','EBCDIC'],
+    devices:['Gateway (translation)'] },
+  { num:5, name:'Session',       pdu:'Data',    color:'#1A5276',
+    desc:'Establishes, manages, and terminates sessions between applications. Handles dialog control (half/full duplex) and synchronization. Controls when each side can transmit.',
+    protocols:['NetBIOS','RPC','PPTP','L2TP','SMB (session mgmt)','SQL sessions'],
+    devices:['Gateway'] },
+  { num:4, name:'Transport',     pdu:'Segment / Datagram', color:'#117A65',
+    desc:'Provides end-to-end communication, segmentation, and reliability. TCP offers reliable ordered delivery with flow control. UDP offers fast connectionless delivery.',
+    protocols:['TCP','UDP','SSL/TLS (transport portion)'],
+    devices:['Firewall (stateful)','Load balancer'] },
+  { num:3, name:'Network',       pdu:'Packet',  color:'#D68910',
+    desc:'Handles logical addressing (IP addresses) and routing between different networks. Routers operate at this layer, making forwarding decisions based on routing tables.',
+    protocols:['IP (IPv4, IPv6)','ICMP','OSPF','BGP','EIGRP','RIP','ARP (conceptually)'],
+    devices:['Router','Layer 3 switch','Firewall (routing)'] },
+  { num:2, name:'Data Link',     pdu:'Frame',   color:'#C0392B',
+    desc:'Handles node-to-node data transfer using MAC addresses. Responsible for framing, error detection (CRC), and flow control within a single network segment.',
+    protocols:['Ethernet (802.3)','Wi-Fi (802.11)','PPP','HDLC','ARP','STP','VLAN (802.1Q)'],
+    devices:['Switch','Bridge','Wireless AP','NIC'] },
+  { num:1, name:'Physical',      pdu:'Bit',     color:'#2E7D32',
+    desc:'Deals with raw bit transmission over a physical medium. Defines electrical/optical signals, cable types, connectors, and physical topology.',
+    protocols:['RS-232','DSL','SONET/SDH','Ethernet physical (1000BASE-T)','802.11 physical'],
+    devices:['Hub','Repeater','Cable','Modem','NIC (physical)'] },
+];
+
+const OSI_CONTAINER = document.getElementById('osi-layers');
+const RIGHT_COL = document.getElementById('osi-right-col');
+
+// Build the two-column layout using a single flat structure
+OSI_CONTAINER.style.gridColumn = '1 / -1'; // span both columns
+document.querySelector('.osi-grid').style.gridTemplateColumns = '1fr';
+
+LAYERS.forEach(l => {
+  const row = document.createElement('div');
+  row.className = 'osi-layer';
+  row.id = 'layer-' + l.num;
+  row.style.borderBottom = '1px solid var(--border)';
+  row.innerHTML = `
+    <div class="osi-num" style="background:${l.color};min-height:52px">${l.num}</div>
+    <div class="osi-name-col" style="border-right:1px solid var(--border)">
+      <div class="osi-layer-name">${l.name}</div>
+      <div class="osi-pdu">PDU: ${l.pdu}</div>
+    </div>
+    <div class="osi-right">
+      <div class="osi-devices">${l.devices.join(' · ')}</div>
+      <div class="osi-protocols">${l.protocols.slice(0,4).join(', ')}${l.protocols.length > 4 ? '…' : ''}</div>
+    </div>`;
+  row.onclick = () => selectLayer(l);
+  OSI_CONTAINER.appendChild(row);
+});
+
+function selectLayer(l) {
+  document.querySelectorAll('.osi-layer').forEach(r => r.classList.remove('active'));
+  document.getElementById('layer-' + l.num).classList.add('active');
+  document.getElementById('d-title').textContent = `Layer ${l.num} — ${l.name}`;
+  document.getElementById('d-title').style.color = l.color;
+  document.getElementById('d-desc').textContent = l.desc;
+  const chips = document.getElementById('d-chips');
+  chips.innerHTML = '';
+  l.protocols.forEach(p => { const c = document.createElement('span'); c.className = 'chip protocol'; c.textContent = p; chips.appendChild(c); });
+  l.devices.forEach(d => { const c = document.createElement('span'); c.className = 'chip device'; c.textContent = d; chips.appendChild(c); });
+}
+
+// Build OSI list in comparison panel
+const osiList = document.getElementById('osi-list');
+LAYERS.forEach(l => {
+  const row = document.createElement('div');
+  row.className = 'compare-row';
+  row.innerHTML = `<div class="compare-dot" style="background:${l.color}"></div><span><strong>Layer ${l.num} – ${l.name}</strong></span>`;
+  osiList.appendChild(row);
+});
+
+// Mnemonics
+const topDown = ['All','People','Seem','To','Need','Data','Processing'];
+const layerNames7 = ['Application','Presentation','Session','Transport','Network','Data Link','Physical'];
+const bottomUp = ['Please','Do','Not','Throw','Sausage','Pizza','Away'];
+
+const mnTop = document.getElementById('mnemonic-top');
+const mnBot = document.getElementById('mnemonic-bottom');
+topDown.forEach((w,i) => {
+  const row = document.createElement('div'); row.className = 'mnemonic-row';
+  row.innerHTML = `<span class="mnemonic-letter" style="color:${LAYERS[i].color}">${w[0]}</span><span class="mnemonic-word">${w}</span><span class="mnemonic-layer">L${7-i} ${layerNames7[i]}</span>`;
+  mnTop.appendChild(row);
+});
+const layerNames1 = [...layerNames7].reverse();
+bottomUp.forEach((w,i) => {
+  const row = document.createElement('div'); row.className = 'mnemonic-row';
+  row.innerHTML = `<span class="mnemonic-letter" style="color:${LAYERS[6-i].color}">${w[0]}</span><span class="mnemonic-word">${w}</span><span class="mnemonic-layer">L${i+1} ${layerNames1[i]}</span>`;
+  mnBot.appendChild(row);
+});
+
+// Auto-select Layer 7 on load
+selectLayer(LAYERS[0]);
+</script>
+</body>
+</html>

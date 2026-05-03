@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Flashcards — Network+ N10-009 | BL Cert Hub</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --navy:#0B1D3A; --blue:#1A5276; --accent:#2E86C1; --sky:#5DADE2;
+      --light:#EAF4FB; --mid:#D6EAF8; --white:#fff; --text:#0B1D3A; --muted:#5D7A8C;
+      --border:rgba(30,80,130,0.13);
+      --d1:#6B3FA0; --d2:#C0531A; --d3:#0E7A8A; --d4:#B8860B; --d5:#2E7D32;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family:'DM Sans',sans-serif; background:var(--light); color:var(--text); min-height:100vh; display:flex; flex-direction:column; }
+
+    /* NAV */
+    nav { background:var(--navy); padding:0 2rem; display:flex; align-items:center; justify-content:space-between; height:56px; position:sticky; top:0; z-index:100; border-bottom:1px solid rgba(93,173,226,0.15); }
+    .nav-brand { display:flex; align-items:center; gap:10px; text-decoration:none; }
+    .bl-circle { width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,#2E86C1,#5DADE2); display:flex; align-items:center; justify-content:center; font-family:'Space Mono',monospace; font-size:10px; font-weight:700; color:#fff; flex-shrink:0; }
+    .nav-brand span { font-size:13px; font-weight:500; color:rgba(255,255,255,0.85); letter-spacing:.02em; }
+    .nav-links { display:flex; gap:6px; }
+    .nav-links a { font-size:12px; font-weight:500; color:rgba(255,255,255,0.6); text-decoration:none; padding:6px 12px; border-radius:6px; transition:all .18s; }
+    .nav-links a:hover { color:#fff; background:rgba(255,255,255,0.08); }
+    .nav-links a.active { color:var(--sky); background:rgba(93,173,226,0.12); }
+
+    /* HERO */
+    .hero { background:linear-gradient(135deg,#0B1D3A 0%,#1A5276 55%,#2E86C1 100%); padding:3rem 2rem 2.5rem; position:relative; overflow:hidden; }
+    .hero-grid-pattern { position:absolute; inset:0; background-image:linear-gradient(rgba(93,173,226,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(93,173,226,0.04) 1px,transparent 1px); background-size:32px 32px; pointer-events:none; }
+    .hero-bg-ring { position:absolute; border-radius:50%; border:40px solid rgba(93,173,226,0.08); pointer-events:none; }
+    .hero-bg-ring.r1 { width:300px; height:300px; top:-70px; right:-50px; }
+    .hero-bg-ring.r2 { width:180px; height:180px; bottom:-60px; left:40%; border-width:22px; }
+    .hero-inner { position:relative; max-width:860px; margin:0 auto; }
+    .exam-badge { display:inline-flex; align-items:center; gap:8px; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.18); border-radius:20px; padding:5px 14px 5px 5px; margin-bottom:1.25rem; }
+    .exam-badge .bl-circle { width:26px; height:26px; font-size:9px; }
+    .exam-badge span { font-size:12px; color:rgba(255,255,255,0.8); font-weight:500; }
+    .hero h1 { font-family:'Space Mono',monospace; font-size:clamp(22px,3.5vw,38px); font-weight:700; color:#fff; line-height:1.2; margin-bottom:.5rem; }
+    .hero h1 .accent { color:var(--sky); }
+    .hero-sub { font-size:14px; color:rgba(255,255,255,0.6); font-weight:300; line-height:1.7; max-width:500px; }
+
+    /* MAIN */
+    .main { max-width:860px; margin:0 auto; padding:2rem 2rem 3rem; flex:1; }
+
+    /* CONTROLS BAR */
+    .controls-bar { background:var(--white); border:1px solid var(--border); border-radius:14px; padding:16px 20px; margin-bottom:1.5rem; box-shadow:0 2px 8px rgba(11,29,58,0.06); display:flex; flex-wrap:wrap; gap:12px; align-items:center; justify-content:space-between; }
+    .filter-group { display:flex; gap:6px; flex-wrap:wrap; align-items:center; }
+    .filter-label { font-size:11px; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; margin-right:2px; }
+    .filter-btn { font-size:11px; font-weight:500; padding:5px 12px; border-radius:20px; border:1px solid var(--border); background:var(--light); color:var(--muted); cursor:pointer; transition:all .16s; font-family:'DM Sans',sans-serif; }
+    .filter-btn:hover { border-color:var(--accent); color:var(--accent); }
+    .filter-btn.active { background:var(--accent); border-color:var(--accent); color:#fff; }
+    .filter-btn[data-domain="1"].active { background:var(--d1); border-color:var(--d1); }
+    .filter-btn[data-domain="2"].active { background:var(--d2); border-color:var(--d2); }
+    .filter-btn[data-domain="3"].active { background:var(--d3); border-color:var(--d3); }
+    .filter-btn[data-domain="4"].active { background:var(--d4); border-color:var(--d4); }
+    .filter-btn[data-domain="5"].active { background:var(--d5); border-color:var(--d5); }
+    .action-group { display:flex; gap:8px; }
+    .btn { font-family:'DM Sans',sans-serif; font-size:12px; font-weight:500; padding:7px 16px; border-radius:8px; border:1px solid; cursor:pointer; transition:all .18s; }
+    .btn-primary { background:var(--accent); border-color:var(--accent); color:#fff; }
+    .btn-primary:hover { background:var(--blue); border-color:var(--blue); }
+    .btn-outline { background:transparent; border-color:var(--border); color:var(--text); }
+    .btn-outline:hover { border-color:var(--accent); color:var(--accent); }
+
+    /* STATS ROW */
+    .stats-row { display:flex; gap:10px; margin-bottom:1.5rem; flex-wrap:wrap; }
+    .stat-pill { font-size:12px; font-weight:500; padding:6px 14px; border-radius:8px; background:var(--white); border:1px solid var(--border); color:var(--muted); }
+    .stat-pill span { font-family:'Space Mono',monospace; font-weight:700; color:var(--accent); }
+    .stat-pill.mastered span { color:var(--d5); }
+    .stat-pill.reviewing span { color:var(--d4); }
+
+    /* PROGRESS BAR */
+    .prog-wrap { margin-bottom:1.5rem; }
+    .prog-row { display:flex; justify-content:space-between; margin-bottom:5px; }
+    .prog-lbl { font-size:12px; color:var(--muted); }
+    .prog-pct { font-family:'Space Mono',monospace; font-size:12px; font-weight:700; color:var(--accent); }
+    .prog-track { height:5px; background:var(--mid); border-radius:3px; overflow:hidden; }
+    .prog-fill { height:100%; background:linear-gradient(90deg,var(--blue),var(--sky)); border-radius:3px; transition:width .5s; }
+
+    /* FLASHCARD */
+    .fc-area { display:flex; flex-direction:column; align-items:center; margin-bottom:1.5rem; }
+    .fc-counter-row { display:flex; align-items:center; justify-content:space-between; width:100%; max-width:620px; margin-bottom:10px; }
+    .fc-counter { font-family:'Space Mono',monospace; font-size:12px; color:var(--muted); }
+    .fc-domain-badge { font-size:10px; font-weight:600; padding:3px 10px; border-radius:20px; border:1px solid; }
+
+    .fc-scene { perspective:1400px; width:100%; max-width:620px; height:240px; cursor:pointer; }
+    .fc-inner { position:relative; width:100%; height:100%; transform-style:preserve-3d; transition:transform .55s cubic-bezier(.4,0,.2,1); }
+    .fc-inner.flipped { transform:rotateY(180deg); }
+    .fc-face { position:absolute; inset:0; backface-visibility:hidden; border-radius:16px; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:28px 32px; text-align:center; border:1px solid var(--border); box-shadow:0 4px 20px rgba(11,29,58,0.1); }
+    .fc-front { background:var(--navy); }
+    .fc-back { background:var(--blue); transform:rotateY(180deg); }
+    .fc-side-label { font-size:10px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:rgba(255,255,255,0.35); position:absolute; top:16px; left:20px; }
+    .fc-term { font-family:'Space Mono',monospace; font-size:clamp(16px,3vw,22px); font-weight:700; color:#fff; line-height:1.3; }
+    .fc-def { font-size:13px; color:rgba(255,255,255,0.9); line-height:1.7; font-weight:300; }
+    .fc-hint { font-size:11px; color:rgba(255,255,255,0.35); margin-top:12px; }
+
+    /* DOT ROW */
+    .fc-dots { display:flex; gap:5px; justify-content:center; margin-bottom:14px; }
+    .fc-dot { width:7px; height:7px; border-radius:50%; background:var(--mid); transition:all .2s; }
+    .fc-dot.active { background:var(--accent); transform:scale(1.3); }
+    .fc-dot.mastered { background:var(--d5); }
+    .fc-dot.reviewing { background:var(--d4); }
+
+    /* CARD CONTROLS */
+    .fc-controls { display:flex; align-items:center; gap:10px; justify-content:center; width:100%; max-width:620px; margin-bottom:1.5rem; }
+    .fc-nav-btn { width:40px; height:40px; border-radius:50%; border:1px solid var(--border); background:var(--white); display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:16px; transition:all .18s; color:var(--text); }
+    .fc-nav-btn:hover:not(:disabled) { border-color:var(--accent); color:var(--accent); }
+    .fc-nav-btn:disabled { opacity:.3; pointer-events:none; }
+    .fc-center-btns { display:flex; gap:8px; }
+    .grade-btn { font-size:11px; font-weight:600; padding:8px 16px; border-radius:8px; border:1px solid; cursor:pointer; transition:all .18s; font-family:'DM Sans',sans-serif; letter-spacing:.02em; }
+    .grade-btn.mastered { background:rgba(46,125,50,0.08); border-color:rgba(46,125,50,0.3); color:var(--d5); }
+    .grade-btn.mastered:hover { background:var(--d5); color:#fff; }
+    .grade-btn.reviewing { background:rgba(184,134,11,0.08); border-color:rgba(184,134,11,0.3); color:var(--d4); }
+    .grade-btn.reviewing:hover { background:var(--d4); color:#fff; }
+    .grade-btn.again { background:rgba(192,57,43,0.08); border-color:rgba(192,57,43,0.3); color:#C0392B; }
+    .grade-btn.again:hover { background:#C0392B; color:#fff; }
+    .grade-note { font-size:11px; color:var(--muted); text-align:center; margin-bottom:1rem; }
+
+    /* CARD LIST (mini overview) */
+    .section-label { font-size:11px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--accent); display:flex; align-items:center; gap:10px; margin-bottom:.9rem; }
+    .section-label::after { content:''; flex:1; height:1px; background:var(--border); }
+    .card-list { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+    .card-mini { background:var(--white); border:1px solid var(--border); border-radius:10px; padding:10px 12px; cursor:pointer; transition:all .18s; position:relative; overflow:hidden; }
+    .card-mini::before { content:''; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--dm-color); }
+    .card-mini:hover { border-color:var(--dm-color); transform:translateY(-1px); box-shadow:0 3px 10px rgba(11,29,58,0.08); }
+    .card-mini.is-mastered { background:rgba(46,125,50,0.05); border-color:rgba(46,125,50,0.25); }
+    .card-mini.is-reviewing { background:rgba(184,134,11,0.05); border-color:rgba(184,134,11,0.25); }
+    .card-mini-term { font-size:11px; font-weight:600; color:var(--text); margin-bottom:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .card-mini-status { font-size:10px; color:var(--muted); }
+
+    /* FOOTER */
+    footer { background:var(--navy); padding:1.25rem 2rem; text-align:center; border-top:1px solid rgba(93,173,226,0.12); }
+    footer p { font-size:12px; color:rgba(255,255,255,0.3); }
+    footer a { color:var(--sky); text-decoration:none; }
+
+    @media(max-width:600px) {
+      .main { padding:1.25rem; }
+      nav { padding:0 1.25rem; }
+      .hero { padding:2rem 1.25rem 2rem; }
+      .fc-scene { height:210px; }
+      .fc-face { padding:20px; }
+      .card-list { grid-template-columns:repeat(2,1fr); }
+      .controls-bar { flex-direction:column; align-items:flex-start; }
+    }
+
+    /* ── DARK MODE ── */
+    html.dark {
+      --light:  #131b27;
+      --mid:    #1a2535;
+      --white:  #1e2a3a;
+      --text:   #d4e6f7;
+      --muted:  #7aa3c0;
+      --border: rgba(93,173,226,0.14);
+      --shadow: 0 2px 12px rgba(0,0,0,0.35);
+    }
+    html.dark body { background: var(--light); color: var(--text); }
+    html.dark nav  { background: #0a1220; border-color: rgba(93,173,226,0.12); }
+    html.dark footer { background: #0a1220; }
+    html.dark .exam-card,
+    html.dark .tool-card,
+    html.dark .question-card,
+    html.dark .widget,
+    html.dark .session-bar,
+    html.dark .setup-section,
+    html.dark .domain-weights,
+    html.dark .mode-bar,
+    html.dark .controls-bar,
+    html.dark .fc-area + .grade-note,
+    html.dark .acronym-card,
+    html.dark .card-mini,
+    html.dark .score-card,
+    html.dark .stat-pill,
+    html.dark .sum-card,
+    html.dark .fc-nav-btn,
+    html.dark .domain-header,
+    html.dark .obj-header { background: var(--white); border-color: var(--border); }
+    html.dark .domain-body { background: var(--white); border-color: var(--border); }
+    html.dark .score-card,
+    html.dark .sum-card { background: #0e1929; }
+    html.dark .question-box,
+    html.dark .opt-btn,
+    html.dark .option,
+    html.dark .sbi-item,
+    html.dark .rs-item,
+    html.dark .setup-section { background: var(--mid); }
+    html.dark .option { border-color: var(--border); color: var(--text); }
+    html.dark .option:hover:not(.disabled) { background: rgba(93,173,226,0.08); }
+    html.dark .fc-scene .fc-front { background: #0d1929; }
+    html.dark .fc-scene .fc-back  { background: #122040; }
+    html.dark .progress-track,
+    html.dark .prog-track,
+    html.dark .mini-bar,
+    html.dark .dw-bar-track { background: var(--mid); }
+    html.dark .cert-name,
+    html.dark .tool-name,
+    html.dark .cs-val,
+    html.dark .stat-val,
+    html.dark .sbi-val,
+    html.dark .rs-val,
+    html.dark .obj-title,
+    html.dark .domain-title { color: var(--text); }
+    html.dark .cert-vendor,
+    html.dark .cert-desc,
+    html.dark .tool-desc,
+    html.dark .cs-lbl,
+    html.dark .stat-lbl,
+    html.dark .score-lbl,
+    html.dark .sum-lbl,
+    html.dark .ac-def,
+    html.dark .card-mini-term,
+    html.dark .card-mini-status { color: var(--muted); }
+    html.dark .section-label::after,
+    html.dark .card-stats { border-color: var(--border); }
+    html.dark .port-table td { background: var(--white); border-color: var(--border); color: var(--text); }
+    html.dark .port-table th { background: #0a1220; }
+    html.dark .alpha-heading { background: var(--mid); color: var(--text); }
+    html.dark .search-input { background: var(--mid); border-color: var(--border); color: var(--text); }
+    html.dark .search-input:focus { background: var(--white); }
+    html.dark .alpha-btn,
+    html.dark .filter-btn,
+    html.dark .mode-tab,
+    html.dark .grade-btn,
+    html.dark .btn-outline { background: var(--mid); border-color: var(--border); color: var(--muted); }
+    html.dark .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+    html.dark .q-controls { background: rgba(0,0,0,0.15); border-color: var(--border); }
+    html.dark .feedback.correct-fb { background: rgba(39,174,96,0.12); }
+    html.dark .feedback.wrong-fb   { background: rgba(231,76,60,0.12); }
+    html.dark #results-screen { background: var(--white); }
+    html.dark .result-label { color: var(--muted); }
+    html.dark .acronym-card.is-mastered { background: rgba(46,125,50,0.1); }
+    html.dark .card-mini.is-mastered { background: rgba(46,125,50,0.1); }
+    html.dark .card-mini.is-reviewing { background: rgba(184,134,11,0.1); }
+    html.dark .stat-pill { background: var(--white); border-color: var(--border); color: var(--muted); }
+    html.dark .fc-dot { background: rgba(93,173,226,0.2); }
+    html.dark .session-bar-inner { border-color: var(--border); }
+    html.dark .q-header { background: #0a1220; }
+    html.dark .q-meta-row .q-num { color: var(--muted); }
+
+    /* Dark-mode toggle button */
+    .theme-btn {
+      width: 34px; height: 34px; border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.08);
+      color: rgba(255,255,255,0.75);
+      cursor: pointer; font-size: 15px;
+      display: flex; align-items: center; justify-content: center;
+      transition: all .18s; flex-shrink: 0;
+    }
+    .theme-btn:hover { background: rgba(255,255,255,0.15); color: #fff; }
+
+  </style>
+</head>
+<body>
+
+<script>
+(function(){
+  const KEY = 'bl-theme';
+  function apply(dark) {
+    document.documentElement.classList.toggle('dark', dark);
+    const btn = document.getElementById('theme-btn');
+    if (btn) btn.textContent = dark ? '☀' : '☾';
+  }
+  // Apply on load before paint
+  apply(localStorage.getItem(KEY) === 'dark');
+  window.__toggleTheme = function() {
+    const dark = !document.documentElement.classList.contains('dark');
+    localStorage.setItem(KEY, dark ? 'dark' : 'light');
+    apply(dark);
+    // Sync other tabs
+    window.dispatchEvent(new StorageEvent('storage', {key: KEY, newValue: dark ? 'dark' : 'light'}));
+  };
+  // Listen for changes from other tabs/pages
+  window.addEventListener('storage', function(e) {
+    if (e.key === KEY) apply(e.newValue === 'dark');
+  });
+})();
+</script>
+
+
+<nav>
+  <a class="nav-brand" href="index.html"><div class="bl-circle">BL</div><span>BL Cert Hub</span></a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="network-plus.html">Network+</a>
+    <a href="#" class="active">Flashcards</a>
+    <button class="theme-btn" id="theme-btn" onclick="__toggleTheme()" title="Toggle dark mode">☾</button>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-grid-pattern"></div>
+  <div class="hero-bg-ring r1"></div>
+  <div class="hero-bg-ring r2"></div>
+  <div class="hero-inner">
+    <div class="exam-badge"><div class="bl-circle">BL</div><span>CompTIA Network+ N10-009</span></div>
+    <h1>Flash<span class="accent">cards</span></h1>
+    <p class="hero-sub">60 cards covering all 5 domains. Tap to flip, mark as mastered or review again, filter by domain.</p>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- CONTROLS -->
+  <div class="controls-bar">
+    <div class="filter-group">
+      <span class="filter-label">Domain</span>
+      <button class="filter-btn active" data-domain="all" onclick="setFilter('all',this)">All</button>
+      <button class="filter-btn" data-domain="1" onclick="setFilter('1',this)">1.0</button>
+      <button class="filter-btn" data-domain="2" onclick="setFilter('2',this)">2.0</button>
+      <button class="filter-btn" data-domain="3" onclick="setFilter('3',this)">3.0</button>
+      <button class="filter-btn" data-domain="4" onclick="setFilter('4',this)">4.0</button>
+      <button class="filter-btn" data-domain="5" onclick="setFilter('5',this)">5.0</button>
+    </div>
+    <div class="action-group">
+      <button class="btn btn-outline" onclick="shuffleDeck()">⇄ Shuffle</button>
+      <button class="btn btn-outline" onclick="resetStatus()">↺ Reset</button>
+      <button class="btn btn-primary" onclick="studyWeak()">Study Weak</button>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-row">
+    <div class="stat-pill">Total: <span id="stat-total">60</span></div>
+    <div class="stat-pill mastered">Mastered: <span id="stat-mastered">0</span></div>
+    <div class="stat-pill reviewing">Reviewing: <span id="stat-reviewing">0</span></div>
+    <div class="stat-pill">Unseen: <span id="stat-unseen">60</span></div>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="prog-wrap">
+    <div class="prog-row"><span class="prog-lbl">Mastery Progress</span><span class="prog-pct" id="prog-pct">0%</span></div>
+    <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+  </div>
+
+  <!-- FLASHCARD -->
+  <div class="fc-area">
+    <div class="fc-counter-row">
+      <span class="fc-counter" id="fc-counter">1 / 60</span>
+      <span class="fc-domain-badge" id="fc-domain-badge"></span>
+    </div>
+
+    <div class="fc-scene" onclick="flip()">
+      <div class="fc-inner" id="fc-inner">
+        <div class="fc-face fc-front">
+          <span class="fc-side-label">Term</span>
+          <div class="fc-term" id="fc-term">Loading...</div>
+          <div class="fc-hint">Tap to reveal definition</div>
+        </div>
+        <div class="fc-face fc-back">
+          <span class="fc-side-label">Definition</span>
+          <div class="fc-def" id="fc-def"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fc-dots" id="fc-dots"></div>
+  </div>
+
+  <!-- GRADE + NAV -->
+  <div class="fc-controls">
+    <button class="fc-nav-btn" id="btn-prev" onclick="navigate(-1)">←</button>
+    <div class="fc-center-btns">
+      <button class="grade-btn again" onclick="grade('again')">✗ Again</button>
+      <button class="grade-btn reviewing" onclick="grade('reviewing')">~ Review</button>
+      <button class="grade-btn mastered" onclick="grade('mastered')">✓ Got it</button>
+    </div>
+    <button class="fc-nav-btn" id="btn-next" onclick="navigate(1)">→</button>
+  </div>
+  <div class="grade-note">Grade yourself to track mastery · Flip the card first, then grade</div>
+
+  <!-- CARD LIST -->
+  <div class="section-label">All Cards</div>
+  <div class="card-list" id="card-list"></div>
+
+</div>
+
+<footer><p>Built by <a href="https://blaborte.github.io" target="_blank">Baltazar Laborte</a> · BL Cert Hub · CompTIA Network+ N10-009</p></footer>
+
+<script>
+/* ══════════════════════════════════
+   ALL 60 FLASHCARDS
+══════════════════════════════════ */
+const ALL_CARDS = [
+  // Domain 1 – Networking Concepts
+  { d:'1', term:'OSI Model', def:'7-layer framework: Physical (1) → Data Link (2) → Network (3) → Transport (4) → Session (5) → Presentation (6) → Application (7). Each layer has specific functions for network communication.' },
+  { d:'1', term:'Layer 1 – Physical', def:'Deals with raw bit transmission over a physical medium. Includes cables, hubs, repeaters, and signal encoding. Protocols: Ethernet (physical), 802.11 (Wi-Fi physical).' },
+  { d:'1', term:'Layer 2 – Data Link', def:'Handles node-to-node data transfer using MAC addresses. Includes switches and bridges. Responsible for framing, error detection (CRC), and flow control within a single network segment.' },
+  { d:'1', term:'Layer 3 – Network', def:'Responsible for logical addressing (IP) and routing packets between networks. Devices: routers. Protocols: IP, ICMP, OSPF, BGP, RIP.' },
+  { d:'1', term:'Layer 4 – Transport', def:'Provides end-to-end communication, segmentation, and reliability. TCP (connection-oriented, reliable) and UDP (connectionless, faster). Uses port numbers to identify applications.' },
+  { d:'1', term:'TCP vs UDP', def:'TCP: connection-oriented, reliable delivery, ordered, uses 3-way handshake (SYN→SYN-ACK→ACK). UDP: connectionless, no delivery guarantee, lower overhead — used for streaming, DNS, VoIP.' },
+  { d:'1', term:'APIPA', def:'Automatic Private IP Addressing. When DHCP fails, a device self-assigns an address in the 169.254.0.0/16 range. Device can only communicate locally — cannot reach internet or other subnets.' },
+  { d:'1', term:'RFC1918 Private Ranges', def:'Private (non-routable) IPv4 ranges: 10.0.0.0/8 (Class A), 172.16.0.0/12 (Class B), 192.168.0.0/16 (Class C). Used internally — NAT required for internet access.' },
+  { d:'1', term:'Unicast / Multicast / Broadcast / Anycast', def:'Unicast: one-to-one. Multicast: one-to-many group (224–239.x.x.x). Broadcast: one-to-all in subnet (255.255.255.255). Anycast: one-to-nearest — routes to closest of multiple servers.' },
+  { d:'1', term:'CIDR Notation', def:'Classless Inter-Domain Routing. /prefix notation replaces class-based subnetting. /24 = 256 IPs (254 usable), /30 = 4 IPs (2 usable for point-to-point links), /32 = single host.' },
+  { d:'1', term:'VPN (Virtual Private Network)', def:'Encrypts and tunnels traffic over an untrusted network (internet). Types: Site-to-site (network to network), Client-to-site (remote user to network), Clientless (browser-based SSL/TLS).' },
+  { d:'1', term:'QoS (Quality of Service)', def:'Prioritizes specific types of network traffic to ensure performance for latency-sensitive applications like VoIP and video. Can guarantee bandwidth, limit latency, and reduce jitter.' },
+  { d:'1', term:'Cloud Service Models', def:'SaaS: vendor manages everything, user accesses app (Gmail, Office 365). PaaS: vendor manages OS/infrastructure, user manages app. IaaS: vendor manages hardware, user manages everything else.' },
+  { d:'1', term:'Cloud Deployment Models', def:'Public: shared infrastructure, owned by provider (AWS, Azure). Private: dedicated infrastructure for one org. Hybrid: mix of public and private — key services on-prem, enterprise in cloud.' },
+  { d:'1', term:'SD-WAN', def:'Software-Defined Wide Area Network. Centralizes WAN management via software, enables automatic failover, traffic routing across multiple links (MPLS, broadband, LTE), and zero-touch provisioning.' },
+
+  // Domain 2 – Network Implementation
+  { d:'2', term:'Subnetting', def:'Dividing a network into smaller segments. Borrowing host bits to create additional network bits. /25 splits a /24 into 2 subnets of 128 IPs each. Formula: 2^n subnets, 2^h - 2 usable hosts.' },
+  { d:'2', term:'Default Gateway', def:'The IP address of the router interface on the local subnet. Devices send packets destined for other networks to the default gateway. Misconfiguration → can reach local hosts but not internet.' },
+  { d:'2', term:'VLAN', def:'Virtual Local Area Network. Logically segments a physical switch into separate broadcast domains. Devices in different VLANs cannot communicate without a Layer 3 device (router or L3 switch).' },
+  { d:'2', term:'802.1Q Trunking', def:'IEEE standard for VLAN tagging. Adds a 4-byte tag to Ethernet frames to identify VLAN membership. Trunk ports carry multiple VLANs between switches. Native VLAN traffic is untagged.' },
+  { d:'2', term:'STP – Spanning Tree Protocol', def:'Prevents Layer 2 loops by placing redundant ports in blocking state. Elects a root bridge (lowest bridge ID). Default priority: 32768. RSTP (802.1w) is the faster modern version.' },
+  { d:'2', term:'Link Aggregation (LACP)', def:'Combines multiple physical links into one logical link using LACP (802.3ad). Increases bandwidth and provides redundancy. Appears as a single interface to the network.' },
+  { d:'2', term:'PoE – Power over Ethernet', def:'Delivers power to devices over Ethernet cable. 802.3af (PoE): up to 15.4W per port. 802.3at (PoE+): up to 30W. 802.3bt (PoE++): up to 60–100W. Used for APs, VoIP phones, cameras.' },
+  { d:'2', term:'802.11 Wi-Fi Standards', def:'802.11a: 5GHz, 54Mbps. 802.11b/g: 2.4GHz. 802.11n (Wi-Fi 4): 2.4/5GHz, MIMO. 802.11ac (Wi-Fi 5): 5GHz, MU-MIMO, up to 3.5Gbps. 802.11ax (Wi-Fi 6): OFDMA, best for dense environments.' },
+  { d:'2', term:'2.4GHz vs 5GHz', def:'2.4GHz: longer range, more interference, only 3 non-overlapping channels (1,6,11). 5GHz: shorter range, less interference, many non-overlapping channels, higher throughput. 6GHz (Wi-Fi 6E): newest, least congested.' },
+  { d:'2', term:'WPA2 vs WPA3', def:'WPA2: AES/CCMP encryption, PSK or Enterprise (RADIUS). WPA3: stronger SAE (Simultaneous Authentication of Equals) handshake, forward secrecy, harder to brute-force. WPA3 is the current standard.' },
+  { d:'2', term:'NAT – Network Address Translation', def:'Maps private internal IP addresses to a public IP for internet access. PAT (Port Address Translation / NAT Overload): many private IPs share one public IP using different port numbers.' },
+  { d:'2', term:'Routing Protocols', def:'Static: manually configured, no overhead. Dynamic: RIP (hop count, max 15), OSPF (link-state, Dijkstra, unlimited), EIGRP (Cisco, composite metric), BGP (internet, AS-path, policy-based).' },
+  { d:'2', term:'Administrative Distance', def:'Router\'s trustworthiness rating for a route source. Lower = more preferred. Connected: 0, Static: 1, EIGRP: 90, OSPF: 110, RIP: 120, BGP external: 20. Used to choose between multiple routing protocols.' },
+
+  // Domain 3 – Network Operations
+  { d:'3', term:'DHCP', def:'Dynamic Host Configuration Protocol (port 67/68). Auto-assigns IP, subnet mask, default gateway, DNS to clients. Process: DORA — Discover → Offer → Request → Acknowledge. IP helper forwards across routers.' },
+  { d:'3', term:'DNS', def:'Domain Name System (port 53). Resolves hostnames to IP addresses. Record types: A (IPv4), AAAA (IPv6), CNAME (alias), MX (mail), NS (nameserver), PTR (reverse lookup), TXT (verification).' },
+  { d:'3', term:'DNS Record Types', def:'A: maps hostname → IPv4. AAAA: hostname → IPv6. CNAME: alias pointing to another hostname. MX: mail server for domain. NS: authoritative nameserver. PTR: reverse DNS (IP → hostname). TXT: arbitrary text, used for SPF/DKIM.' },
+  { d:'3', term:'NTP – Network Time Protocol', def:'Synchronizes clocks across network devices (port 123). Critical for log correlation, Kerberos authentication, and SIEM analysis. Stratum 0: atomic clock. Stratum 1: directly connected to stratum 0, etc.' },
+  { d:'3', term:'SNMP – Simple Network Management Protocol', def:'Monitors and manages network devices (ports 161/162). v1/v2c: community strings (plaintext). v3: adds authentication and encryption. MIB defines manageable objects. Traps: device-initiated alerts to manager.' },
+  { d:'3', term:'Syslog', def:'Standard for sending log messages from devices to a central server (port 514). Severity levels 0–7: Emergency, Alert, Critical, Error, Warning, Notice, Informational, Debug. SIEM collects and correlates syslog data.' },
+  { d:'3', term:'RPO & RTO', def:'RPO (Recovery Point Objective): max acceptable data loss measured in time — determines backup frequency. RTO (Recovery Time Objective): max acceptable downtime — determines how fast systems must be restored.' },
+  { d:'3', term:'MTTR & MTBF', def:'MTTR (Mean Time To Repair): average time to fix a failed component. MTBF (Mean Time Between Failures): average operational time between failures = Total hours ÷ Number of failures. Used to predict device lifespan.' },
+  { d:'3', term:'DR Sites', def:'Cold site: facility only, no equipment — cheapest, longest recovery. Warm site: partial equipment, can be operational in hours — moderate cost and recovery. Hot site: fully operational mirror — most expensive, fastest recovery.' },
+  { d:'3', term:'Port Mirroring (SPAN)', def:'Copies all traffic from monitored switch ports to a dedicated monitoring port. Used for passive IDS/IPS, packet capture, and network analysis without being inline. Does not introduce latency.' },
+  { d:'3', term:'Out-of-Band Management', def:'Manages network devices via a separate dedicated management network with different IP addresses. Allows device access even when the main network is down. Examples: console port, dedicated management interface, OOBM network.' },
+  { d:'3', term:'IPAM', def:'IP Address Management. Tool or process for planning, tracking, and managing IP address space. Prevents conflicts, tracks DHCP leases, and maintains an accurate inventory of all assigned IPs in the network.' },
+
+  // Domain 4 – Network Security
+  { d:'4', term:'CIA Triad', def:'Confidentiality: data only accessible to authorized users (encryption). Integrity: data hasn\'t been altered (hashing, checksums). Availability: systems accessible when needed (redundancy, backups, HA). Foundation of all security.' },
+  { d:'4', term:'802.1X (Port-based NAC)', def:'Network Access Control standard. Device must authenticate via RADIUS before gaining network access. Supplicant (device) → Authenticator (switch/AP) → Authentication server (RADIUS). Used for both wired and wireless.' },
+  { d:'4', term:'RADIUS vs TACACS+', def:'RADIUS: UDP, combines authentication and authorization, widely used for network access (Wi-Fi, VPN). TACACS+: TCP, separates authentication, authorization, and accounting (AAA), preferred for device administration (Cisco).' },
+  { d:'4', term:'ACL – Access Control List', def:'Rule-based packet filtering on routers/firewalls. Standard ACL: filters on source IP only. Extended ACL: filters on source, destination, protocol, and port. Applied inbound or outbound on interfaces.' },
+  { d:'4', term:'Common Network Attacks', def:'ARP poisoning: fake ARP replies to intercept traffic. MAC flooding: overflows CAM table causing switch to broadcast. VLAN hopping: double-tagging to access other VLANs. DNS poisoning: corrupts DNS cache to redirect users.' },
+  { d:'4', term:'DoS vs DDoS', def:'DoS (Denial of Service): single attacker floods target to exhaust resources. DDoS (Distributed DoS): coordinated attack from many compromised hosts (botnet). Mitigation: rate limiting, blackholing, scrubbing centers.' },
+  { d:'4', term:'Honeynet & Honeypot', def:'Honeypot: decoy system designed to attract attackers and study their methods. Honeynet: network of honeypots providing broader attack data. Alerts when accessed — legitimate users should never touch them.' },
+  { d:'4', term:'GDPR & PCI DSS', def:'GDPR: EU regulation for personal data protection. Requires data locality, breach notification, user consent. PCI DSS: security standards for organizations handling payment card data. Both enforce encryption, access controls, and auditing.' },
+  { d:'4', term:'Network Segmentation', def:'Dividing a network into isolated segments using VLANs, firewalls, or ACLs. Benefits: contains breaches, limits lateral movement, enables different security policies per zone. Critical for IoT, OT/SCADA, and guest networks.' },
+  { d:'4', term:'PKI & Certificates', def:'Public Key Infrastructure manages digital certificates (X.509). CA issues certificates proving identity. Used for HTTPS, S/MIME, VPN, 802.1X. Self-signed: not trusted by default. Certificate contains public key, expiry, and issuer info.' },
+
+  // Domain 5 – Network Troubleshooting
+  { d:'5', term:'Troubleshooting Methodology', def:'CompTIA 7 steps: 1-Identify problem, 2-Establish theory, 3-Test theory, 4-Plan of action, 5-Implement solution, 6-Verify functionality, 7-Document. OSI bottom-up: start at Physical, work up to Application.' },
+  { d:'5', term:'ping & tracert', def:'ping: tests Layer 3 reachability, measures RTT, checks for packet loss. tracert/traceroute: traces hop-by-hop path, shows where packets stop (* = ICMP blocked). First troubleshooting tools for connectivity issues.' },
+  { d:'5', term:'netstat', def:'Displays active network connections, listening ports, routing tables, and interface stats. netstat -an: all connections with port numbers. netstat -r: routing table. Useful for verifying if a service is listening on the correct port.' },
+  { d:'5', term:'nslookup & dig', def:'Query DNS servers for record resolution. nslookup hostname: returns IP. nslookup -type=MX domain: mail records. dig @8.8.8.8 domain: specific DNS server query. Used to diagnose DNS resolution failures.' },
+  { d:'5', term:'ipconfig / ifconfig / ip', def:'ipconfig (Windows): displays IP configuration. ipconfig /release + /renew: forces DHCP renewal. ifconfig/ip (Linux): shows/configures interfaces. ip addr, ip route: modern Linux equivalents.' },
+  { d:'5', term:'arp', def:'Address Resolution Protocol command. arp -a: displays ARP cache (IP-to-MAC mappings). Used to verify a device\'s MAC address, detect ARP poisoning (multiple IPs sharing one MAC), and diagnose Layer 2 issues.' },
+  { d:'5', term:'Nmap', def:'Network mapper tool for port scanning and host discovery. nmap -sP 192.168.1.0/24: ping sweep. nmap -sV target: service/version detection. nmap -p 80,443 target: specific ports. Used for security audits and troubleshooting.' },
+  { d:'5', term:'Crosstalk & Interference', def:'Crosstalk: signal bleed between adjacent wire pairs in a cable (NEXT=near-end, FEXT=far-end). Caused by poor termination or wrong cable category. EMI/RFI: external electromagnetic interference. Fix: use STP cable, proper termination.' },
+  { d:'5', term:'Duplex Mismatch', def:'One side of a link set to full-duplex, other to half-duplex. Causes intermittent connectivity, slowness, and CRC errors. Fix: manually configure both sides to the same duplex setting, or both to auto-negotiate.' },
+  { d:'5', term:'LLDP / CDP', def:'Link Layer Discovery Protocol (LLDP): open standard. Cisco Discovery Protocol (CDP): Cisco-proprietary. Both discover neighboring devices and their capabilities at Layer 2. Used to map topology and identify switch/port connections.' },
+];
+
+/* ══════════════════════════════════
+   STATE
+══════════════════════════════════ */
+const DOMAIN_COLORS = { '1':['var(--d1)','rgba(107,63,160,0.12)'], '2':['var(--d2)','rgba(192,83,26,0.12)'], '3':['var(--d3)','rgba(14,122,138,0.12)'], '4':['var(--d4)','rgba(184,134,11,0.12)'], '5':['var(--d5)','rgba(46,125,50,0.12)'] };
+const DOMAIN_NAMES = { '1':'Networking Concepts', '2':'Network Implementation', '3':'Network Operations', '4':'Network Security', '5':'Network Troubleshooting' };
+
+let deck = [];      // current filtered+ordered indices into ALL_CARDS
+let status = {};    // index → 'unseen' | 'mastered' | 'reviewing' | 'again'
+let curIdx = 0;     // position in deck
+let isFlipped = false;
+let activeFilter = 'all';
+
+function init() {
+  ALL_CARDS.forEach((_, i) => { status[i] = 'unseen'; });
+  applyFilter('all');
+}
+
+function applyFilter(f) {
+  activeFilter = f;
+  if (f === 'all') {
+    deck = ALL_CARDS.map((_, i) => i);
+  } else {
+    deck = ALL_CARDS.map((_, i) => i).filter(i => ALL_CARDS[i].d === f);
+  }
+  curIdx = 0;
+  renderCard();
+  renderDots();
+  renderCardList();
+  updateStats();
+}
+
+function setFilter(f, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  applyFilter(f);
+}
+
+function renderCard() {
+  if (deck.length === 0) return;
+  isFlipped = false;
+  document.getElementById('fc-inner').classList.remove('flipped');
+  const card = ALL_CARDS[deck[curIdx]];
+  setTimeout(() => {
+    document.getElementById('fc-term').textContent = card.term;
+    document.getElementById('fc-def').textContent = card.def;
+    const [col, bg] = DOMAIN_COLORS[card.d];
+    const badge = document.getElementById('fc-domain-badge');
+    badge.textContent = card.d + '.0 ' + DOMAIN_NAMES[card.d];
+    badge.style.cssText = `color:${col};background:${bg};border-color:${col.replace('var(','').replace(')','')};border-color:${bg.replace('rgba','rgba').replace(',0.12',',0.4')}`;
+    badge.style.color = col;
+    badge.style.background = bg;
+    badge.style.borderColor = col;
+  }, 50);
+  document.getElementById('fc-counter').textContent = `${curIdx+1} / ${deck.length}`;
+  document.getElementById('btn-prev').disabled = curIdx === 0;
+  document.getElementById('btn-next').disabled = curIdx === deck.length - 1;
+  renderDots();
+}
+
+function flip() {
+  isFlipped = !isFlipped;
+  document.getElementById('fc-inner').classList.toggle('flipped', isFlipped);
+}
+
+function navigate(dir) {
+  const next = curIdx + dir;
+  if (next < 0 || next >= deck.length) return;
+  curIdx = next;
+  renderCard();
+}
+
+function grade(g) {
+  const cardIdx = deck[curIdx];
+  status[cardIdx] = g === 'again' ? 'again' : g;
+  updateStats();
+  renderCardList();
+  renderDots();
+  // auto-advance
+  if (curIdx < deck.length - 1) {
+    curIdx++;
+    renderCard();
+  }
+}
+
+function shuffleDeck() {
+  deck = deck.sort(() => Math.random() - 0.5);
+  curIdx = 0;
+  renderCard();
+  renderDots();
+}
+
+function studyWeak() {
+  const weak = ALL_CARDS.map((_, i) => i).filter(i => {
+    const s = status[i];
+    return s === 'again' || s === 'reviewing' || s === 'unseen';
+  }).filter(i => activeFilter === 'all' || ALL_CARDS[i].d === activeFilter);
+  if (weak.length === 0) { alert('No weak cards in this filter! 🎉 Try resetting or switching to All.'); return; }
+  deck = weak.sort(() => Math.random() - 0.5);
+  curIdx = 0;
+  renderCard();
+  renderDots();
+}
+
+function resetStatus() {
+  ALL_CARDS.forEach((_, i) => { status[i] = 'unseen'; });
+  updateStats();
+  renderCardList();
+  renderDots();
+}
+
+function updateStats() {
+  const inDeck = activeFilter === 'all' ? ALL_CARDS.map((_, i) => i) : ALL_CARDS.map((_, i) => i).filter(i => ALL_CARDS[i].d === activeFilter);
+  const m = inDeck.filter(i => status[i] === 'mastered').length;
+  const r = inDeck.filter(i => status[i] === 'reviewing').length;
+  const u = inDeck.filter(i => status[i] === 'unseen' || status[i] === 'again').length;
+  document.getElementById('stat-total').textContent = inDeck.length;
+  document.getElementById('stat-mastered').textContent = m;
+  document.getElementById('stat-reviewing').textContent = r;
+  document.getElementById('stat-unseen').textContent = u;
+  const pct = inDeck.length > 0 ? Math.round((m / inDeck.length) * 100) : 0;
+  document.getElementById('prog-pct').textContent = pct + '%';
+  document.getElementById('prog-fill').style.width = pct + '%';
+}
+
+function renderDots() {
+  const dots = document.getElementById('fc-dots');
+  const max = Math.min(deck.length, 12);
+  dots.innerHTML = '';
+  for (let i = 0; i < max; i++) {
+    const d = document.createElement('div');
+    d.className = 'fc-dot';
+    if (i === curIdx) d.classList.add('active');
+    else {
+      const s = status[deck[i]];
+      if (s === 'mastered') d.classList.add('mastered');
+      else if (s === 'reviewing') d.classList.add('reviewing');
+    }
+    d.onclick = ((idx) => () => { curIdx = idx; renderCard(); })(i);
+    dots.appendChild(d);
+  }
+}
+
+function renderCardList() {
+  const list = document.getElementById('card-list');
+  list.innerHTML = '';
+  const cards = activeFilter === 'all' ? ALL_CARDS.map((c,i)=>({c,i})) : ALL_CARDS.map((c,i)=>({c,i})).filter(({c}) => c.d === activeFilter);
+  cards.forEach(({c, i}) => {
+    const [col] = DOMAIN_COLORS[c.d];
+    const s = status[i];
+    const el = document.createElement('div');
+    el.className = 'card-mini' + (s === 'mastered' ? ' is-mastered' : s === 'reviewing' ? ' is-reviewing' : '');
+    el.style.setProperty('--dm-color', col);
+    el.innerHTML = `<div class="card-mini-term">${c.term}</div><div class="card-mini-status">${s === 'unseen' ? '—' : s === 'mastered' ? '✓ Mastered' : s === 'reviewing' ? '~ Reviewing' : '✗ Again'}</div>`;
+    el.onclick = () => {
+      const deckIdx = deck.indexOf(i);
+      if (deckIdx !== -1) { curIdx = deckIdx; renderCard(); window.scrollTo({top:0,behavior:'smooth'}); }
+      else {
+        if (activeFilter !== 'all') { setFilter('all', document.querySelector('[data-domain="all"]')); }
+        setTimeout(() => { const di = deck.indexOf(i); if (di !== -1) { curIdx = di; renderCard(); window.scrollTo({top:0,behavior:'smooth'}); } }, 50);
+      }
+    };
+    list.appendChild(el);
+  });
+}
+
+init();
+</script>
+</body>
+</html>
