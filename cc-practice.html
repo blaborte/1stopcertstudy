@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Practice Exam — ISC2 CC | BL Cert Hub</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    :root{
+      --navy:#0B1D3A;--blue:#1A5276;--accent:#2E86C1;--sky:#5DADE2;
+      --light:#EAF4FB;--mid:#D6EAF8;--white:#fff;--text:#0B1D3A;--muted:#5D7A8C;
+      --border:rgba(30,80,130,0.13);
+      --correct:#27AE60;--correct-bg:rgba(39,174,96,0.07);--correct-border:rgba(39,174,96,0.28);
+      --wrong:#E74C3C;--wrong-bg:rgba(231,76,60,0.07);--wrong-border:rgba(231,76,60,0.28);
+    }
+    html{scroll-behavior:smooth}
+    body{font-family:'DM Sans',sans-serif;background:var(--light);color:var(--text);min-height:100vh}
+
+    /* NAV */
+    nav{background:var(--navy);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:56px;position:sticky;top:0;z-index:100;border-bottom:1px solid rgba(93,173,226,0.15)}
+    .nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+    .bl-circle{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#2E86C1,#5DADE2);display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:#fff;flex-shrink:0}
+    .nav-brand span{font-size:13px;font-weight:500;color:rgba(255,255,255,0.85);letter-spacing:.02em}
+    .nav-links{display:flex;gap:6px}
+    .nav-links a{font-size:12px;font-weight:500;color:rgba(255,255,255,0.6);text-decoration:none;padding:6px 12px;border-radius:6px;transition:all .18s}
+    .nav-links a:hover{color:#fff;background:rgba(255,255,255,0.08)}
+    .nav-links a.active{color:var(--sky);background:rgba(93,173,226,0.12)}
+
+    /* HERO */
+    .hero{background:linear-gradient(135deg,#0B1D3A 0%,#1A5276 55%,#2E86C1 100%);padding:3rem 2rem 2.5rem;position:relative;overflow:hidden}
+    .hero-grid-pattern{position:absolute;inset:0;background-image:linear-gradient(rgba(93,173,226,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(93,173,226,0.04) 1px,transparent 1px);background-size:32px 32px;pointer-events:none}
+    .hero-bg-ring{position:absolute;border-radius:50%;border:40px solid rgba(93,173,226,0.08);pointer-events:none}
+    .hero-bg-ring.r1{width:300px;height:300px;top:-70px;right:-50px}
+    .hero-bg-ring.r2{width:180px;height:180px;bottom:-60px;left:40%;border-width:22px}
+    .hero-inner{position:relative;max-width:880px;margin:0 auto}
+    .exam-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.18);border-radius:20px;padding:5px 14px 5px 5px;margin-bottom:1.25rem}
+    .exam-badge .bl-circle{width:26px;height:26px;font-size:9px}
+    .exam-badge span{font-size:12px;color:rgba(255,255,255,0.8);font-weight:500}
+    .hero h1{font-family:'Space Mono',monospace;font-size:clamp(22px,3.5vw,38px);font-weight:700;color:#fff;line-height:1.2;margin-bottom:.5rem}
+    .hero h1 .accent{color:var(--sky)}
+    .hero-sub{font-size:14px;color:rgba(255,255,255,0.6);font-weight:300;line-height:1.7;max-width:500px}
+
+    /* WRAP */
+    .exam-wrap{max-width:880px;margin:0 auto;padding:2rem 2rem 3rem}
+
+    /* ── SETUP SCREEN ── */
+    #setup-screen{display:block}
+    .setup-title{font-family:'Space Mono',monospace;font-size:14px;font-weight:700;color:var(--navy);margin-bottom:1rem}
+    .setup-section{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:16px;box-shadow:0 2px 8px rgba(11,29,58,0.06)}
+    .setup-section-label{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+    .setup-section-label::after{content:'';flex:1;height:1px;background:var(--border)}
+    .option-grid{display:grid;gap:10px}
+    .option-grid.cols-3{grid-template-columns:repeat(3,1fr)}
+    .option-grid.cols-6{grid-template-columns:repeat(6,1fr)}
+    .opt-btn{
+      padding:12px 10px;border-radius:10px;border:1.5px solid var(--border);
+      background:var(--light);cursor:pointer;text-align:center;
+      transition:all .18s;font-family:'DM Sans',sans-serif;
+    }
+    .opt-btn:hover{border-color:var(--accent);background:rgba(46,134,193,0.05)}
+    .opt-btn.selected{border-color:var(--accent);background:rgba(46,134,193,0.1);color:var(--accent)}
+    .opt-btn .ob-val{font-family:'Space Mono',monospace;font-size:16px;font-weight:700;color:var(--navy);display:block;margin-bottom:2px}
+    .opt-btn.selected .ob-val{color:var(--accent)}
+    .opt-btn .ob-lbl{font-size:11px;color:var(--muted)}
+    .opt-btn.selected .ob-lbl{color:var(--accent)}
+    .start-btn{width:100%;padding:14px;border-radius:10px;background:var(--accent);border:none;color:#fff;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:all .18s;letter-spacing:.02em;margin-top:8px}
+    .start-btn:hover{background:var(--blue)}
+
+    /* ── EXAM SCREEN ── */
+    #exam-screen{display:none}
+
+    /* SESSION BAR */
+    .session-bar{background:var(--white);border:1px solid var(--border);border-radius:12px;margin-bottom:1.25rem;overflow:hidden;box-shadow:0 2px 8px rgba(11,29,58,0.06)}
+    .session-bar-head{display:flex;align-items:center;justify-content:space-between;padding:11px 18px;cursor:pointer;user-select:none;transition:background .15s}
+    .session-bar-head:hover{background:rgba(46,134,193,0.03)}
+    .session-bar-pills{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .s-pill{font-size:11px;font-weight:500;padding:4px 12px;border-radius:20px;background:rgba(46,134,193,0.08);color:var(--accent);border:1px solid rgba(46,134,193,0.18);white-space:nowrap}
+    .s-pill.timer-pill{background:var(--navy);color:var(--sky);border-color:transparent;font-family:'Space Mono',monospace;font-weight:700}
+    .s-pill.timer-pill.warning{color:#F39C12}
+    .s-pill.timer-pill.danger{color:#E74C3C;animation:pulse .8s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+    .bar-chevron{font-size:11px;color:var(--muted);transition:transform .25s;flex-shrink:0;margin-left:8px}
+    .bar-chevron.open{transform:rotate(180deg)}
+    .session-bar-body{max-height:0;overflow:hidden;transition:max-height .3s ease}
+    .session-bar-body.open{max-height:160px}
+    .session-bar-inner{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:0 18px 14px;border-top:1px solid var(--border);padding-top:12px;margin-top:0}
+    .sbi-item{text-align:center;background:var(--light);border-radius:8px;padding:10px}
+    .sbi-val{font-family:'Space Mono',monospace;font-size:15px;font-weight:700;color:var(--navy)}
+    .sbi-lbl{font-size:10px;color:var(--muted);margin-top:2px}
+
+    /* SCOREBOARD */
+    .scoreboard{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.5rem}
+    .score-card{background:var(--navy);border-radius:12px;padding:14px;text-align:center}
+    .score-val{font-family:'Space Mono',monospace;font-size:20px;font-weight:700;color:var(--sky)}
+    .score-lbl{font-size:10px;color:rgba(255,255,255,0.45);margin-top:4px}
+
+    /* PROGRESS */
+    .progress-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+    .progress-label{font-size:12px;font-weight:500;color:var(--text)}
+    .progress-pct{font-family:'Space Mono',monospace;font-size:12px;color:var(--accent);font-weight:700}
+    .progress-track{height:6px;background:var(--mid);border-radius:3px;overflow:hidden;margin-bottom:1.25rem}
+    .progress-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--blue),var(--sky));border-radius:3px;transition:width .4s}
+
+    /* Q NAV PILLS */
+    .section-label{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);display:flex;align-items:center;gap:10px;margin-bottom:.75rem}
+    .section-label::after{content:'';flex:1;height:1px;background:var(--border)}
+    .q-nav{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:1.25rem}
+    .q-pill{width:30px;height:30px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;border:1px solid var(--border);background:var(--white);color:var(--muted);cursor:pointer;transition:all .15s}
+    .q-pill:hover{border-color:var(--accent);color:var(--accent)}
+    .q-pill.current{background:var(--accent);border-color:var(--accent);color:#fff}
+    .q-pill.ans-correct{background:rgba(39,174,96,0.15);border-color:var(--correct);color:var(--correct)}
+    .q-pill.ans-wrong{background:rgba(231,76,60,0.15);border-color:var(--wrong);color:var(--wrong)}
+    .q-pill.ans-skip{background:var(--mid);border-color:var(--border);color:var(--muted)}
+
+    /* QUESTION */
+    .question-card{background:var(--white);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:1.5rem;box-shadow:0 2px 12px rgba(11,29,58,0.07)}
+    .q-body{padding:22px 22px 18px}
+    .q-text{font-size:14px;font-weight:500;color:var(--text);line-height:1.7;margin-bottom:12px}
+    .q-meta-row{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+    .q-num{font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:var(--muted)}
+    .q-domain-badge{font-size:10px;font-weight:500;padding:3px 10px;border-radius:10px;background:rgba(46,134,193,0.08);color:var(--accent);border:1px solid rgba(46,134,193,0.18)}
+    .q-multi-note{font-size:11px;color:var(--muted);font-style:italic;margin-bottom:12px}
+    .options{display:flex;flex-direction:column;gap:8px}
+    .option{display:flex;align-items:flex-start;gap:12px;padding:11px 16px;border-radius:9px;border:1px solid var(--border);background:var(--light);cursor:pointer;transition:all .16s;font-size:13px;color:var(--text);line-height:1.5;user-select:none}
+    .option:hover:not(.disabled){border-color:var(--accent);background:rgba(46,134,193,0.05)}
+    .option.selected{border-color:var(--accent);background:rgba(46,134,193,0.08)}
+    .option.correct{border-color:var(--correct);background:var(--correct-bg);color:#1A6B3A}
+    .option.wrong{border-color:var(--wrong);background:var(--wrong-bg);color:#A93226}
+    .option.disabled{pointer-events:none}
+    .opt-key{width:26px;height:26px;border-radius:50%;flex-shrink:0;background:var(--mid);display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:var(--blue);transition:all .16s;margin-top:1px}
+    .option.correct .opt-key{background:var(--correct);color:#fff}
+    .option.wrong .opt-key{background:var(--wrong);color:#fff}
+    .option.selected .opt-key{background:var(--accent);color:#fff}
+    .feedback{display:none;margin-top:14px;padding:13px 16px;border-radius:9px;font-size:13px;line-height:1.65;border:1px solid}
+    .feedback.show{display:block}
+    .feedback.correct-fb{background:rgba(39,174,96,0.08);border-color:var(--correct-border);color:#1A6B3A}
+    .feedback.wrong-fb{background:rgba(231,76,60,0.08);border-color:var(--wrong-border);color:#A93226}
+    .feedback strong{display:block;margin-bottom:4px;font-size:12px;letter-spacing:.03em}
+    .q-controls{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-top:1px solid var(--border);background:rgba(234,244,251,0.5)}
+    .btn{font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;padding:8px 18px;border-radius:8px;border:1px solid;cursor:pointer;transition:all .18s;letter-spacing:.02em}
+    .btn-primary{background:var(--accent);border-color:var(--accent);color:#fff}
+    .btn-primary:hover{background:var(--blue);border-color:var(--blue)}
+    .btn-primary:disabled{opacity:.4;pointer-events:none}
+    .btn-outline{background:transparent;border-color:var(--border);color:var(--text)}
+    .btn-outline:hover{border-color:var(--accent);color:var(--accent)}
+    .btn-danger{background:transparent;border-color:rgba(231,76,60,0.3);color:var(--wrong)}
+    .btn-danger:hover{background:rgba(231,76,60,0.07)}
+
+    /* RESULTS */
+    #results-screen{display:none;background:var(--white);border:1px solid var(--border);border-radius:14px;padding:3rem 2rem;text-align:center;box-shadow:0 2px 12px rgba(11,29,58,0.07)}
+    .result-score{font-family:'Space Mono',monospace;font-size:52px;font-weight:700;color:var(--accent);line-height:1}
+    .result-label{font-size:14px;color:var(--muted);margin-top:6px;margin-bottom:2rem}
+    .result-grade{display:inline-block;font-family:'Space Mono',monospace;font-size:13px;font-weight:700;padding:6px 20px;border-radius:8px;margin-bottom:2rem}
+    .result-grade.pass{background:rgba(39,174,96,0.1);color:var(--correct);border:1px solid var(--correct-border)}
+    .result-grade.fail{background:rgba(231,76,60,0.1);color:var(--wrong);border:1px solid var(--wrong-border)}
+    .result-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:2rem;max-width:400px;margin-left:auto;margin-right:auto}
+    .rs-item{background:var(--light);border-radius:10px;padding:12px}
+    .rs-val{font-family:'Space Mono',monospace;font-size:20px;font-weight:700}
+    .rs-lbl{font-size:10px;color:var(--muted);margin-top:3px}
+    .result-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+
+    /* FOOTER */
+    footer{background:var(--navy);padding:1.25rem 2rem;text-align:center;border-top:1px solid rgba(93,173,226,0.12)}
+    footer p{font-size:12px;color:rgba(255,255,255,0.3)}
+    footer a{color:var(--sky);text-decoration:none}
+
+    @media(max-width:600px){
+      .exam-wrap{padding:1.25rem}
+      .scoreboard{grid-template-columns:repeat(2,1fr)}
+      .option-grid.cols-6{grid-template-columns:repeat(3,1fr)}
+      .option-grid.cols-3{grid-template-columns:1fr}
+      nav{padding:0 1.25rem}
+      .hero{padding:2rem 1.25rem 2rem}
+    }
+
+    /* ── DARK MODE ── */
+    html.dark {
+      --light:  #131b27;
+      --mid:    #1a2535;
+      --white:  #1e2a3a;
+      --text:   #d4e6f7;
+      --muted:  #7aa3c0;
+      --border: rgba(93,173,226,0.14);
+      --shadow: 0 2px 12px rgba(0,0,0,0.35);
+    }
+    html.dark body { background: var(--light); color: var(--text); }
+    html.dark nav  { background: #0a1220; border-color: rgba(93,173,226,0.12); }
+    html.dark footer { background: #0a1220; }
+    html.dark .exam-card,
+    html.dark .tool-card,
+    html.dark .question-card,
+    html.dark .widget,
+    html.dark .session-bar,
+    html.dark .setup-section,
+    html.dark .domain-weights,
+    html.dark .mode-bar,
+    html.dark .controls-bar,
+    html.dark .fc-area + .grade-note,
+    html.dark .acronym-card,
+    html.dark .card-mini,
+    html.dark .score-card,
+    html.dark .stat-pill,
+    html.dark .sum-card,
+    html.dark .fc-nav-btn,
+    html.dark .domain-header,
+    html.dark .obj-header { background: var(--white); border-color: var(--border); }
+    html.dark .domain-body { background: var(--white); border-color: var(--border); }
+    html.dark .score-card,
+    html.dark .sum-card { background: #0e1929; }
+    html.dark .question-box,
+    html.dark .opt-btn,
+    html.dark .option,
+    html.dark .sbi-item,
+    html.dark .rs-item,
+    html.dark .setup-section { background: var(--mid); }
+    html.dark .option { border-color: var(--border); color: var(--text); }
+    html.dark .option:hover:not(.disabled) { background: rgba(93,173,226,0.08); }
+    html.dark .fc-scene .fc-front { background: #0d1929; }
+    html.dark .fc-scene .fc-back  { background: #122040; }
+    html.dark .progress-track,
+    html.dark .prog-track,
+    html.dark .mini-bar,
+    html.dark .dw-bar-track { background: var(--mid); }
+    html.dark .cert-name,
+    html.dark .tool-name,
+    html.dark .cs-val,
+    html.dark .stat-val,
+    html.dark .sbi-val,
+    html.dark .rs-val,
+    html.dark .obj-title,
+    html.dark .domain-title { color: var(--text); }
+    html.dark .cert-vendor,
+    html.dark .cert-desc,
+    html.dark .tool-desc,
+    html.dark .cs-lbl,
+    html.dark .stat-lbl,
+    html.dark .score-lbl,
+    html.dark .sum-lbl,
+    html.dark .ac-def,
+    html.dark .card-mini-term,
+    html.dark .card-mini-status { color: var(--muted); }
+    html.dark .section-label::after,
+    html.dark .card-stats { border-color: var(--border); }
+    html.dark .port-table td { background: var(--white); border-color: var(--border); color: var(--text); }
+    html.dark .port-table th { background: #0a1220; }
+    html.dark .alpha-heading { background: var(--mid); color: var(--text); }
+    html.dark .search-input { background: var(--mid); border-color: var(--border); color: var(--text); }
+    html.dark .search-input:focus { background: var(--white); }
+    html.dark .alpha-btn,
+    html.dark .filter-btn,
+    html.dark .mode-tab,
+    html.dark .grade-btn,
+    html.dark .btn-outline { background: var(--mid); border-color: var(--border); color: var(--muted); }
+    html.dark .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+    html.dark .q-controls { background: rgba(0,0,0,0.15); border-color: var(--border); }
+    html.dark .feedback.correct-fb { background: rgba(39,174,96,0.12); }
+    html.dark .feedback.wrong-fb   { background: rgba(231,76,60,0.12); }
+    html.dark #results-screen { background: var(--white); }
+    html.dark .result-label { color: var(--muted); }
+    html.dark .acronym-card.is-mastered { background: rgba(46,125,50,0.1); }
+    html.dark .card-mini.is-mastered { background: rgba(46,125,50,0.1); }
+    html.dark .card-mini.is-reviewing { background: rgba(184,134,11,0.1); }
+    html.dark .stat-pill { background: var(--white); border-color: var(--border); color: var(--muted); }
+    html.dark .fc-dot { background: rgba(93,173,226,0.2); }
+    html.dark .session-bar-inner { border-color: var(--border); }
+    html.dark .q-header { background: #0a1220; }
+    html.dark .q-meta-row .q-num { color: var(--muted); }
+
+    /* Dark-mode toggle button */
+    .theme-btn {
+      width: 34px; height: 34px; border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.08);
+      color: rgba(255,255,255,0.75);
+      cursor: pointer; font-size: 15px;
+      display: flex; align-items: center; justify-content: center;
+      transition: all .18s; flex-shrink: 0;
+    }
+    .theme-btn:hover { background: rgba(255,255,255,0.15); color: #fff; }
+
+
+    html.dark{--light:#131b27;--mid:#1a2535;--white:#1e2a3a;--text:#d4e6f7;--muted:#7aa3c0;--border:rgba(93,173,226,0.14)}
+    html.dark body{background:var(--light);color:var(--text)}
+    html.dark nav,html.dark footer{background:#0a1220}
+    html.dark .setup-section,html.dark .session-bar,html.dark .question-card,html.dark #results-screen{background:var(--white);border-color:var(--border)}
+    html.dark .question-box,html.dark .opt-btn,html.dark .option,html.dark .sbi-item,html.dark .rs-item{background:var(--mid)}
+    html.dark .option{border-color:var(--border);color:var(--text)}
+    html.dark .q-controls{background:rgba(0,0,0,0.15);border-color:var(--border)}
+    html.dark .q-meta-row .q-num{color:var(--muted)}
+    html.dark .q-header{background:#0a1220}
+    html.dark .score-card{background:#0e1929}
+    html.dark .section-label::after{background:var(--border)}
+    html.dark .q-pill{background:var(--white);border-color:var(--border)}
+    html.dark .session-bar-inner{border-color:var(--border)}
+    html.dark .setup-section-label::after{background:var(--border)}
+    .theme-btn{width:34px;height:34px;border-radius:8px;border:1px solid rgba(255,255,255,0.18);background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.75);cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;transition:all .18s;flex-shrink:0}
+    .theme-btn:hover{background:rgba(255,255,255,0.15);color:#fff}
+
+  </style>
+</head>
+<body>
+<script>
+(function(){const K="bl-theme";function apply(d){document.documentElement.classList.toggle("dark",d);const b=document.getElementById("theme-btn");if(b)b.textContent=d?"☀":"☾"}apply(localStorage.getItem(K)==="dark");window.__toggleTheme=function(){const d=!document.documentElement.classList.contains("dark");localStorage.setItem(K,d?"dark":"light");apply(d)};window.addEventListener("storage",function(e){if(e.key===K)apply(e.newValue==="dark")})})();
+</script>
+
+
+
+
+<nav>
+  <a class="nav-brand" href="index.html"><div class="bl-circle">BL</div><span>BL Cert Hub</span></a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="cc-home.html">CC</a>
+    <a href="#" class="active">Practice Exam</a>
+    <button class="theme-btn" id="theme-btn" onclick="__toggleTheme()" title="Toggle dark mode">☾</button>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-grid-pattern"></div>
+  <div class="hero-bg-ring r1"></div>
+  <div class="hero-bg-ring r2"></div>
+  <div class="hero-inner">
+    <div class="exam-badge"><div class="bl-circle">BL</div><span>ISC2 Certified in Cybersecurity (CC)</span></div>
+    <h1>Practice <span class="accent">Exam</span></h1>
+    <p class="hero-sub">203 questions from the ISC2 CC question bank covering all 5 domains. Choose your session length and timer, then start.</p>
+  </div>
+</div>
+
+<div class="exam-wrap">
+
+  <!-- SETUP SCREEN -->
+  <div id="setup-screen">
+    <div class="setup-section">
+      <div class="setup-section-label">Number of Questions</div>
+      <div class="option-grid cols-6" id="q-count-grid">
+        <div class="opt-btn selected" data-count="10" onclick="selectCount(this,10)"><span class="ob-val">10</span><span class="ob-lbl">Quick</span></div>
+        <div class="opt-btn" data-count="20" onclick="selectCount(this,20)"><span class="ob-val">20</span><span class="ob-lbl">Short</span></div>
+        <div class="opt-btn" data-count="30" onclick="selectCount(this,30)"><span class="ob-val">30</span><span class="ob-lbl">Medium</span></div>
+        <div class="opt-btn" data-count="50" onclick="selectCount(this,50)"><span class="ob-val">50</span><span class="ob-lbl">Standard</span></div>
+        <div class="opt-btn" data-count="100" onclick="selectCount(this,100)"><span class="ob-val">100</span><span class="ob-lbl">Extended</span></div>
+        <div class="opt-btn" id="all-q-btn" data-count="203" onclick="selectCount(this, parseInt(this.dataset.count))"><span class="ob-val">All</span><span class="ob-lbl">203 Qs</span></div>
+      </div>
+    </div>
+    <div class="setup-section">
+      <div class="setup-section-label">Timer</div>
+      <div class="option-grid cols-3" id="timer-grid">
+        <div class="opt-btn selected" data-time="0" onclick="selectTimer(this,0)"><span class="ob-val">None</span><span class="ob-lbl">Untimed</span></div>
+        <div class="opt-btn" data-time="600" onclick="selectTimer(this,600)"><span class="ob-val">10m</span><span class="ob-lbl">10 Minutes</span></div>
+        <div class="opt-btn" data-time="1200" onclick="selectTimer(this,1200)"><span class="ob-val">20m</span><span class="ob-lbl">20 Minutes</span></div>
+        <div class="opt-btn" data-time="1800" onclick="selectTimer(this,1800)"><span class="ob-val">30m</span><span class="ob-lbl">30 Minutes</span></div>
+        <div class="opt-btn" data-time="3600" onclick="selectTimer(this,3600)"><span class="ob-val">1h</span><span class="ob-lbl">1 Hour</span></div>
+        <div class="opt-btn" data-time="5400" onclick="selectTimer(this,5400)"><span class="ob-val">1.5h</span><span class="ob-lbl">1.5 Hours</span></div>
+      </div>
+    </div>
+    <button class="start-btn" onclick="startExam()">Start Practice Exam →</button>
+  </div>
+
+  <!-- EXAM SCREEN -->
+  <div id="exam-screen">
+    <div class="session-bar">
+      <div class="session-bar-head" onclick="toggleSessionBar()">
+        <div class="session-bar-pills">
+          <span class="s-pill" id="session-q-pill">10 Questions</span>
+          <span class="s-pill" id="session-t-pill">Untimed</span>
+          <span class="s-pill timer-pill" id="timer-pill" style="display:none">00:00</span>
+        </div>
+        <span class="bar-chevron" id="bar-chevron">▼</span>
+      </div>
+      <div class="session-bar-body" id="session-bar-body">
+        <div class="session-bar-inner">
+          <div class="sbi-item"><div class="sbi-val" id="sbi-total">—</div><div class="sbi-lbl">Total Questions</div></div>
+          <div class="sbi-item"><div class="sbi-val" id="sbi-timer">—</div><div class="sbi-lbl">Time Limit</div></div>
+          <div class="sbi-item"><div class="sbi-val" id="sbi-mode">Untimed</div><div class="sbi-lbl">Mode</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="scoreboard">
+      <div class="score-card"><div class="score-val" id="sc-total">—</div><div class="score-lbl">Questions</div></div>
+      <div class="score-card"><div class="score-val" id="sc-answered">0</div><div class="score-lbl">Answered</div></div>
+      <div class="score-card"><div class="score-val" id="sc-correct">0</div><div class="score-lbl">Correct</div></div>
+      <div class="score-card"><div class="score-val" id="sc-pct">0%</div><div class="score-lbl">Score</div></div>
+    </div>
+    <div class="progress-row">
+      <span class="progress-label" id="prog-label">Question 1</span>
+      <span class="progress-pct" id="prog-pct">0%</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="prog-bar"></div></div>
+    <div class="section-label">Jump to Question</div>
+    <div class="q-nav" id="q-nav"></div>
+    <div class="question-card" id="q-card">
+      <div class="q-body">
+        <div class="q-text" id="q-text"></div>
+        <div class="q-meta-row">
+          <span class="q-num" id="q-num-label">Question 1</span>
+          <span class="q-domain-badge" id="q-domain-label"></span>
+        </div>
+        <div class="q-multi-note" id="q-multi-note" style="display:none">Select all that apply</div>
+        <div class="options" id="q-options"></div>
+        <div class="feedback" id="q-feedback"></div>
+      </div>
+      <div class="q-controls">
+        <button class="btn btn-outline" onclick="goTo(curQ-1)" id="btn-prev">← Prev</button>
+        <button class="btn btn-danger" onclick="endExam()">End Exam</button>
+        <button class="btn btn-primary" id="btn-next" onclick="handleNext()" disabled>Next →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULTS SCREEN -->
+  <div id="results-screen">
+    <div class="result-score" id="res-score">0/0</div>
+    <div class="result-label" id="res-label">ISC2 CC Practice Exam Complete</div>
+    <div class="result-grade" id="res-grade">—</div>
+    <div class="result-stats">
+      <div class="rs-item"><div class="rs-val" id="res-correct" style="color:var(--correct)">0</div><div class="rs-lbl">Correct</div></div>
+      <div class="rs-item"><div class="rs-val" id="res-wrong" style="color:var(--wrong)">0</div><div class="rs-lbl">Incorrect</div></div>
+      <div class="rs-item"><div class="rs-val" id="res-skip" style="color:var(--muted)">0</div><div class="rs-lbl">Skipped</div></div>
+    </div>
+    <div class="result-actions">
+      <button class="btn btn-primary" onclick="backToSetup()">↺ New Session</button>
+      <button class="btn btn-outline" onclick="location.href='cc-home.html'">← Back to Hub</button>
+    </div>
+  </div>
+
+</div>
+<footer><p>Built by <a href="https://blaborte.github.io" target="_blank">Baltazar Laborte</a> · BL Cert Hub · ISC2 Certified in Cybersecurity (CC)</p></footer>
+
+<script>
+
+const CC_Q = [
+  {q:'The address 8be2:4382:8d84:7ce2:ec0f:3908:d29a:903a is an:',opts:['A. Web address','B. IPv4 address','C. IPv6 address','D. MAC address'],ans:[2],exp:'This is a valid IPv6 address — 128-bit expressed as eight groups of four hexadecimal digits separated by colons. IPv4 uses dotted-decimal. MAC addresses use a shorter hex format.',domain:'Network Security'},
+  {q:'Which of the following canons is found in the ISC2 code of ethics?',opts:['A. Advance and promote the profession','B. Protect society, the common good, and the infrastructure','C. Provide diligent and competent service to principals','D. Act honorably, honestly, safely and legally'],ans:[2],exp:'The four ISC2 canons are: Protect society; Act honorably, honestly, justly, responsibly and legally; Provide diligent and competent service to principals; Advance and protect the profession. Option C matches exactly.',domain:'Security Principles'},
+  {q:'Which of the following is NOT an ethical canon of the ISC2?',opts:['A. Advance and protect the profession','B. Protect society, the common good, necessary public trust and confidence, and the infrastructure','C. Act honorably, honestly, justly, responsibly and legally','D. Provide active and qualified service to principal'],ans:[3],exp:'"Provide active and qualified service" is not a canon. The correct wording is "Provide diligent and competent service to principals." The difference in wording matters.',domain:'Security Principles'},
+  {q:'The cloud deployment model where a company has resources on-premise and in the cloud is known as:',opts:['A. Hybrid cloud','B. Multi-tenant','C. Private cloud','D. Community cloud'],ans:[0],exp:'A hybrid cloud combines on-premises private infrastructure with public cloud resources, enabling data and applications to move between them as needed.',domain:'Network Security'},
+  {q:'Which of the following is a public IP address?',opts:['A. 13.16.123.1','B. 192.168.123.1','C. 172.16.123.1','D. 10.221.123.1'],ans:[0],exp:'Private ranges: 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16. Only 13.16.123.1 falls outside all private ranges and is a public routable IP.',domain:'Network Security'},
+  {q:'Which of the following is a data handling policy procedure?',opts:['A. Transform','B. Collect','C. Encode','D. Destroy'],ans:[3],exp:'ISC2 data lifecycle: Create, Store, Use, Share, Archive, Destroy. Destroy is the final valid phase. Transform, Collect, and Encode are not ISC2 data lifecycle phases.',domain:'Security Operations'},
+  {q:'Which devices would be more effective in detecting an intrusion into a network?',opts:['A. Routers','B. HIDS','C. Firewalls','D. NIDS'],ans:[3],exp:'NIDS (Network Intrusion Detection System) monitors all network traffic for suspicious activity. HIDS monitors only a single host. Routers route traffic and firewalls filter it but neither specializes in intrusion detection.',domain:'Network Security'},
+  {q:'Which concept describes a strategy integrating people, technology and operations to establish security controls across multiple layers?',opts:['A. Least Privilege','B. Defense in Depth','C. Separation of Duties','D. Privileged Accounts'],ans:[1],exp:'Defense in Depth is a layered security strategy. If one layer fails, others continue to provide protection. It integrates people, technology, and operations across the organization.',domain:'Security Principles'},
+  {q:'Which access control is most effective at protecting a door against unauthorized access?',opts:['A. Fences','B. Turnstiles','C. Barriers','D. Locks'],ans:[3],exp:'Locks directly secure doors and are the most effective control for individual door protection. Fences, turnstiles, and barriers control access to areas but are not as specific to doors.',domain:'Access Controls'},
+  {q:'Which of the following is a detection control?',opts:['A. Turnstiles','B. Smoke sensors','C. Bollards','D. Firewalls'],ans:[1],exp:'Smoke sensors detect a condition (fire) after it begins — a detective control. Turnstiles and bollards are preventive/deterrent physical controls. Firewalls are preventive technical controls.',domain:'Security Principles'},
+  {q:'Which type of attack has the PRIMARY objective of controlling the system from outside?',opts:['A. Backdoors','B. Rootkits','C. Cross-Site Scripting','D. Trojans'],ans:[0],exp:'Backdoors provide persistent remote access and control of a compromised system. They bypass normal authentication and are specifically designed for outside control.',domain:'Network Security'},
+  {q:'Which of the following is NOT a protocol of OSI Level 3 (Network layer)?',opts:['A. SNMP','B. ICMP','C. IGMP','D. IP'],ans:[0],exp:'SNMP operates at Layer 7 (Application). ICMP, IGMP, and IP all operate at Layer 3 (Network layer).',domain:'Network Security'},
+  {q:'When a company hires an insurance company to mitigate risk, which risk management technique is being applied?',opts:['A. Risk avoidance','B. Risk transfer','C. Risk mitigation','D. Risk tolerance'],ans:[1],exp:'Insurance transfers the financial consequences of a risk to a third party. Risk mitigation reduces impact, risk avoidance eliminates the risky activity, risk tolerance accepts the risk.',domain:'Security Principles'},
+  {q:'The SMTP protocol operates at which OSI level?',opts:['A. 7','B. 25','C. 3','D. 23'],ans:[0],exp:'SMTP operates at OSI Layer 7 (Application layer). Port 25 is the well-known port number for SMTP, not an OSI layer.',domain:'Network Security'},
+  {q:'The process of verifying or proving a user\'s identification is known as:',opts:['A. Confidentiality','B. Integrity','C. Authentication','D. Authorization'],ans:[2],exp:'Authentication verifies a user\'s claimed identity. Authorization determines what they can do. Confidentiality and Integrity are CIA triad properties.',domain:'Access Controls'},
+  {q:'To protect against tailgating, which type of access control would be most effective?',opts:['A. Locks','B. Fences','C. Barriers','D. Turnstiles'],ans:[3],exp:'Turnstiles allow only one person through at a time, making them the most effective control against tailgating (one person following another through a secured entry).',domain:'Access Controls'},
+  {q:'Logging and monitoring systems are essential to:',opts:['A. Identifying inefficient systems, preventing compromises, and recording system use','B. Identifying efficient systems, labeling compromises, and recording system use','C. Identifying inefficient systems, detecting compromises, and recording system use','D. Identifying efficient systems, detecting compromises, and recording system use'],ans:[2],exp:'Logging and monitoring identify inefficient systems, DETECT (not prevent) compromises, and record how systems are used for audit and forensic purposes.',domain:'Security Operations'},
+  {q:'In the event of a disaster, which should be the PRIMARY objective?',opts:['A. Guarantee the safety of people','B. Guarantee the continuity of critical systems','C. Protection of the production database','D. Application of disaster communication'],ans:[0],exp:'Human life safety is always the top priority in any disaster. Business continuity, data protection, and communications are secondary to protecting people.',domain:'BC/DR/IR'},
+  {q:'The process that ensures system changes do not adversely impact business operations is known as:',opts:['A. Change Management','B. Vulnerability Management','C. Configuration Management','D. Inventory Management'],ans:[0],exp:'Change Management ensures all IT changes are documented, reviewed, approved, and implemented in a controlled way that does not disrupt business operations.',domain:'Security Operations'},
+  {q:'The last phase in the data security lifecycle is:',opts:['A. Encryption','B. Backup','C. Archival','D. Destruction'],ans:[3],exp:'The ISC2 data lifecycle is: Create, Store, Use, Share, Archive, Destroy. Destruction is the final phase.',domain:'Security Operations'},
+  {q:'Which access control model specifies access based on the subject\'s role in the organization?',opts:['A. RBAC','B. MAC','C. DAC','D. ABAC'],ans:[0],exp:'RBAC grants permissions based on organizational role. MAC uses security labels, DAC allows owner discretion, ABAC uses multiple attributes.',domain:'Access Controls'},
+  {q:'Which of the following is NOT an example of a physical security control?',opts:['A. Firewalls','B. Biometric access controls','C. Remote control electronic locks','D. Security cameras'],ans:[0],exp:'Firewalls are technical/logical controls. Biometric readers, electronic locks, and security cameras are all physical security controls.',domain:'Access Controls'},
+  {q:'Which type of attack most effectively maintains remote access and control over a victim\'s computer?',opts:['A. Trojans','B. Phishing','C. Cross-Site Scripting','D. Rootkits'],ans:[3],exp:'Rootkits embed deep in the OS and maintain persistent, hidden remote access. They are specifically designed to stay undetected while providing ongoing control.',domain:'Network Security'},
+  {q:'In incident terminology, Zero Day means:',opts:['A. Days to solve a previously unknown vulnerability','B. A previously unknown system vulnerability','C. Days without a cybersecurity incident','D. Days with a cybersecurity incident'],ans:[1],exp:'A Zero Day is a previously unknown vulnerability with no available patch. The vendor has "zero days" to fix it because it was unknown until exploited.',domain:'Network Security'},
+  {q:'Which of the following is NOT a possible model for an Incident Response Team (IRT)?',opts:['A. Leveraged','B. Pre-existing','C. Dedicated','D. Hybrid'],ans:[1],exp:'ISC2 recognizes three IRT models: Leveraged, Dedicated, and Hybrid. "Pre-existing" is not a valid IRT model.',domain:'BC/DR/IR'},
+  {q:'A device not complying with the security baseline should be:',opts:['A. Disabled or separated into quarantine until a virus scan is run','B. Disabled or isolated into quarantine until it can be checked and updated','C. Placed in a DMZ until it can be reviewed and updated','D. Marked as potentially vulnerable and placed in quarantine'],ans:[1],exp:'Non-compliant devices should be isolated/quarantined until fully checked and updated to meet the security baseline — not just scanned for viruses.',domain:'Security Operations'},
+  {q:'A biometric reader granting access to a computer system in a data center is a:',opts:['A. Administrative Control','B. Physical Control','C. Authorization Control','D. Technical Control'],ans:[3],exp:'A biometric reader controlling access to a computer system is a Technical (logical) control — it uses technology to enforce access. Physical controls protect physical space.',domain:'Access Controls'},
+  {q:'Which type of attack PRIMARILY aims to make a resource inaccessible to intended users?',opts:['A. Denial of Service','B. Phishing','C. Trojans','D. Cross-Site Scripting'],ans:[0],exp:'DoS attacks exhaust resources to deny service to legitimate users. Phishing steals credentials, Trojans provide backdoors, XSS injects malicious scripts.',domain:'Network Security'},
+  {q:'Which type of attack embeds malicious payload inside reputable or trusted software?',opts:['A. Trojans','B. Phishing','C. Rootkits','D. Cross-Site Scripting'],ans:[0],exp:'Trojans disguise malicious code inside seemingly legitimate software, tricking users into installing it.',domain:'Network Security'},
+  {q:'Which tool is commonly used to sniff network traffic?',opts:['A. Burp Suite','B. John the Ripper','C. Wireshark','D. Nslookup'],ans:[2],exp:'Wireshark is the industry-standard network packet analyzer for capturing and examining network traffic.',domain:'Network Security'},
+  {q:'Which of these is NOT an attack against an IP network?',opts:['A. Side-channel Attack','B. Man-in-the-middle Attack','C. Fragmented Packet Attack','D. Oversized Packet Attack'],ans:[0],exp:'Side-channel attacks exploit physical properties (power, timing, EM emissions) of hardware rather than targeting IP network protocols.',domain:'Network Security'},
+  {q:'Detailed steps to complete tasks supporting departmental policies are typically documented in:',opts:['A. Regulations','B. Standards','C. Policies','D. Procedures'],ans:[3],exp:'Procedures provide step-by-step task instructions. Policies state what must be done, standards specify how, regulations are legally mandated.',domain:'Security Principles'},
+  {q:'Which device connects a LAN to the Internet?',opts:['A. SIEM','B. HIDS','C. Router','D. Firewall'],ans:[2],exp:'A router connects different networks including LANs to the Internet using IP routing. SIEM collects events, HIDS monitors a host, firewalls filter traffic.',domain:'Network Security'},
+  {q:'What does SIEM stand for?',opts:['A. Security Information and Enterprise Manager','B. Security Information and Event Manager','C. System Information and Enterprise Manager','D. System Information and Event Manager'],ans:[1],exp:'SIEM = Security Information and Event Management. It collects, correlates, and analyzes security events from across the organization.',domain:'Security Operations'},
+  {q:'A security safeguard is the same as a:',opts:['A. Safety control','B. Privacy control','C. Security control','D. Security principle'],ans:[2],exp:'A security safeguard and security control are synonymous — both describe measures put in place to reduce risk and protect assets.',domain:'Security Principles'},
+  {q:'Which access control model grants access based on complex rules and multiple attributes?',opts:['A. DAC','B. ABAC','C. RBAC','D. MAC'],ans:[1],exp:'ABAC evaluates multiple attributes (user, resource, environment) and complex rule sets to make access decisions — the most flexible model.',domain:'Access Controls'},
+  {q:'Which port is used for secure web communication (HTTPS)?',opts:['A. 69','B. 80','C. 25','D. 443'],ans:[3],exp:'HTTPS uses port 443. HTTP uses 80, TFTP uses 69, SMTP uses 25.',domain:'Network Security'},
+  {q:'Which has the PRIMARY objective of identifying and prioritizing critical business processes?',opts:['A. Business Impact Plan','B. Business Impact Analysis','C. Disaster Recovery Plan','D. Business Continuity Plan'],ans:[1],exp:'The BIA identifies critical business functions, determines disruption impacts, and establishes RPO/RTO values — the foundation for BCP and DRP.',domain:'BC/DR/IR'},
+  {q:'Which of the following are NOT types of security controls?',opts:['A. Common controls','B. Hybrid controls','C. System-specific controls','D. Storage controls'],ans:[3],exp:'Three control types: Common, System-specific, and Hybrid. "Storage controls" is not a recognized security control type.',domain:'Security Principles'},
+  {q:'Which of the following is NOT a type of learning activity used in Security Awareness?',opts:['A. Awareness','B. Training','C. Education','D. Tutorial'],ans:[3],exp:'ISC2 recognizes three types: Awareness, Training, and Education. Tutorial is not a recognized category in the ISC2 security awareness framework.',domain:'Security Principles'},
+  {q:'The magnitude of harm from unauthorized disclosure, modification, or destruction of information is known as:',opts:['A. Vulnerability','B. Threat','C. Impact','D. Likelihood'],ans:[2],exp:'Impact is the magnitude of harm resulting from a security incident. Vulnerability is a weakness, Threat is a potential danger, Likelihood is the probability.',domain:'Security Principles'},
+  {q:'Implementing security controls is a form of:',opts:['A. Risk reduction','B. Risk acceptance','C. Risk avoidance','D. Risk transference'],ans:[0],exp:'Implementing controls reduces probability or impact of risks — this is risk reduction/mitigation. Acceptance keeps the risk, avoidance eliminates the activity, transference shifts it.',domain:'Security Principles'},
+  {q:'Which attacks take advantage of poor input validation in websites?',opts:['A. Trojans','B. Cross-Site Scripting','C. Phishing','D. Rootkits'],ans:[1],exp:'XSS exploits insufficient input validation to inject malicious scripts into web pages viewed by other users.',domain:'Network Security'},
+  {q:'Which is an example of an administrative security control?',opts:['A. Access Control Lists','B. Acceptable Use Policies','C. Badge Readers','D. No entry signs'],ans:[1],exp:'AUPs are administrative controls (policies and procedures). ACLs are technical, badge readers are physical, no entry signs are deterrent.',domain:'Security Principles'},
+  {q:'In Change Management, which component addresses procedures needed to undo changes?',opts:['A. Request for Approval','B. Request for Change','C. Rollback','D. Disaster and Recover'],ans:[2],exp:'Rollback procedures define steps to reverse a change and restore the system to its previous state if problems occur.',domain:'Security Operations'},
+  {q:'Which property is NOT guaranteed by Digital Signatures?',opts:['A. Authentication','B. Confidentiality','C. Non-Repudiation','D. Integrity'],ans:[1],exp:'Digital signatures provide Authentication, Non-Repudiation, and Integrity. Confidentiality requires encryption — digital signatures do not encrypt data.',domain:'Security Principles'},
+  {q:'Which devices have the PRIMARY objective of collecting and analyzing security events?',opts:['A. Hubs','B. Firewalls','C. Routers','D. SIEM'],ans:[3],exp:'SIEM systems collect, correlate, and analyze security events and logs from multiple sources across the organization.',domain:'Security Operations'},
+  {q:'What is an effective way of hardening a system?',opts:['A. Patch the system','B. Have an IDS in place','C. Run a vulnerability scan','D. Create a DMZ for web services'],ans:[0],exp:'Patching removes known vulnerabilities — a direct hardening action. IDS and vulnerability scans are detective measures. DMZ is network segmentation, not system hardening.',domain:'Security Operations'},
+  {q:'Which type of key can both encrypt and decrypt the same message?',opts:['A. A public key','B. A private key','C. An asymmetric key','D. A symmetric key'],ans:[3],exp:'Symmetric encryption uses the same key for both encryption and decryption. Asymmetric uses different keys (public/private pair).',domain:'Security Principles'},
+  {q:'Which regulations address data protection and privacy in Europe?',opts:['A. SOX','B. HIPAA','C. FISMA','D. GDPR'],ans:[3],exp:'GDPR (General Data Protection Regulation) governs data protection and privacy for individuals within the EU. SOX is US financial, HIPAA is US healthcare, FISMA is US federal.',domain:'Security Principles'},
+  {q:'Which devices inspect packet headers to allow or deny network traffic?',opts:['A. Hubs','B. Firewalls','C. Routers','D. Switches'],ans:[1],exp:'Firewalls inspect packet headers (IP addresses, ports, protocols) to enforce access control rules. Hubs broadcast all traffic, routers forward by IP, switches forward by MAC.',domain:'Network Security'},
+  {q:'A web server accepting external client requests should be placed in which network?',opts:['A. Intranet','B. DMZ','C. Internal Network','D. VPN'],ans:[1],exp:'The DMZ is designed for public-facing servers. It separates them from the internal network so a compromised server cannot directly access internal systems.',domain:'Network Security'},
+  {q:'Sensitivity is a measure of the:',opts:['A. protection and timeliness assigned to information by its owner','B. urgency and protection assigned to information by its owner','C. importance assigned to information by its owner, representing its need for protection','D. pertinence assigned to information by its owner'],ans:[2],exp:'Sensitivity measures the importance of information and its need for protection as assigned by the data owner, used to determine appropriate classification levels.',domain:'Security Operations'},
+  {q:'How many data labels are considered good practice?',opts:['A. 2-3','B. 1','C. 1-2','D. More than 4'],ans:[0],exp:'ISC2 recommends 2-3 data classification labels — enough to distinguish sensitivity levels without creating excessive handling complexity.',domain:'Security Operations'},
+  {q:'Security posters are PRIMARILY employed in:',opts:['A. Security Awareness','B. Incident Response Plans','C. Business Continuity Plans','D. Physical Security Controls'],ans:[0],exp:'Posters are awareness tools — they keep security top of mind without formal training. They are part of the Security Awareness program.',domain:'Security Principles'},
+  {q:'Which user type is LESS likely to have a privileged account?',opts:['A. System Administrator','B. Security Analyst','C. Help Desk','D. External Worker'],ans:[3],exp:'External workers (contractors, vendors) typically receive minimum access due to least privilege and reduced trust compared to internal employees.',domain:'Access Controls'},
+  {q:'Which is NOT an element of System Security Configuration Management?',opts:['A. Inventory','B. Baselines','C. Updates','D. Audit logs'],ans:[3],exp:'SCCM elements are Inventory, Baselines, and Updates/patches. Audit logs belong to monitoring and accountability, not SCCM.',domain:'Security Operations'},
+  {q:'Which are the correct components/phases of an incident response plan?',opts:['A. Preparation -> Detection -> Recovery -> Containment -> Eradication -> Post-Incident','B. Preparation -> Detection -> Containment -> Eradication -> Post-Incident -> Recovery','C. Preparation -> Detection -> Eradication -> Recovery -> Containment -> Post-Incident','D. Preparation -> Detection and Analysis -> Containment, Eradication and Recovery -> Post-Incident'],ans:[3],exp:'The correct ISC2 IR phases are: Preparation, Detection and Analysis, Containment/Eradication/Recovery, Post-Incident Activity.',domain:'BC/DR/IR'},
+  {q:'Which of the following is an example of 2FA (Two-Factor Authentication)?',opts:['A. Badges','B. Passwords','C. Keys','D. One-Time Passwords (OTP)'],ans:[3],exp:'OTPs combine something you know (PIN) with something you have (token/app). Badges, passwords, and physical keys alone are single-factor.',domain:'Access Controls'},
+  {q:'The predetermined set of instructions to sustain business operations after a disaster is commonly known as:',opts:['A. Business Impact Analysis','B. Disaster Recovery Plan','C. Business Impact Plan','D. Business Continuity Plan'],ans:[3],exp:'A BCP contains predetermined procedures to sustain critical business operations during and after a disaster. A DRP focuses specifically on IT system recovery.',domain:'BC/DR/IR'},
+  {q:'Which is NOT a feature of a cryptographic hash function?',opts:['A. Reversible','B. Unique','C. Deterministic','D. Useful'],ans:[0],exp:'Hash functions are one-way (irreversible). They are deterministic (same input = same output), produce unique outputs, and are useful for integrity verification.',domain:'Security Principles'},
+  {q:'Which three packets are used in the TCP connection handshake?',opts:['A. Offer - Request - ACK','B. SYN - SYN/ACK - ACK','C. SYN - ACK - FIN','D. Discover - Offer - Request'],ans:[1],exp:'TCP three-way handshake: SYN (client) - SYN/ACK (server) - ACK (client). DORA is DHCP. FIN closes connections.',domain:'Network Security'},
+  {q:'After an earthquake, which document contains procedures to return business to normal operation?',opts:['A. The Business Impact Plan','B. The Business Impact Analysis','C. The Business Continuity Plan','D. The Disaster Recovery Plan'],ans:[3],exp:'The DRP contains procedures to restore IT systems after a disaster. The BCP maintains ongoing operations during the disruption.',domain:'BC/DR/IR'},
+  {q:'What is the consequence of a Denial of Service attack?',opts:['A. Exhaustion of device resources','B. Malware infection','C. Increase in availability of resources','D. Remote control of a device'],ans:[0],exp:'DoS attacks flood systems to exhaust CPU, memory, bandwidth, or connections — making the service unavailable to legitimate users.',domain:'Network Security'},
+  {q:'According to ISC2, which are the six phases of data handling?',opts:['A. Create - Use - Store - Share - Archive - Destroy','B. Create - Store - Use - Share - Archive - Destroy','C. Create - Share - Use - Store - Archive - Destroy','D. Create - Share - Store - Use - Archive - Destroy'],ans:[1],exp:'The ISC2 data lifecycle is: Create, Store, Use, Share, Archive, Destroy — in that order.',domain:'Security Operations'},
+  {q:'Which is less likely to be part of an incident response team?',opts:['A. Legal representatives','B. Human Resources','C. Representatives of senior management','D. Information security professionals'],ans:[1],exp:'HR is not typically a core IR team member. IR teams include information security professionals, legal, senior management, and technical experts.',domain:'BC/DR/IR'},
+  {q:'Which tool is commonly used to crack passwords?',opts:['A. Burp Suite','B. Nslookup','C. John the Ripper','D. Wireshark'],ans:[2],exp:'John the Ripper is a widely-used password cracking tool. Burp Suite tests web apps, Nslookup queries DNS, Wireshark captures network traffic.',domain:'Network Security'},
+  {q:'To find out whether personal tablet devices are allowed in the office, which policy should you read?',opts:['A. BYOD','B. Privacy Policy','C. Change Management Policy','D. AUP'],ans:[0],exp:'A BYOD (Bring Your Own Device) policy governs whether and how employees may use personal devices for work.',domain:'Security Principles'},
+  {q:'In which cloud model do companies share resources and infrastructure?',opts:['A. Hybrid cloud','B. Multi-tenant','C. Private cloud','D. Community cloud'],ans:[3],exp:'A Community cloud shares infrastructure among organizations with common interests (same industry, compliance requirements).',domain:'Network Security'},
+  {q:'The PRIMARY objective of a Disaster Recovery Plan is:',opts:['A. Restore operations to last-known reliable state','B. Outline safe escape procedures for personnel','C. Maintain crucial operations during a disaster','D. Communicate damage caused to operations'],ans:[0],exp:'A DRP\'s primary objective is to restore IT systems to the last-known reliable operational state as quickly as possible after a disaster.',domain:'BC/DR/IR'},
+  {q:'An entity that exploits a target organization\'s system vulnerabilities is a:',opts:['A. Threat Vector','B. Threat Actor','C. Threat','D. Attacker'],ans:[1],exp:'A Threat Actor is an entity that intentionally acts to exploit vulnerabilities. A Threat is the potential danger. A Threat Vector is the path used for attack.',domain:'Security Principles'},
+  {q:'A best practice of patch management is to:',opts:['A. Apply all patches as quickly as possible','B. Test patches before applying them','C. Apply patches every Wednesday','D. Apply patches per vendor reputation'],ans:[1],exp:'Testing patches in a non-production environment before deployment prevents patches from causing unintended disruptions or compatibility issues.',domain:'Security Operations'},
+  {q:'Which is the best option for a network admin who needs to control network access?',opts:['A. HIDS','B. IDS','C. SIEM','D. NAC'],ans:[3],exp:'NAC (Network Access Control) enforces security policies by controlling which devices and users can connect to the network.',domain:'Network Security'},
+  {q:'Which of these is NOT a change management component?',opts:['A. Approval','B. RFC','C. Rollback','D. Governance'],ans:[3],exp:'Change management components: Approval, RFC (Request for Change), and Rollback. Governance is an organizational concept, not a specific CM component.',domain:'Security Operations'},
+  {q:'Which of the following is NOT a social engineering technique?',opts:['A. Pretexting','B. Quid pro quo','C. Double-dealing','D. Baiting'],ans:[2],exp:'"Double-dealing" is not a recognized social engineering technique. Valid techniques include Pretexting, Quid pro quo, and Baiting.',domain:'Network Security'},
+  {q:'If there is no time constraint, which protocol establishes a reliable connection?',opts:['A. TCP','B. DHCP','C. SNMP','D. UDP'],ans:[0],exp:'TCP provides reliable, ordered, error-checked delivery through three-way handshake and acknowledgments. UDP is faster but unreliable.',domain:'Network Security'},
+  {q:'An exploitable weakness or flaw in a system is a:',opts:['A. Threat','B. Bug','C. Vulnerability','D. Risk'],ans:[2],exp:'A vulnerability is a weakness that can be exploited. A threat is a potential event, a risk combines threat and vulnerability, a bug is a software error that may or may not be exploitable.',domain:'Security Principles'},
+  {q:'In which cloud model does the customer have LEAST responsibility over infrastructure?',opts:['A. IaaS','B. FaaS','C. PaaS','D. SaaS'],ans:[3],exp:'SaaS: provider manages everything. Customer only uses the application. IaaS gives the customer the most infrastructure responsibility.',domain:'Network Security'},
+  {q:'Risk Management is:',opts:['A. Assessment of potential impact of a threat','B. Creation of an incident response team','C. The impact and likelihood of a threat','D. Identification, evaluation and prioritization of risks'],ans:[3],exp:'Risk Management is the process of identifying, evaluating, and prioritizing risks, then coordinating resources to minimize their impact.',domain:'Security Principles'},
+  {q:'Which document contains elements that are NOT mandatory?',opts:['A. Policies','B. Guidelines','C. Regulations','D. Procedures'],ans:[1],exp:'Guidelines are recommendations — best practices that are advisory and non-mandatory. Policies and procedures define required behaviors; regulations have legal force.',domain:'Security Principles'},
+  {q:'In which phase of an Incident Response Plan are incident responses prioritized?',opts:['A. Post-incident Activity','B. Detection and Analysis','C. Preparation','D. Containment, Eradication, and Recovery'],ans:[1],exp:'During Detection and Analysis, incidents are identified, analyzed, and prioritized by severity and business impact to guide the response effort.',domain:'BC/DR/IR'},
+  {q:'Which principle states a user should only have necessary permissions to execute a task?',opts:['A. Privileged Accounts','B. Separation of Duties','C. Least Privilege','D. Defense in Depth'],ans:[2],exp:'Least Privilege: users get only the minimum permissions needed for their job functions — no more, no less.',domain:'Access Controls'},
+  {q:'The Bell-LaPadula access control model is a form of:',opts:['A. ABAC','B. RBAC','C. MAC','D. DAC'],ans:[2],exp:'Bell-LaPadula is a MAC model developed for military use enforcing confidentiality with "no read up, no write down" policy.',domain:'Access Controls'},
+  {q:'In risk management, highest priority is given to risk where:',opts:['A. Frequency is low and expected impact is high','B. Probability is low and impact is low','C. Probability is high and impact is low','D. Frequency is high and impact is low'],ans:[0],exp:'High impact risks demand high priority regardless of frequency. A low-probability but high-impact event (like a major breach) still requires significant attention and resources.',domain:'Security Principles'},
+  {q:'Which area is connected to PII (Personally Identifiable Information)?',opts:['A. Non-Repudiation','B. Authentication','C. Integrity','D. Confidentiality'],ans:[3],exp:'PII must be protected from unauthorized access — a Confidentiality concern. Ensuring personal data is only accessible to authorized parties is the primary PII protection goal.',domain:'Security Principles'},
+  {q:'Per the "Provide diligent and competent service" canon, ISC2 professionals must:',opts:['A. Tarnish no reputation through malice','B. Treat all members fairly and consider public safety','C. Avoid apparent or actual conflicts of interest','D. Promote understanding of prudent security measures'],ans:[2],exp:'Under this canon, ISC2 professionals must avoid conflicts of interest — maintaining objectivity and independence in all professional relationships.',domain:'Security Principles'},
+  {q:'Malicious emails targeting company executives are an example of:',opts:['A. Trojans','B. Whaling','C. Phishing','D. Rootkits'],ans:[1],exp:'Whaling is targeted phishing specifically aimed at senior executives (C-suite). It uses highly personalized messages to trick high-value targets.',domain:'Network Security'},
+  {q:'Governments can impose financial penalties for breaking a:',opts:['A. Regulation','B. Standard','C. Policy','D. Procedure'],ans:[0],exp:'Regulations are legally mandated requirements with government enforcement power including financial penalties and legal action.',domain:'Security Principles'},
+  {q:'Which attack tricks users into revealing personal information via fraudulent messages?',opts:['A. Phishing','B. Cross-Site Scripting','C. Denial of Service','D. Trojans'],ans:[0],exp:'Phishing uses deceptive messages to trick users into revealing sensitive information like credentials or financial data.',domain:'Network Security'},
+  {q:'In which access control model can the creator of an object delegate permissions?',opts:['A. ABAC','B. MAC','C. RBAC','D. DAC'],ans:[3],exp:'In DAC (Discretionary Access Control) the data owner has discretion to grant or delegate access permissions to other users.',domain:'Access Controls'},
+  {q:'Which attack has the PRIMARY objective of encrypting data and demanding a ransom?',opts:['A. Ransomware','B. Trojan','C. Cross-Site Scripting','D. Phishing'],ans:[0],exp:'Ransomware encrypts victim files and systems then demands payment (usually cryptocurrency) for the decryption key.',domain:'Network Security'},
+  {q:'Which cloud model allows access to fundamental computer resources?',opts:['A. SaaS','B. FaaS','C. PaaS','D. IaaS'],ans:[3],exp:'IaaS provides fundamental computing resources — virtual machines, storage, networking — that customers configure as needed.',domain:'Network Security'},
+  {q:'How many layers does the OSI model have?',opts:['A. 7','B. 4','C. 6','D. 5'],ans:[0],exp:'The OSI model has 7 layers: Physical, Data Link, Network, Transport, Session, Presentation, Application.',domain:'Network Security'},
+  {q:'Which principle aims primarily at fraud detection?',opts:['A. Privileged Accounts','B. Defense in Depth','C. Least Privilege','D. Separation of Duties'],ans:[3],exp:'Separation of Duties divides critical tasks among multiple people so no single person can commit and conceal fraud.',domain:'Security Principles'},
+  {q:'Which protocol uses a three-way handshake to establish a reliable connection?',opts:['A. TCP','B. SMTP','C. UDP','D. SNMP'],ans:[0],exp:'TCP uses three-way handshake (SYN, SYN-ACK, ACK) to establish reliable ordered connections. UDP is connectionless.',domain:'Network Security'},
+  {q:'Which is an example of a technical security control?',opts:['A. Access control lists','B. Turnstiles','C. Fences','D. Bollards'],ans:[0],exp:'ACLs are technical/logical controls. Turnstiles, fences, and bollards are all physical controls.',domain:'Security Principles'},
+  {q:'Which attack gains information by observing device power consumption?',opts:['A. Side Channels','B. Trojans','C. Cross-Site Scripting','D. Denial of Service'],ans:[0],exp:'Side-channel attacks extract information from physical characteristics (power, timing, EM emissions) rather than exploiting software.',domain:'Network Security'},
+  {q:'Which is the most distinctive property concern for PHI (Protected Health Information)?',opts:['A. Integrity','B. Confidentiality','C. Non-Repudiation','D. Authentication'],ans:[1],exp:'PHI is primarily a Confidentiality concern — it must be protected from unauthorized disclosure under HIPAA and similar regulations.',domain:'Security Principles'},
+  {q:'Which is the most efficient and effective way to test a business continuity plan?',opts:['A. Simulations','B. Walkthroughs','C. Reviews','D. Discussions'],ans:[0],exp:'Simulations mimic actual disaster scenarios and validate that procedures actually work — more effective than walkthroughs, reviews, or discussions.',domain:'BC/DR/IR'},
+  {q:'Which cybersecurity concept guarantees information is accessible only to authorized users?',opts:['A. Confidentiality','B. Non-repudiation','C. Authentication','D. Accessibility'],ans:[0],exp:'Confidentiality (the "C" in CIA) ensures information is accessible only to those authorized to access it.',domain:'Security Principles'},
+  {q:'In the event of a disaster, what should be the PRIMARY objective?',opts:['A. Apply disaster communication','B. Protect the production database','C. Guarantee the safety of people','D. Guarantee continuity of critical systems'],ans:[2],exp:'Human life safety is always the top priority. Business systems and communications are secondary to protecting people.',domain:'BC/DR/IR'},
+  {q:'A security professional should report company security policy violations to:',opts:['A. The ISC Ethics Committee','B. Company management','C. National authorities','D. A court of law'],ans:[1],exp:'Security policy violations should first be reported to company management through internal channels. External reporting may follow for criminal activity.',domain:'Security Principles'},
+  {q:'Which department is NOT regularly involved in a DRP?',opts:['A. Executives','B. IT','C. Public Relations','D. Financial'],ans:[2],exp:'Public Relations is not typically a core DRP participant. DRP involves IT (recovery), Executives (authority), and Financial (budget). PR handles communications separately.',domain:'BC/DR/IR'},
+  {q:'Which is included in an SLA document?',opts:['A. Plan for continuation of critical business functions','B. Plan to keep operations going during recovery','C. Instructions to detect and limit cyber-attack consequences','D. Instructions on data ownership and destruction'],ans:[3],exp:'SLAs between cloud customers and providers should include provisions for data ownership rights and destruction procedures when the service ends.',domain:'Security Operations'},
+  {q:'What is the most important difference between MAC and DAC?',opts:['A. In MAC, admins set roles; in DAC roles are at owner discretion','B. In MAC, admins assign access; in DAC admins set user roles','C. In MAC, admins assign access permissions; in DAC access is at owner discretion','D. In MAC, access is at owner discretion; in DAC admins assign access'],ans:[2],exp:'MAC: administrators assign all access permissions based on security labels. DAC: the data owner has discretion to set permissions for their objects.',domain:'Access Controls'},
+  {q:'Requiring a specific user role to access resources is an example of:',opts:['A. MAC','B. ABAC','C. RBAC','D. DAC'],ans:[2],exp:'RBAC grants access based on organizational role. Permissions are assigned to roles, and users are assigned to roles.',domain:'Access Controls'},
+  {q:'Which document ensures vital company systems keep running during disrupting events?',opts:['A. Business Impact Plan','B. Business Impact Analysis','C. Disaster Recovery Plan','D. Business Continuity Plan'],ans:[3],exp:'The BCP contains procedures for maintaining critical business operations during disruptions. DRP focuses on IT system recovery.',domain:'BC/DR/IR'},
+  {q:'Which is NOT a best practice in access management?',opts:['A. Give only the right amount of permission','B. Periodically assess if permissions still apply','C. Request justification when upgrading permission','D. Trust but verify'],ans:[3],exp:'"Trust but verify" contradicts Zero Trust principles. The three valid practices are all forms of least privilege management.',domain:'Access Controls'},
+  {q:'If a company collects PII, which policy is required?',opts:['A. Remote Access Policy','B. GDPR','C. Privacy Policy','D. Acceptable Use Policy'],ans:[2],exp:'Any organization collecting PII must have a Privacy Policy explaining what data is collected and how it is used, stored, and protected.',domain:'Security Principles'},
+  {q:'Which is LEAST likely to be installed by an infection?',opts:['A. Logic Bomb','B. Keylogger','C. Trojan','D. Backdoor'],ans:[2],exp:'Trojans are typically installed by deceived users, not propagated by infection. Logic bombs, keyloggers, and backdoors are commonly installed by malware.',domain:'Network Security'},
+  {q:'The best defense against a Replay Attack is to:',opts:['A. Use an IPSec VPN','B. Use a Firewall','C. Use password authentication','D. Use message digesting'],ans:[3],exp:'Message digesting with timestamps/nonces ensures each message is unique and cannot be reused, preventing replay attacks.',domain:'Network Security'},
+  {q:'Which device determines the most efficient path for traffic to flow across networks?',opts:['A. Hubs','B. Firewalls','C. Routers','D. Switches'],ans:[2],exp:'Routers determine optimal paths using routing tables and protocols. Switches handle local traffic, hubs broadcast all traffic, firewalls filter traffic.',domain:'Network Security'},
+  {q:'Which malware self-replicates without human intervention?',opts:['A. Worm','B. Trojan','C. Virus','D. Rootkits'],ans:[0],exp:'Worms self-replicate and spread across networks autonomously. Viruses require a host program and user action. Trojans require users to install them.',domain:'Network Security'},
+  {q:'As an ISC2 member, "due care" means:',opts:['A. Do what is right in each situation on the job','B. Give continuity to legacy security practices','C. Apply patches annually','D. Research and acquire knowledge to do your job right'],ans:[0],exp:'"Due care" means doing what a reasonably prudent person would do — taking appropriate steps and making sound decisions in each situation.',domain:'Security Principles'},
+  {q:'Which is NOT a best practice in access management?',opts:['A. Periodically assessing whether permissions still apply','B. Requesting justification when upgrading permission','C. Giving only the right amount of permission','D. Trust but verify'],ans:[3],exp:'"Trust but verify" contradicts Zero Trust ("never trust, always verify"). The other three are valid least-privilege practices.',domain:'Access Controls'},
+  {q:'During an incident investigation, which policies are most likely to cause difficulties?',opts:['A. Configuration standards','B. Incident response policies','C. Communication policies','D. Retention policies'],ans:[3],exp:'Retention policies specifying data deletion timelines can conflict with investigations — required evidence may have already been deleted per policy.',domain:'BC/DR/IR'},
+  {q:'In an ACL, the element that determines which permissions apply is:',opts:['A. The subject','B. The object','C. The firmware','D. The rule'],ans:[3],exp:'Rules within an ACL define what permissions apply to which subjects for which objects — the rule is the policy element making access decisions.',domain:'Access Controls'},
+  {q:'What does "data remanence" refer to?',opts:['A. Data in use that cannot be encrypted','B. Files saved locally that cannot be remotely accessed','C. Data left over after routine removal and deletion','D. All data in a system'],ans:[2],exp:'Data remanence is residual data that remains after attempts to remove or erase it — why secure disposal methods like degaussing are necessary.',domain:'Security Operations'},
+  {q:'Which recovery site has some systems in place but not the data needed to take over operations?',opts:['A. A hot site','B. A cloud site','C. A warm site','D. A cold site'],ans:[2],exp:'A warm site has hardware configured but lacks current data. Hot site is fully operational. Cold site has only the facility.',domain:'BC/DR/IR'},
+  {q:'Which is NOT a characteristic of an MSP implementation?',opts:['A. Manage all in-house infrastructure','B. Monitor and respond to security incidents','C. Mediate and decide top-level decisions','D. Utilize expertise for product or service implementation'],ans:[2],exp:'MSPs do not make top-level strategic decisions for clients. Those decisions remain with the client organization\'s leadership.',domain:'Security Operations'},
+  {q:'Which is NOT a typical component of a comprehensive BCP?',opts:['A. A cost prediction of immediate response procedures','B. Immediate response procedures and checklists','C. Notification systems and call trees for alerting personnel','D. A list of BCP team members'],ans:[0],exp:'Cost predictions are not a standard BCP component. BCPs include procedures, checklists, call trees, and team member lists.',domain:'BC/DR/IR'},
+  {q:'Which of these is NOT considered unethical per ISC2?',opts:['A. Disrupting the intended use of the internet','B. Seeking unauthorized access to internet resources','C. Compromising the privacy of users','D. Having fake social media profiles and accounts'],ans:[3],exp:'Fake social media profiles are not explicitly identified as unethical in the ISC2 code. The other three directly violate ISC2 ethical principles.',domain:'Security Principles'},
+  {q:'Which IR phase uses indicators of compromise and log analysis?',opts:['A. Preparation','B. Eradication','C. Identification','D. Containment'],ans:[2],exp:'The Identification phase uses IoCs, log analysis, and event correlation to detect and confirm that an incident has occurred.',domain:'BC/DR/IR'},
+  {q:'Which access control system is commonly used in the military?',opts:['A. ABAC','B. DAC','C. RBAC','D. MAC'],ans:[3],exp:'MAC with security labels (Top Secret, Secret, Confidential) is the standard for military and government use requiring strict compartmentalization.',domain:'Access Controls'},
+  {q:'Which of these is NOT a security principle?',opts:['A. Security in Depth (SID)','B. Zero Trust model','C. Least Privilege','D. Separation of Duties'],ans:[0],exp:'"Security in Depth (SID)" is not recognized. The correct term is "Defense in Depth." Zero Trust, Least Privilege, and Separation of Duties are established principles.',domain:'Security Principles'},
+  {q:'Which is NOT a common goal of a cybersecurity attacker?',opts:['A. Allocation','B. Alteration','C. Disclosure','D. Denial'],ans:[0],exp:'Attacker goals are the DAD triad: Disclosure, Alteration, Denial. "Allocation" is not a recognized attacker objective.',domain:'Security Principles'},
+  {q:'Which layer type is NOT part of the TCP/IP model?',opts:['A. Application','B. Physical','C. Internet','D. Transport'],ans:[1],exp:'TCP/IP has four layers: Application, Transport, Internet, Network Access. Physical is an OSI layer, not a separate TCP/IP layer.',domain:'Network Security'},
+  {q:'On a BYOD model, which technology best separates corporate from personal data?',opts:['A. Biometrics','B. Full-device encryption','C. Context-aware authentication','D. Containerization'],ans:[3],exp:'Containerization creates an isolated environment keeping corporate apps and data completely separate from personal data, with separate encryption and controls.',domain:'Security Operations'},
+  {q:'In risk management, what does ALE outline?',opts:['A. Expected cost per year of not performing risk mitigation','B. The business impact of a risk','C. Percentage of Asset Lost Efficiency','D. Probability of a risk occurring in a given year'],ans:[0],exp:'ALE (Annualized Loss Expectancy) = SLE x ARO. It represents the expected annual cost of a risk — the annual cost of NOT mitigating it.',domain:'Security Principles'},
+  {q:'Which technique is PRIMARILY used to ensure data integrity?',opts:['A. Message Digest','B. Content Encryption','C. Backups','D. Hashing'],ans:[3],exp:'Hashing produces a fixed-size fingerprint that changes completely if any data is altered — the primary integrity verification mechanism.',domain:'Security Principles'},
+  {q:'Which is an example of a privacy breach?',opts:['A. Any observable occurrence in a network or system','B. Being exposed to the possibility of attack','C. Unavailability of critical systems','D. Access of private information by an unauthorized person'],ans:[3],exp:'A privacy breach is unauthorized access to or disclosure of private personal information. Observable occurrences are events, exposure is vulnerability, unavailability is an availability issue.',domain:'Security Principles'},
+  {q:'Which term refers to a collection of fixes?',opts:['A. Downgrade','B. Patch','C. Service Pack','D. Hotfix'],ans:[2],exp:'A Service Pack is a collection of multiple fixes and patches bundled together. A patch addresses one specific issue, a hotfix is an emergency single fix.',domain:'Security Operations'},
+  {q:'During background checks, which can NEVER be used for discrimination?',opts:['A. Employment history, references, criminal records','B. Credit history, employment history, references','C. Criminal records, credit history, references','D. References, education, political affiliation, employment history'],ans:[3],exp:'Political affiliation can never be a basis for employment discrimination. Employment history, references, criminal records, credit history, and education may all be legally considered.',domain:'Security Principles'},
+  {q:'When seeking cybersecurity insurance, the MOST IMPORTANT objective is:',opts:['A. Risk acceptance','B. Risk transference','C. Risk avoidance','D. Risk spreading'],ans:[1],exp:'Cybersecurity insurance is risk transference — financial consequences transfer to the insurance company in exchange for premiums.',domain:'Security Principles'},
+  {q:'Which document is MORE directly related to what can be done with a system or its information?',opts:['A. SLA','B. MOA','C. MOU','D. ROE'],ans:[3],exp:'ROE (Rules of Engagement) defines what is permitted when using a system or its information — it governs the specific actions allowed.',domain:'Security Principles'},
+  {q:'Which document outlines procedures ensuring vital systems keep running during disruptions?',opts:['A. Business Impact Analysis','B. Business Impact Plan','C. Business Continuity Plan','D. Disaster Recovery Plan'],ans:[2],exp:'The BCP provides procedures for maintaining vital operations during disruptions, covering people, processes, and resources.',domain:'BC/DR/IR'},
+  {q:'Which social engineering attack sends targeted emails to specific individuals?',opts:['A. Pharming','B. Whaling','C. Vishing','D. Spear phishing'],ans:[3],exp:'Spear phishing targets specific individuals with personalized emails. Whaling targets executives specifically. Vishing uses voice. Pharming redirects DNS.',domain:'Network Security'},
+  {q:'Which property is NOT guaranteed by a Message Authentication Code?',opts:['A. Authenticity','B. Anonymity','C. Integrity','D. Non-repudiation'],ans:[1],exp:'MAC provides Authenticity, Integrity, and Non-repudiation. It does NOT provide Anonymity — the sender is identified by the MAC.',domain:'Security Principles'},
+  {q:'What is the PRIMARY objective of degaussing?',opts:['A. Preventing magnetic side-channel attacks','B. Reducing noisy data on a disk','C. Erasing data on a disk','D. Retaining data on a disk'],ans:[2],exp:'Degaussing uses a powerful magnetic field to permanently and unrecoverably erase data from magnetic storage media.',domain:'Security Operations'},
+  {q:'Which is part of the ISC2 code of ethics canons?',opts:['A. Provide diligent and competent services to stakeholders','B. Advance and protect the profession','C. Prevent and detect unauthorized use of digital assets','D. Act always in the best interest of your client'],ans:[1],exp:'"Advance and protect the profession" is one of the four ISC2 canons. The others listed are not exact ISC2 canon statements.',domain:'Security Principles'},
+  {q:'Which is NOT one of the ISC2 ethics canons?',opts:['A. Act honorably, honestly, justly, responsibly, and legally','B. Consider the social consequences of the systems you are designing','C. Protect society, the common good, necessary public trust and confidence, and the infrastructure','D. Provide diligent and competent service to principals'],ans:[1],exp:'"Consider social consequences of systems you are designing" is from the ACM code, not ISC2. The four ISC2 canons are options A, C, and D.',domain:'Security Principles'},
+  {q:'Which is the PRIMARY objective of the PCI-DSS standard?',opts:['A. Personally Identifiable Information (PII)','B. Change Management','C. Secure Credit Card Payments','D. Protected Health Information (PHI)'],ans:[2],exp:'PCI-DSS was created specifically to protect payment card data and secure credit card transactions.',domain:'Security Principles'},
+  {q:'Which attack encrypts the organization\'s information and demands payment for the decryption code?',opts:['A. Phishing','B. DDoS','C. Spoofing','D. Ransomware'],ans:[3],exp:'Ransomware encrypts victim data and demands payment for the decryption key.',domain:'Network Security'},
+  {q:'The PRIMARY objective of a business continuity plan is:',opts:['A. To regularly verify compliance with regulations','B. To sustain business operations while recovering from disruption','C. To assess the impact of disruption to the business','D. To restore the business to the last-known reliable state'],ans:[1],exp:'The BCP\'s primary goal is sustaining critical operations during and after disruption. BIA assesses impact, DRP restores systems.',domain:'BC/DR/IR'},
+  {q:'Which attack\'s PRIMARY goal is gaining access through falsified identity?',opts:['A. Ransomware','B. Amplification','C. Spoofing','D. DDoS'],ans:[2],exp:'Spoofing forges a legitimate entity\'s identity (IP, email, MAC address) to gain unauthorized access or trust.',domain:'Network Security'},
+  {q:'Which is NOT a PRIMARY responsibility of an incident response team when an incident occurs?',opts:['A. Determining scope of damage','B. Implementing recovery procedures','C. Determining if confidential information was compromised','D. Communicating with top management regarding the event'],ans:[3],exp:'Communicating with management, while it may happen, is not a primary technical IR team responsibility. Primary duties are scoping, containment, recovery, and breach analysis.',domain:'BC/DR/IR'},
+  {q:'What is the PRIMARY objective of rollback in change management?',opts:['A. Identify required changes needed','B. Validate the system change process','C. Restore the system to its state before the change','D. Establish a minimum acceptable level of security requirements'],ans:[2],exp:'Rollback restores a system to its previous stable state when a change causes problems and needs to be reversed.',domain:'Security Operations'},
+  {q:'Which entity is responsible for signing an organization\'s policies?',opts:['A. Human Resources','B. Security engineer','C. Financial Department','D. Senior management'],ans:[3],exp:'Senior management must authorize and sign security policies to give them organizational authority and demonstrate executive commitment.',domain:'Security Principles'},
+  {q:'Which term refers to threats with high sophistication spanning months or years?',opts:['A. Rootkit','B. APT','C. Side-channel','D. Ping of death'],ans:[1],exp:'APT (Advanced Persistent Threat) describes sophisticated long-term attacks — often nation-state sponsored — maintaining prolonged unauthorized access while avoiding detection.',domain:'Network Security'},
+  {q:'The PRIMARY objective of a security baseline is to establish:',opts:['A. A minimum understood and a good level of security requirements','B. A minimum understood and acceptable level of security requirements','C. Security and configuration requirements','D. A maximum understood and acceptable level of security requirements'],ans:[1],exp:'A security baseline establishes the minimum understood and acceptable level of security requirements — the floor below which no configuration should fall.',domain:'Security Operations'},
+  {q:'Which attacks take advantage of inadequate input validation in websites?',opts:['A. Phishing','B. Trojans','C. Cross-Site Scripting','D. Rootkits'],ans:[2],exp:'XSS exploits inadequate input validation to inject malicious scripts into web pages executed by other users\' browsers.',domain:'Network Security'},
+  {q:'Which tool detects AND acts on malicious activity?',opts:['A. Router','B. IPS','C. IDS','D. Firewall'],ans:[1],exp:'IPS detects AND automatically blocks/drops malicious traffic. IDS only detects and alerts. Firewalls filter based on rules, routers forward traffic.',domain:'Network Security'},
+  {q:'In a DAC policy, which task can only be performed by a subject granted access?',opts:['A. Changing security attributes','B. Reading the information','C. Executing the information','D. Modifying the information'],ans:[1],exp:'In DAC, reading information requires explicit access granted by the object owner. Changing security attributes is reserved for the owner.',domain:'Access Controls'},
+  {q:'In the event of non-compliance, which can have considerable financial consequences?',opts:['A. Policies','B. Regulations','C. Guidelines','D. Standards'],ans:[1],exp:'Regulations are legally mandated with government enforcement power including significant financial penalties.',domain:'Security Principles'},
+  {q:'What does LAN refer to?',opts:['A. A tool to manage network traffic and protect a network','B. A network on a building or limited geographical area','C. A device connecting multiple devices in a network','D. A long-distance connection between geographically-distant networks'],ans:[1],exp:'LAN (Local Area Network) spans a building or limited geographic area. WAN spans long distances, switches connect devices, firewalls protect networks.',domain:'Network Security'},
+  {q:'Which is a type of corrective security control?',opts:['A. Patches','B. Intrusion detection systems','C. Guidelines','D. Encryption'],ans:[0],exp:'Patches fix known vulnerabilities — a corrective control. IDS is detective, guidelines are advisory/administrative, encryption is preventive.',domain:'Security Principles'},
+  {q:'Which enables point-to-point communication over an untrusted network?',opts:['A. VLAN','B. Firewall','C. Router','D. VPN'],ans:[3],exp:'A VPN creates an encrypted tunnel for secure point-to-point communication over untrusted networks like the Internet.',domain:'Network Security'},
+  {q:'At which OSI layer do TCP and UDP operate?',opts:['A. Transport Layer','B. Session Layer','C. Application Layer','D. Physical Layer'],ans:[0],exp:'TCP and UDP both operate at OSI Layer 4 (Transport Layer), providing end-to-end communication services.',domain:'Network Security'},
+  {q:'Which is the PRIMARY focus of the ISO 27002 standard?',opts:['A. Health Insurance Portability and Accountability Act (HIPAA)','B. Information Security Management System (ISMS)','C. Risk Management','D. Application Security'],ans:[1],exp:'ISO 27002 provides implementation guidance for information security controls supporting ISO 27001, which defines the ISMS framework.',domain:'Security Principles'},
+  {q:'Which subnet mask allows 30 hosts?',opts:['A. /26','B. /30','C. /27','D. /29'],ans:[2],exp:'/27 = 255.255.255.224 = 30 usable hosts (32 total - 2). /26 = 62 hosts, /29 = 6 hosts, /30 = 2 hosts.',domain:'Network Security'},
+  {q:'Which statement about IPv6 security implications is NOT true?',opts:['A. Rules based on static IPv6 addresses may not work','B. IPv6\'s NAT implementation is insecure','C. IPv6 traffic may bypass existing security controls','D. IPv6 reputation services may not be mature'],ans:[1],exp:'IPv6 does not natively use NAT — it was designed to eliminate NAT. The statement about "IPv6\'s NAT implementation" is false because IPv6 has no standard NAT.',domain:'Network Security'},
+  {q:'Which is a type of detective access control?',opts:['A. Bollards','B. Movement Sensors','C. Turnstiles','D. Firewalls'],ans:[1],exp:'Movement sensors detect motion and trigger alerts — detective controls. Bollards and turnstiles are preventive/deterrent. Firewalls are preventive.',domain:'Access Controls'},
+  {q:'Name, age, location, and job title of a person are all examples of:',opts:['A. Biometric factors','B. Attributes','C. Account permissions','D. Identity factors'],ans:[1],exp:'Name, age, location, and job title are attributes — descriptive characteristics about a person.',domain:'Security Principles'},
+  {q:'Which cloud service model is best for customers wanting to install a custom operating system?',opts:['A. SaaS','B. SLA','C. IaaS','D. PaaS'],ans:[2],exp:'IaaS provides raw virtual machines with full control — customers can install any OS. SaaS provides apps, PaaS provides a platform.',domain:'Network Security'},
+  {q:'Which statement is TRUE about cybersquatting?',opts:['A. Unethical but common','B. Partially illegal','C. Illegal','D. Legal'],ans:[2],exp:'Cybersquatting is illegal under ACPA and similar laws globally — registering domain names of trademarks to extort the rightful owner.',domain:'Security Principles'},
+  {q:'Which address is reserved specifically for broadcasting?',opts:['A. 192.299.121.254','B. 192.299.121.0','C. 192.299.121.14','D. 192.299.121.255'],ans:[3],exp:'The .255 address in a subnet is the broadcast address. Packets sent to it are delivered to all hosts on the subnet. The .0 address is the network address.',domain:'Network Security'},
+  {q:'Which department is NOT typically involved in a Disaster Recovery Plan?',opts:['A. Executive','B. Financial','C. Public Relations','D. IT'],ans:[2],exp:'PR is not typically a core DRP participant. DRP involves IT (recovery), Executives (authorization), and Financial (budget).',domain:'BC/DR/IR'},
+  {q:'Which pair does NOT constitute MFA?',opts:['A. Fingerprint and password','B. Username and retina scan','C. Password and username','D. PIN and credit card'],ans:[2],exp:'Password and username are both "something you know" — the same factor type. MFA requires two DIFFERENT factor categories.',domain:'Access Controls'},
+  {q:'Which method maps live hosts in a network?',opts:['A. Geolocation','B. Traceroute','C. Ping sweep','D. Wireshark'],ans:[2],exp:'A ping sweep sends ICMP requests to a range of IP addresses to identify which hosts are active and responding.',domain:'Network Security'},
+  {q:'A poster reminding users about password best practices is an example of:',opts:['A. Awareness','B. Schooling','C. Education','D. Training'],ans:[0],exp:'Posters and reminders are Awareness activities — they keep security in mind without formal instruction.',domain:'Security Principles'},
+  {q:'Which CIA Triad element is PRIMARILY jeopardized in a DDoS attack?',opts:['A. Accountability','B. Availability','C. Integrity','D. Confidentiality'],ans:[1],exp:'DDoS attacks flood systems to exhaust resources and deny service — directly attacking Availability.',domain:'Network Security'},
+  {q:'What technology MOST LIKELY conserves storage space for video recordings?',opts:['A. Motion detection','B. PTZ','C. Facial recognition','D. Infrared cameras'],ans:[0],exp:'Motion detection triggers recording only when movement occurs, dramatically reducing required storage. Other technologies do not reduce storage.',domain:'Security Operations'},
+  {q:'An organization using a layered approach to security architecture is using:',opts:['A. Zero trust','B. Defense in depth','C. Network Layers','D. Network Control Access'],ans:[1],exp:'Defense in Depth implements multiple security layers so that if one fails, others still provide protection.',domain:'Security Principles'},
+  {q:'Which technique ensures the property of non-repudiation?',opts:['A. Using a VPN','B. Passwords','C. Encryption','D. Digital signatures'],ans:[3],exp:'Digital signatures bind an identity to a message using asymmetric cryptography — the signer cannot deny having signed it.',domain:'Security Principles'},
+  {q:'A USB pen with data passed around the office is an example of:',opts:['A. Data in motion','B. Data at rest','C. Data in transit','D. Data in use'],ans:[1],exp:'Data stored on a USB drive is Data at Rest — stored on physical media, not being transmitted or processed.',domain:'Security Operations'},
+  {q:'To strengthen detective access controls, which tool should an organization implement?',opts:['A. Patches','B. Encryption','C. IDS','D. Backups'],ans:[2],exp:'IDS is a detective control — it monitors for suspicious activity and alerts administrators. Patches are corrective, encryption is preventive, backups are recovery.',domain:'Access Controls'},
+  {q:'Which is an example of a MAC address?',opts:['A. 00-51-02-1F-58-F6','B. 0051021f58','C. 10.23.19.49','D. 2001:db8:3333:4444:5555:6666:7777:8888'],ans:[0],exp:'MAC addresses are 48-bit hardware addresses expressed as six pairs of hexadecimal digits (e.g., 00-51-02-1F-58-F6).',domain:'Network Security'},
+  {q:'Which credential type is NOT used in MFA?',opts:['A. Something you have','B. Something you know','C. Something you are','D. Something you trust'],ans:[3],exp:'The three MFA factors are: something you have (token/card), something you know (password/PIN), something you are (biometrics). "Something you trust" is not recognized.',domain:'Access Controls'},
+  {q:'On an IR team, which role acts as the main link to Senior Management?',opts:['A. Information security','B. Communications and public relations','C. Management','D. Technical expert'],ans:[1],exp:'Communications and Public Relations on the IR team liaises between the response team and senior management, and manages external communications.',domain:'BC/DR/IR'},
+  {q:'Which is NOT an effective way to protect an organization from cybercriminals?',opts:['A. Removing or disabling unneeded services and protocols','B. Using firewalls','C. Using out-dated anti-malware software','D. Using IDS and IPS'],ans:[2],exp:'Out-dated anti-malware cannot protect against recent threats. All security tools must be regularly updated to remain effective.',domain:'Network Security'},
+  {q:'Which CANNOT be a corrective security control?',opts:['A. Disaster Recovery Plan','B. Backups','C. Patches','D. Bollards'],ans:[3],exp:'Bollards are physical barriers — preventive/deterrent controls. Corrective controls (DRP, backups, patches) restore systems or fix issues after incidents.',domain:'Security Principles'},
+  {q:'Which is included in an SLA document?',opts:['A. Instructions on data ownership and destruction','B. Instructions to detect and limit cyber-attack consequences','C. A plan to keep operations going during recovery','D. A plan for continuation of critical business functions'],ans:[0],exp:'SLAs between cloud customers and providers include provisions for data ownership rights and destruction when the service relationship ends.',domain:'Security Operations'},
+  {q:'Which port corresponds to SMTP?',opts:['A. 161','B. 69','C. 25','D. 22'],ans:[2],exp:'SMTP uses port 25. Port 161 is SNMP, port 69 is TFTP, port 22 is SSH.',domain:'Network Security'},
+  {q:'Which attack misleads users into exposing personal information via fraudulent emails?',opts:['A. Cross-Site Scripting','B. Denial of Service','C. Trojans','D. Phishing'],ans:[3],exp:'Phishing uses deceptive emails appearing legitimate to trick users into revealing sensitive credentials or financial data.',domain:'Network Security'},
+  {q:'Which is NOT a characteristic of the cloud?',opts:['A. Zero Customer Responsibility','B. Broad Network Access','C. Measured Service','D. Rapid Elasticity'],ans:[0],exp:'NIST five cloud characteristics: On-demand self-service, Broad network access, Resource pooling, Rapid elasticity, Measured service. "Zero Customer Responsibility" is not one of them.',domain:'Network Security'},
+  {q:'Which is a COMMON mistake when implementing record retention policies?',opts:['A. Not categorizing the type of information','B. Not labeling the type of information','C. Applying the longest retention periods','D. Applying shorter retention periods'],ans:[2],exp:'Applying the longest retention period to all data "to be safe" increases storage costs, legal liability, and compliance complexity unnecessarily.',domain:'Security Operations'},
+  {q:'Which type of security control does NOT include CCTV cameras?',opts:['A. Corrective','B. Deterrent','C. Preventive','D. Detective'],ans:[0],exp:'CCTV cameras are deterrent (presence discourages), detective (records events), and preventive (discourages entry). They are NOT corrective — they do not fix problems.',domain:'Security Principles'},
+  {q:'A consultant designing PHI security policies will primarily be handling:',opts:['A. Personal Health information','B. Public Health information','C. Procedural Health information','D. Protected Health information'],ans:[3],exp:'PHI = Protected Health Information — health data covered under HIPAA that must be protected from unauthorized disclosure.',domain:'Security Principles'},
+  {q:'Which cloud deployment model combines public and private cloud?',opts:['A. Community','B. Private','C. Hybrid','D. Public'],ans:[2],exp:'A Hybrid cloud combines public and private infrastructure, keeping sensitive data on-premises while leveraging public cloud for other workloads.',domain:'Network Security'},
+  {q:'What is the primary goal of a Change Management Policy?',opts:['A. Standardize creation of systems','B. Guarantee systems have latest security patches','C. Standardize usage of systems','D. Guarantee changes do not negatively affect operations'],ans:[3],exp:'Change Management ensures IT changes are made in a controlled way that does not disrupt business operations.',domain:'Security Operations'},
+  {q:'Which is NOT a feature of SIEM?',opts:['A. Log auditing','B. Log encryption','C. Log consolidation','D. Log retention'],ans:[1],exp:'SIEM provides log aggregation, correlation, alerting, auditing, and retention. Log encryption is not a SIEM feature — encryption is done by source systems.',domain:'Security Operations'},
+  {q:'Which technology is LEAST effective at preventing shared accounts?',opts:['A. Requiring OTP via application','B. Requiring OTP via token','C. Password complexity requirements','D. Requiring biometric authentication'],ans:[2],exp:'Password complexity does not prevent sharing — multiple people can memorize the same complex password. Biometrics, OTPs, and tokens are personal and harder to share.',domain:'Access Controls'},
+  {q:'Which is NOT a best practice in access management?',opts:['A. Trust but verify','B. Periodically assessing whether permissions still apply','C. Giving only the right amount of permission','D. Requesting justification when upgrading permission'],ans:[0],exp:'"Trust but verify" is not best practice. Modern security follows Zero Trust: never trust, always verify.',domain:'Access Controls'},
+  {q:'When analyzing risks, which activity is required?',opts:['A. Accepting all evaluated risks','B. Identifying risks associated with loss of confidentiality','C. Determining the likelihood of occurrence','D. Selecting appropriate controls'],ans:[2],exp:'Determining likelihood of occurrence is required in risk analysis — without it you cannot calculate risk levels or prioritize mitigation.',domain:'Security Principles'},
+  {q:'Which exercise goes through an incident step-by-step validating what each person will do?',opts:['A. A simulation exercise','B. A walk-through exercise','C. A tabletop exercise','D. A checklist exercise'],ans:[1],exp:'A walk-through exercise takes participants step-by-step through an incident, validating individual roles and responsibilities.',domain:'BC/DR/IR'},
+  {q:'Which type of document is usually THE LEAST formal?',opts:['A. Standards','B. Guidelines','C. Policies','D. Regulations'],ans:[1],exp:'Guidelines are advisory and non-mandatory — best practices and recommendations. Policies are mandatory organizational rules, standards specify implementation, regulations are legally mandated.',domain:'Security Principles'},
+  {q:'A backup capturing changes since the last full backup is:',opts:['A. A differential backup','B. An incremental backup','C. A backup snapshot','D. A full backup'],ans:[0],exp:'Differential backup captures all changes since the last full backup. Incremental captures only changes since the last backup of any type.',domain:'BC/DR/IR'},
+  {q:'A high-level executive receives a malicious targeted email. Which attack is this?',opts:['A. DDOS','B. Whaling','C. Phishing','D. Spear phishing'],ans:[1],exp:'Whaling targets high-level executives (CEOs, CFOs, board members) specifically — a specialized form of spear phishing aimed at "big fish."',domain:'Network Security'},
+  {q:'What does redundancy mean in cybersecurity?',opts:['A. Designing with robust components for attack resilience','B. Designing with only necessary components','C. Designing with less attack surface','D. Designing with duplicate components as backup if one fails'],ans:[3],exp:'Redundancy means having duplicate components so that if one fails, the backup takes over ensuring continuity of operations.',domain:'Security Operations'},
+  {q:'When a company collects PII, which policy is required?',opts:['A. Remote Access Policy','B. GDPR','C. Privacy Policy','D. Acceptable Use Policy'],ans:[2],exp:'A Privacy Policy is required for any organization collecting PII, explaining collection, use, storage, and protection practices.',domain:'Security Principles'},
+  {q:'Which attack PRIMARILY aims to consume all available resources making services inaccessible?',opts:['A. Trojans','B. Cross-Site Scripting','C. Denial of Service','D. Phishing'],ans:[2],exp:'DoS attacks flood systems to exhaust resources (bandwidth, CPU, memory, connections) making the service unavailable to legitimate users.',domain:'Network Security'},
+  {q:'Which tool is MOST likely to detect an XSS vulnerability?',opts:['A. Network vulnerability scanner','B. Static application test','C. Intrusion detection system','D. Web application vulnerability scanner'],ans:[3],exp:'A web application vulnerability scanner specifically tests for XSS, SQL injection, CSRF, and other web vulnerabilities.',domain:'Network Security'},
+  {q:'Which physical access control is LESS effective at preventing unauthorized individual access?',opts:['A. Turnstiles','B. Barriers','C. Fences','D. Bollards'],ans:[3],exp:'Bollards prevent vehicles but are less effective at controlling individual pedestrian access. Turnstiles, barriers, and fences directly control individual entry.',domain:'Access Controls'},
+];
+
+/* ══════════════════════════════════════
+   STATE
+══════════════════════════════════════ */
+let sessionQ = [];
+let curQ = 0;
+let answers = [];
+let revealed = [];
+let correct = 0, wrong = 0;
+let selectedTest = 1;
+let selectedCount = 10;
+let selectedTime = 0;
+let timerInterval = null;
+let timeLeft = 0;
+
+/* ══════════════════════════════════════
+   SETUP
+══════════════════════════════════════ */
+function selectCount(el, n) {
+  document.querySelectorAll('#q-count-grid .opt-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedCount = n;
+}
+function selectTimer(el, t) {
+  document.querySelectorAll('#timer-grid .opt-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedTime = t;
+}
+function selectTest(el, t) {
+  selectedTest = t;
+  document.querySelectorAll('#test-select-grid .opt-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  // Update question count options based on pool size
+  const poolSize = t === 1 ? 129 : t === 2 ? 100 : 229;
+  // Update "All" button label
+  const allBtn = document.getElementById('all-q-btn');
+  if (allBtn) {
+    allBtn.querySelector('.ob-val').textContent = 'All';
+    allBtn.querySelector('.ob-lbl').textContent = poolSize + ' Qs';
+    allBtn.dataset.count = poolSize;
+  }
+  // Update session title label on results
+  const lbl = document.getElementById('res-label');
+  if (lbl) lbl.textContent = t === 'both' ? 'Combined Practice Exam Complete' : `Practice Test ${t} Complete`;
+}
+
+function toggleSessionBar() {
+  const body = document.getElementById('session-bar-body');
+  const chev = document.getElementById('bar-chevron');
+  body.classList.toggle('open');
+  chev.classList.toggle('open');
+}
+
+function startExam() {
+  const shuffled = [...CC_Q].sort(() => Math.random() - 0.5);
+  sessionQ = shuffled.slice(0, Math.min(selectedCount, CC_Q.length));
+  curQ = 0;
+  answers = new Array(sessionQ.length).fill(null);
+  revealed = new Array(sessionQ.length).fill(false);
+  correct = 0; wrong = 0;
+
+  document.getElementById('sc-total').textContent = sessionQ.length;
+  document.getElementById('session-q-pill').textContent = sessionQ.length + ' Qs';
+  document.getElementById('sbi-total').textContent = sessionQ.length;
+
+  if (selectedTime > 0) {
+    timeLeft = selectedTime;
+    const tLabel = formatTime(selectedTime);
+    document.getElementById('session-t-pill').textContent = '⏱ ' + tLabel;
+    document.getElementById('sbi-timer').textContent = tLabel;
+    document.getElementById('sbi-mode').textContent = 'Timed';
+    document.getElementById('timer-pill').style.display = 'inline-block';
+    document.getElementById('timer-pill').textContent = tLabel;
+    startTimer();
+  } else {
+    document.getElementById('session-t-pill').textContent = 'Untimed';
+    document.getElementById('sbi-timer').textContent = '∞';
+    document.getElementById('sbi-mode').textContent = 'Untimed';
+    document.getElementById('timer-pill').style.display = 'none';
+  }
+
+  document.getElementById('setup-screen').style.display = 'none';
+  document.getElementById('exam-screen').style.display = 'block';
+  renderQuestion();
+  updateScoreboard();
+}
+
+/* ══════════════════════════════════════
+   TIMER
+══════════════════════════════════════ */
+function startTimer() {
+  clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    const pill = document.getElementById('timer-pill');
+    const tStr = formatTime(timeLeft);
+    pill.textContent = tStr;
+    document.getElementById('session-t-pill').textContent = '⏱ ' + tStr;
+    pill.className = 's-pill timer-pill';
+    if (timeLeft <= 60) pill.classList.add('danger');
+    else if (timeLeft <= 180) pill.classList.add('warning');
+    if (timeLeft <= 0) { clearInterval(timerInterval); endExam(); }
+  }, 1000);
+}
+function formatTime(s) {
+  const h = Math.floor(s / 3600);
+  const m = Math.floor((s % 3600) / 60);
+  const sec = s % 60;
+  if (h > 0) return `${h}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+  return `${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+}
+
+/* ══════════════════════════════════════
+   RENDER QUESTION
+══════════════════════════════════════ */
+function renderQuestion() {
+  const q = sessionQ[curQ];
+  document.getElementById('q-num-label').textContent = `Question ${curQ + 1}`;
+  document.getElementById('q-domain-label').textContent = q.domain;
+  document.getElementById('q-text').textContent = q.q;
+  document.getElementById('q-multi-note').style.display = q.multi ? 'block' : 'none';
+
+  const pct = Math.round(((curQ + 1) / sessionQ.length) * 100);
+  document.getElementById('prog-label').textContent = `Question ${curQ + 1} of ${sessionQ.length}`;
+  document.getElementById('prog-pct').textContent = pct + '%';
+  document.getElementById('prog-bar').style.width = pct + '%';
+
+  const fb = document.getElementById('q-feedback');
+  fb.className = 'feedback'; fb.innerHTML = '';
+
+  const opts = document.getElementById('q-options');
+  opts.innerHTML = '';
+  q.opts.forEach((o, i) => {
+    const el = document.createElement('div');
+    el.className = 'option';
+    el.dataset.idx = i;
+    el.innerHTML = `<div class="opt-key">${o.charAt(0)}</div><span>${o.slice(3)}</span>`;
+    el.onclick = () => selectOpt(i, el);
+    if (revealed[curQ]) {
+      el.classList.add('disabled');
+      if (q.ans.includes(i)) el.classList.add('correct');
+      else if (answers[curQ] && answers[curQ].includes(i)) el.classList.add('wrong');
+    } else if (answers[curQ] && answers[curQ].includes(i)) {
+      el.classList.add('selected');
+    }
+    opts.appendChild(el);
+  });
+
+  if (revealed[curQ] && answers[curQ] && answers[curQ].length > 0) showFeedback(q);
+
+  const btnNext = document.getElementById('btn-next');
+  btnNext.disabled = !(answers[curQ] && answers[curQ].length > 0);
+  btnNext.textContent = curQ === sessionQ.length - 1 ? 'Finish →' : 'Next →';
+  document.getElementById('btn-prev').disabled = curQ === 0;
+
+  buildNav();
+}
+
+function selectOpt(idx, el) {
+  if (revealed[curQ]) return;
+  const q = sessionQ[curQ];
+  if (!answers[curQ]) answers[curQ] = [];
+
+  if (q.multi) {
+    if (answers[curQ].includes(idx)) {
+      answers[curQ] = answers[curQ].filter(i => i !== idx);
+      el.classList.remove('selected');
+    } else {
+      answers[curQ].push(idx);
+      el.classList.add('selected');
+    }
+    document.getElementById('btn-next').disabled = answers[curQ].length === 0;
+    if (answers[curQ].length === q.ans.length) revealAnswer();
+  } else {
+    document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+    answers[curQ] = [idx];
+    el.classList.add('selected');
+    revealAnswer();
+  }
+}
+
+function revealAnswer() {
+  if (revealed[curQ]) return;
+  revealed[curQ] = true;
+  const q = sessionQ[curQ];
+  const isCorrect = q.ans.slice().sort().join(',') === answers[curQ].slice().sort().join(',');
+  if (isCorrect) correct++; else wrong++;
+
+  document.querySelectorAll('.option').forEach(el => {
+    el.classList.add('disabled');
+    const i = parseInt(el.dataset.idx);
+    if (q.ans.includes(i)) el.classList.add('correct');
+    else if (answers[curQ].includes(i)) el.classList.add('wrong');
+    el.classList.remove('selected');
+  });
+
+  showFeedback(q);
+  document.getElementById('btn-next').disabled = false;
+  updateScoreboard();
+  buildNav();
+}
+
+function showFeedback(q) {
+  const isCorrect = q.ans.slice().sort().join(',') === (answers[curQ] || []).slice().sort().join(',');
+  const fb = document.getElementById('q-feedback');
+  fb.className = 'feedback show ' + (isCorrect ? 'correct-fb' : 'wrong-fb');
+  fb.innerHTML = `<strong>${isCorrect ? '✓ Correct!' : '✗ Incorrect'}</strong>${q.exp}`;
+}
+
+function handleNext() {
+  if (!revealed[curQ] && answers[curQ] && answers[curQ].length > 0) { revealAnswer(); return; }
+  if (curQ < sessionQ.length - 1) { goTo(curQ + 1); }
+  else { endExam(); }
+}
+
+function goTo(i) {
+  if (i < 0 || i >= sessionQ.length) return;
+  curQ = i;
+  renderQuestion();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function buildNav() {
+  const nav = document.getElementById('q-nav');
+  nav.innerHTML = '';
+  sessionQ.forEach((_, i) => {
+    const pill = document.createElement('div');
+    pill.className = 'q-pill';
+    pill.textContent = i + 1;
+    pill.onclick = () => goTo(i);
+    if (i === curQ) pill.classList.add('current');
+    else if (revealed[i]) {
+      const q = sessionQ[i];
+      const isCorr = q.ans.slice().sort().join(',') === (answers[i]||[]).slice().sort().join(',');
+      pill.classList.add(isCorr ? 'ans-correct' : 'ans-wrong');
+    } else if (answers[i] && answers[i].length > 0) pill.classList.add('ans-skip');
+    nav.appendChild(pill);
+  });
+}
+
+function updateScoreboard() {
+  const answered = revealed.filter(Boolean).length;
+  const pct = answered > 0 ? Math.round((correct / answered) * 100) : 0;
+  document.getElementById('sc-answered').textContent = answered;
+  document.getElementById('sc-correct').textContent = correct;
+  document.getElementById('sc-pct').textContent = pct + '%';
+}
+
+/* ══════════════════════════════════════
+   END / RESULTS
+══════════════════════════════════════ */
+function endExam() {
+  clearInterval(timerInterval);
+  const total = sessionQ.length;
+  const skipped = total - correct - wrong;
+  const pct = Math.round((correct / total) * 100);
+
+  document.getElementById('exam-screen').style.display = 'none';
+  document.getElementById('res-score').textContent = `${correct}/${total}`;
+  document.getElementById('res-correct').textContent = correct;
+  document.getElementById('res-wrong').textContent = wrong;
+  document.getElementById('res-skip').textContent = skipped;
+
+  const grade = document.getElementById('res-grade');
+  const resLbl = document.getElementById('res-label');
+  if (resLbl) resLbl.textContent = 'ISC2 CC Practice Exam Complete';
+  if (pct >= 72) { grade.className = 'result-grade pass'; grade.textContent = `${pct}% — PASS 🎉`; }
+  else { grade.className = 'result-grade fail'; grade.textContent = `${pct}% — Keep Studying`; }
+
+  document.getElementById('results-screen').style.display = 'block';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function backToSetup() {
+  clearInterval(timerInterval);
+  document.getElementById('results-screen').style.display = 'none';
+  document.getElementById('exam-screen').style.display = 'none';
+  document.getElementById('setup-screen').style.display = 'block';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>
