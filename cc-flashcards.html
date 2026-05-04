@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Flashcards — ISC2 CC | BL Cert Hub</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --navy:#0B1D3A; --blue:#1A5276; --accent:#2E86C1; --sky:#5DADE2;
+      --light:#EAF4FB; --mid:#D6EAF8; --white:#fff; --text:#0B1D3A; --muted:#5D7A8C;
+      --border:rgba(30,80,130,0.13);
+      --d1:#6B3FA0; --d2:#C0531A; --d3:#0E7A8A; --d4:#B8860B; --d5:#2E7D32;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family:'DM Sans',sans-serif; background:var(--light); color:var(--text); min-height:100vh; display:flex; flex-direction:column; }
+
+    /* NAV */
+    nav { background:var(--navy); padding:0 2rem; display:flex; align-items:center; justify-content:space-between; height:56px; position:sticky; top:0; z-index:100; border-bottom:1px solid rgba(93,173,226,0.15); }
+    .nav-brand { display:flex; align-items:center; gap:10px; text-decoration:none; }
+    .bl-circle { width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,#2E86C1,#5DADE2); display:flex; align-items:center; justify-content:center; font-family:'Space Mono',monospace; font-size:10px; font-weight:700; color:#fff; flex-shrink:0; }
+    .nav-brand span { font-size:13px; font-weight:500; color:rgba(255,255,255,0.85); letter-spacing:.02em; }
+    .nav-links { display:flex; gap:6px; }
+    .nav-links a { font-size:12px; font-weight:500; color:rgba(255,255,255,0.6); text-decoration:none; padding:6px 12px; border-radius:6px; transition:all .18s; }
+    .nav-links a:hover { color:#fff; background:rgba(255,255,255,0.08); }
+    .nav-links a.active { color:var(--sky); background:rgba(93,173,226,0.12); }
+
+    /* HERO */
+    .hero { background:linear-gradient(135deg,#0B1D3A 0%,#1A5276 55%,#2E86C1 100%); padding:3rem 2rem 2.5rem; position:relative; overflow:hidden; }
+    .hero-grid-pattern { position:absolute; inset:0; background-image:linear-gradient(rgba(93,173,226,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(93,173,226,0.04) 1px,transparent 1px); background-size:32px 32px; pointer-events:none; }
+    .hero-bg-ring { position:absolute; border-radius:50%; border:40px solid rgba(93,173,226,0.08); pointer-events:none; }
+    .hero-bg-ring.r1 { width:300px; height:300px; top:-70px; right:-50px; }
+    .hero-bg-ring.r2 { width:180px; height:180px; bottom:-60px; left:40%; border-width:22px; }
+    .hero-inner { position:relative; max-width:860px; margin:0 auto; }
+    .exam-badge { display:inline-flex; align-items:center; gap:8px; background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.18); border-radius:20px; padding:5px 14px 5px 5px; margin-bottom:1.25rem; }
+    .exam-badge .bl-circle { width:26px; height:26px; font-size:9px; }
+    .exam-badge span { font-size:12px; color:rgba(255,255,255,0.8); font-weight:500; }
+    .hero h1 { font-family:'Space Mono',monospace; font-size:clamp(22px,3.5vw,38px); font-weight:700; color:#fff; line-height:1.2; margin-bottom:.5rem; }
+    .hero h1 .accent { color:var(--sky); }
+    .hero-sub { font-size:14px; color:rgba(255,255,255,0.6); font-weight:300; line-height:1.7; max-width:500px; }
+
+    /* MAIN */
+    .main { max-width:860px; margin:0 auto; padding:2rem 2rem 3rem; flex:1; }
+
+    /* CONTROLS BAR */
+    .controls-bar { background:var(--white); border:1px solid var(--border); border-radius:14px; padding:16px 20px; margin-bottom:1.5rem; box-shadow:0 2px 8px rgba(11,29,58,0.06); display:flex; flex-wrap:wrap; gap:12px; align-items:center; justify-content:space-between; }
+    .filter-group { display:flex; gap:6px; flex-wrap:wrap; align-items:center; }
+    .filter-label { font-size:11px; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; margin-right:2px; }
+    .filter-btn { font-size:11px; font-weight:500; padding:5px 12px; border-radius:20px; border:1px solid var(--border); background:var(--light); color:var(--muted); cursor:pointer; transition:all .16s; font-family:'DM Sans',sans-serif; }
+    .filter-btn:hover { border-color:var(--accent); color:var(--accent); }
+    .filter-btn.active { background:var(--accent); border-color:var(--accent); color:#fff; }
+    .filter-btn[data-domain="1"].active { background:var(--d1); border-color:var(--d1); }
+    .filter-btn[data-domain="2"].active { background:var(--d2); border-color:var(--d2); }
+    .filter-btn[data-domain="3"].active { background:var(--d3); border-color:var(--d3); }
+    .filter-btn[data-domain="4"].active { background:var(--d4); border-color:var(--d4); }
+    .filter-btn[data-domain="5"].active { background:var(--d5); border-color:var(--d5); }
+    .action-group { display:flex; gap:8px; }
+    .btn { font-family:'DM Sans',sans-serif; font-size:12px; font-weight:500; padding:7px 16px; border-radius:8px; border:1px solid; cursor:pointer; transition:all .18s; }
+    .btn-primary { background:var(--accent); border-color:var(--accent); color:#fff; }
+    .btn-primary:hover { background:var(--blue); border-color:var(--blue); }
+    .btn-outline { background:transparent; border-color:var(--border); color:var(--text); }
+    .btn-outline:hover { border-color:var(--accent); color:var(--accent); }
+
+    /* STATS ROW */
+    .stats-row { display:flex; gap:10px; margin-bottom:1.5rem; flex-wrap:wrap; }
+    .stat-pill { font-size:12px; font-weight:500; padding:6px 14px; border-radius:8px; background:var(--white); border:1px solid var(--border); color:var(--muted); }
+    .stat-pill span { font-family:'Space Mono',monospace; font-weight:700; color:var(--accent); }
+    .stat-pill.mastered span { color:var(--d5); }
+    .stat-pill.reviewing span { color:var(--d4); }
+
+    /* PROGRESS BAR */
+    .prog-wrap { margin-bottom:1.5rem; }
+    .prog-row { display:flex; justify-content:space-between; margin-bottom:5px; }
+    .prog-lbl { font-size:12px; color:var(--muted); }
+    .prog-pct { font-family:'Space Mono',monospace; font-size:12px; font-weight:700; color:var(--accent); }
+    .prog-track { height:5px; background:var(--mid); border-radius:3px; overflow:hidden; }
+    .prog-fill { height:100%; background:linear-gradient(90deg,var(--blue),var(--sky)); border-radius:3px; transition:width .5s; }
+
+    /* FLASHCARD */
+    .fc-area { display:flex; flex-direction:column; align-items:center; margin-bottom:1.5rem; }
+    .fc-counter-row { display:flex; align-items:center; justify-content:space-between; width:100%; max-width:620px; margin-bottom:10px; }
+    .fc-counter { font-family:'Space Mono',monospace; font-size:12px; color:var(--muted); }
+    .fc-domain-badge { font-size:10px; font-weight:600; padding:3px 10px; border-radius:20px; border:1px solid; }
+
+    .fc-scene { perspective:1400px; width:100%; max-width:620px; height:240px; cursor:pointer; }
+    .fc-inner { position:relative; width:100%; height:100%; transform-style:preserve-3d; transition:transform .55s cubic-bezier(.4,0,.2,1); }
+    .fc-inner.flipped { transform:rotateY(180deg); }
+    .fc-face { position:absolute; inset:0; backface-visibility:hidden; border-radius:16px; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:28px 32px; text-align:center; border:1px solid var(--border); box-shadow:0 4px 20px rgba(11,29,58,0.1); }
+    .fc-front { background:var(--navy); }
+    .fc-back { background:var(--blue); transform:rotateY(180deg); }
+    .fc-side-label { font-size:10px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:rgba(255,255,255,0.35); position:absolute; top:16px; left:20px; }
+    .fc-term { font-family:'Space Mono',monospace; font-size:clamp(16px,3vw,22px); font-weight:700; color:#fff; line-height:1.3; }
+    .fc-def { font-size:13px; color:rgba(255,255,255,0.9); line-height:1.7; font-weight:300; }
+    .fc-hint { font-size:11px; color:rgba(255,255,255,0.35); margin-top:12px; }
+
+    /* DOT ROW */
+    .fc-dots { display:flex; gap:5px; justify-content:center; margin-bottom:14px; }
+    .fc-dot { width:7px; height:7px; border-radius:50%; background:var(--mid); transition:all .2s; }
+    .fc-dot.active { background:var(--accent); transform:scale(1.3); }
+    .fc-dot.mastered { background:var(--d5); }
+    .fc-dot.reviewing { background:var(--d4); }
+
+    /* CARD CONTROLS */
+    .fc-controls { display:flex; align-items:center; gap:10px; justify-content:center; width:100%; max-width:620px; margin-bottom:1.5rem; }
+    .fc-nav-btn { width:40px; height:40px; border-radius:50%; border:1px solid var(--border); background:var(--white); display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:16px; transition:all .18s; color:var(--text); }
+    .fc-nav-btn:hover:not(:disabled) { border-color:var(--accent); color:var(--accent); }
+    .fc-nav-btn:disabled { opacity:.3; pointer-events:none; }
+    .fc-center-btns { display:flex; gap:8px; }
+    .grade-btn { font-size:11px; font-weight:600; padding:8px 16px; border-radius:8px; border:1px solid; cursor:pointer; transition:all .18s; font-family:'DM Sans',sans-serif; letter-spacing:.02em; }
+    .grade-btn.mastered { background:rgba(46,125,50,0.08); border-color:rgba(46,125,50,0.3); color:var(--d5); }
+    .grade-btn.mastered:hover { background:var(--d5); color:#fff; }
+    .grade-btn.reviewing { background:rgba(184,134,11,0.08); border-color:rgba(184,134,11,0.3); color:var(--d4); }
+    .grade-btn.reviewing:hover { background:var(--d4); color:#fff; }
+    .grade-btn.again { background:rgba(192,57,43,0.08); border-color:rgba(192,57,43,0.3); color:#C0392B; }
+    .grade-btn.again:hover { background:#C0392B; color:#fff; }
+    .grade-note { font-size:11px; color:var(--muted); text-align:center; margin-bottom:1rem; }
+
+    /* CARD LIST (mini overview) */
+    .section-label { font-size:11px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--accent); display:flex; align-items:center; gap:10px; margin-bottom:.9rem; }
+    .section-label::after { content:''; flex:1; height:1px; background:var(--border); }
+    .card-list { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+    .card-mini { background:var(--white); border:1px solid var(--border); border-radius:10px; padding:10px 12px; cursor:pointer; transition:all .18s; position:relative; overflow:hidden; }
+    .card-mini::before { content:''; position:absolute; left:0; top:0; bottom:0; width:3px; background:var(--dm-color); }
+    .card-mini:hover { border-color:var(--dm-color); transform:translateY(-1px); box-shadow:0 3px 10px rgba(11,29,58,0.08); }
+    .card-mini.is-mastered { background:rgba(46,125,50,0.05); border-color:rgba(46,125,50,0.25); }
+    .card-mini.is-reviewing { background:rgba(184,134,11,0.05); border-color:rgba(184,134,11,0.25); }
+    .card-mini-term { font-size:11px; font-weight:600; color:var(--text); margin-bottom:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .card-mini-status { font-size:10px; color:var(--muted); }
+
+    /* FOOTER */
+    footer { background:var(--navy); padding:1.25rem 2rem; text-align:center; border-top:1px solid rgba(93,173,226,0.12); }
+    footer p { font-size:12px; color:rgba(255,255,255,0.3); }
+    footer a { color:var(--sky); text-decoration:none; }
+
+    @media(max-width:600px) {
+      .main { padding:1.25rem; }
+      nav { padding:0 1.25rem; }
+      .hero { padding:2rem 1.25rem 2rem; }
+      .fc-scene { height:210px; }
+      .fc-face { padding:20px; }
+      .card-list { grid-template-columns:repeat(2,1fr); }
+      .controls-bar { flex-direction:column; align-items:flex-start; }
+    }
+
+    /* ── DARK MODE ── */
+    html.dark {
+      --light:  #131b27;
+      --mid:    #1a2535;
+      --white:  #1e2a3a;
+      --text:   #d4e6f7;
+      --muted:  #7aa3c0;
+      --border: rgba(93,173,226,0.14);
+      --shadow: 0 2px 12px rgba(0,0,0,0.35);
+    }
+    html.dark body { background: var(--light); color: var(--text); }
+    html.dark nav  { background: #0a1220; border-color: rgba(93,173,226,0.12); }
+    html.dark footer { background: #0a1220; }
+    html.dark .exam-card,
+    html.dark .tool-card,
+    html.dark .question-card,
+    html.dark .widget,
+    html.dark .session-bar,
+    html.dark .setup-section,
+    html.dark .domain-weights,
+    html.dark .mode-bar,
+    html.dark .controls-bar,
+    html.dark .fc-area + .grade-note,
+    html.dark .acronym-card,
+    html.dark .card-mini,
+    html.dark .score-card,
+    html.dark .stat-pill,
+    html.dark .sum-card,
+    html.dark .fc-nav-btn,
+    html.dark .domain-header,
+    html.dark .obj-header { background: var(--white); border-color: var(--border); }
+    html.dark .domain-body { background: var(--white); border-color: var(--border); }
+    html.dark .score-card,
+    html.dark .sum-card { background: #0e1929; }
+    html.dark .question-box,
+    html.dark .opt-btn,
+    html.dark .option,
+    html.dark .sbi-item,
+    html.dark .rs-item,
+    html.dark .setup-section { background: var(--mid); }
+    html.dark .option { border-color: var(--border); color: var(--text); }
+    html.dark .option:hover:not(.disabled) { background: rgba(93,173,226,0.08); }
+    html.dark .fc-scene .fc-front { background: #0d1929; }
+    html.dark .fc-scene .fc-back  { background: #122040; }
+    html.dark .progress-track,
+    html.dark .prog-track,
+    html.dark .mini-bar,
+    html.dark .dw-bar-track { background: var(--mid); }
+    html.dark .cert-name,
+    html.dark .tool-name,
+    html.dark .cs-val,
+    html.dark .stat-val,
+    html.dark .sbi-val,
+    html.dark .rs-val,
+    html.dark .obj-title,
+    html.dark .domain-title { color: var(--text); }
+    html.dark .cert-vendor,
+    html.dark .cert-desc,
+    html.dark .tool-desc,
+    html.dark .cs-lbl,
+    html.dark .stat-lbl,
+    html.dark .score-lbl,
+    html.dark .sum-lbl,
+    html.dark .ac-def,
+    html.dark .card-mini-term,
+    html.dark .card-mini-status { color: var(--muted); }
+    html.dark .section-label::after,
+    html.dark .card-stats { border-color: var(--border); }
+    html.dark .port-table td { background: var(--white); border-color: var(--border); color: var(--text); }
+    html.dark .port-table th { background: #0a1220; }
+    html.dark .alpha-heading { background: var(--mid); color: var(--text); }
+    html.dark .search-input { background: var(--mid); border-color: var(--border); color: var(--text); }
+    html.dark .search-input:focus { background: var(--white); }
+    html.dark .alpha-btn,
+    html.dark .filter-btn,
+    html.dark .mode-tab,
+    html.dark .grade-btn,
+    html.dark .btn-outline { background: var(--mid); border-color: var(--border); color: var(--muted); }
+    html.dark .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+    html.dark .q-controls { background: rgba(0,0,0,0.15); border-color: var(--border); }
+    html.dark .feedback.correct-fb { background: rgba(39,174,96,0.12); }
+    html.dark .feedback.wrong-fb   { background: rgba(231,76,60,0.12); }
+    html.dark #results-screen { background: var(--white); }
+    html.dark .result-label { color: var(--muted); }
+    html.dark .acronym-card.is-mastered { background: rgba(46,125,50,0.1); }
+    html.dark .card-mini.is-mastered { background: rgba(46,125,50,0.1); }
+    html.dark .card-mini.is-reviewing { background: rgba(184,134,11,0.1); }
+    html.dark .stat-pill { background: var(--white); border-color: var(--border); color: var(--muted); }
+    html.dark .fc-dot { background: rgba(93,173,226,0.2); }
+    html.dark .session-bar-inner { border-color: var(--border); }
+    html.dark .q-header { background: #0a1220; }
+    html.dark .q-meta-row .q-num { color: var(--muted); }
+
+    /* Dark-mode toggle button */
+    .theme-btn {
+      width: 34px; height: 34px; border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.08);
+      color: rgba(255,255,255,0.75);
+      cursor: pointer; font-size: 15px;
+      display: flex; align-items: center; justify-content: center;
+      transition: all .18s; flex-shrink: 0;
+    }
+    .theme-btn:hover { background: rgba(255,255,255,0.15); color: #fff; }
+
+  </style>
+</head>
+<body>
+
+<script>
+(function(){
+  const KEY = 'bl-theme';
+  function apply(dark) {
+    document.documentElement.classList.toggle('dark', dark);
+    const btn = document.getElementById('theme-btn');
+    if (btn) btn.textContent = dark ? '☀' : '☾';
+  }
+  // Apply on load before paint
+  apply(localStorage.getItem(KEY) === 'dark');
+  window.__toggleTheme = function() {
+    const dark = !document.documentElement.classList.contains('dark');
+    localStorage.setItem(KEY, dark ? 'dark' : 'light');
+    apply(dark);
+    // Sync other tabs
+    window.dispatchEvent(new StorageEvent('storage', {key: KEY, newValue: dark ? 'dark' : 'light'}));
+  };
+  // Listen for changes from other tabs/pages
+  window.addEventListener('storage', function(e) {
+    if (e.key === KEY) apply(e.newValue === 'dark');
+  });
+})();
+</script>
+
+
+<nav>
+  <a class="nav-brand" href="index.html"><div class="bl-circle">BL</div><span>BL Cert Hub</span></a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="cc-home.html">CC</a>
+    <a href="#" class="active">Flashcards</a>
+    <button class="theme-btn" id="theme-btn" onclick="__toggleTheme()" title="Toggle dark mode">☾</button>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-grid-pattern"></div>
+  <div class="hero-bg-ring r1"></div>
+  <div class="hero-bg-ring r2"></div>
+  <div class="hero-inner">
+    <div class="exam-badge"><div class="bl-circle">BL</div><span>ISC2 Certified in Cybersecurity (CC)</span></div>
+    <h1>Flash<span class="accent">cards</span></h1>
+    <p class="hero-sub">60 cards covering all 5 ISC2 CC domains. Tap to flip, mark as mastered or review again, filter by domain.</p>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- CONTROLS -->
+  <div class="controls-bar">
+    <div class="filter-group">
+      <span class="filter-label">Domain</span>
+      <button class="filter-btn active" data-domain="all" onclick="setFilter('all',this)">All</button>
+      <button class="filter-btn" data-domain="1" onclick="setFilter('1',this)">1.0</button>
+      <button class="filter-btn" data-domain="2" onclick="setFilter('2',this)">2.0</button>
+      <button class="filter-btn" data-domain="3" onclick="setFilter('3',this)">3.0</button>
+      <button class="filter-btn" data-domain="4" onclick="setFilter('4',this)">4.0</button>
+      <button class="filter-btn" data-domain="5" onclick="setFilter('5',this)">5.0</button>
+    </div>
+    <div class="action-group">
+      <button class="btn btn-outline" onclick="shuffleDeck()">⇄ Shuffle</button>
+      <button class="btn btn-outline" onclick="resetStatus()">↺ Reset</button>
+      <button class="btn btn-primary" onclick="studyWeak()">Study Weak</button>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-row">
+    <div class="stat-pill">Total: <span id="stat-total">60</span></div>
+    <div class="stat-pill mastered">Mastered: <span id="stat-mastered">0</span></div>
+    <div class="stat-pill reviewing">Reviewing: <span id="stat-reviewing">0</span></div>
+    <div class="stat-pill">Unseen: <span id="stat-unseen">60</span></div>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="prog-wrap">
+    <div class="prog-row"><span class="prog-lbl">Mastery Progress</span><span class="prog-pct" id="prog-pct">0%</span></div>
+    <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+  </div>
+
+  <!-- FLASHCARD -->
+  <div class="fc-area">
+    <div class="fc-counter-row">
+      <span class="fc-counter" id="fc-counter">1 / 60</span>
+      <span class="fc-domain-badge" id="fc-domain-badge"></span>
+    </div>
+
+    <div class="fc-scene" onclick="flip()">
+      <div class="fc-inner" id="fc-inner">
+        <div class="fc-face fc-front">
+          <span class="fc-side-label">Term</span>
+          <div class="fc-term" id="fc-term">Loading...</div>
+          <div class="fc-hint">Tap to reveal definition</div>
+        </div>
+        <div class="fc-face fc-back">
+          <span class="fc-side-label">Definition</span>
+          <div class="fc-def" id="fc-def"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fc-dots" id="fc-dots"></div>
+  </div>
+
+  <!-- GRADE + NAV -->
+  <div class="fc-controls">
+    <button class="fc-nav-btn" id="btn-prev" onclick="navigate(-1)">←</button>
+    <div class="fc-center-btns">
+      <button class="grade-btn again" onclick="grade('again')">✗ Again</button>
+      <button class="grade-btn reviewing" onclick="grade('reviewing')">~ Review</button>
+      <button class="grade-btn mastered" onclick="grade('mastered')">✓ Got it</button>
+    </div>
+    <button class="fc-nav-btn" id="btn-next" onclick="navigate(1)">→</button>
+  </div>
+  <div class="grade-note">Grade yourself to track mastery · Flip the card first, then grade</div>
+
+  <!-- CARD LIST -->
+  <div class="section-label">All Cards</div>
+  <div class="card-list" id="card-list"></div>
+
+</div>
+
+<footer><p>Built by <a href="https://blaborte.github.io" target="_blank">Baltazar Laborte</a> · BL Cert Hub · ISC2 Certified in Cybersecurity (CC)</p></footer>
+
+<script>
+/* ══════════════════════════════════
+   ALL 60 FLASHCARDS
+══════════════════════════════════ */
+const ALL_CARDS = [
+  // Domain 1 – Security Principles
+  {d:'1',term:'CIA Triad',def:'Confidentiality (only authorized access), Integrity (data not altered), Availability (accessible when needed). Foundation of all information security decisions. Every control maps to one or more of these three properties.'},
+  {d:'1',term:'Non-Repudiation',def:'The sender cannot deny having sent a message. Achieved with digital signatures using asymmetric cryptography. Provides proof of origin and delivery. Critical for financial transactions and legal evidence.'},
+  {d:'1',term:'Authentication',def:'Verifying that a user is who they claim to be. Methods: passwords (know), tokens/smartcards (have), biometrics (are). MFA combines two or more factor types for stronger assurance.'},
+  {d:'1',term:'Authorization',def:'Determining what an authenticated user is permitted to do. Comes after authentication. Implemented through ACLs, RBAC, MAC, DAC. Principle of least privilege limits authorization to minimum necessary.'},
+  {d:'1',term:'ISC2 Code of Ethics — Canon 1',def:'Protect society, the common good, necessary public trust and confidence, and the infrastructure. Highest priority canon — public safety overrides employer, client, and personal interests.'},
+  {d:'1',term:'ISC2 Code of Ethics — Canon 3',def:'Provide diligent and competent service to principals. Requires avoiding apparent or actual conflicts of interest. Exact wording matters — NOT "active and qualified" or "to stakeholders."'},
+  {d:'1',term:'Document Hierarchy',def:'Regulations (law, enforceable, financial penalties) → Policies (mandatory org rules) → Standards (how policies are implemented) → Procedures (step-by-step instructions) → Guidelines (advisory, non-mandatory recommendations).'},
+  {d:'1',term:'Risk Transfer',def:'Shifting financial consequences of a risk to a third party — typically through cyber insurance. Does not eliminate the risk, only the financial burden. Cybersecurity insurance is the classic example.'},
+  {d:'1',term:'Risk Mitigation',def:'Implementing controls to reduce the likelihood or impact of a risk. Patches, firewalls, training are all mitigation controls. Most common risk treatment alongside risk acceptance.'},
+  {d:'1',term:'ALE (Annualized Loss Expectancy)',def:'ALE = SLE × ARO. SLE = Asset Value × Exposure Factor. ARO = times per year a threat occurs. ALE represents the expected annual cost of a risk — used to justify security spending.'},
+  {d:'1',term:'Symmetric Encryption',def:'Same key for both encryption and decryption. Fast — used for bulk data (AES-256 for data at rest). Problem: secure key distribution. AES is the current gold standard (128, 192, or 256-bit keys).'},
+  {d:'1',term:'Asymmetric Encryption',def:'Public key encrypts, private key decrypts. Sign with private key, verify with public key. Slower — used for key exchange and digital signatures. Algorithms: RSA (2048+ bit), ECC (smaller keys, same security).'},
+  {d:'1',term:'Hashing',def:'One-way function producing a fixed-size digest. Cannot be reversed. Properties: deterministic, unique (collision-resistant), fixed output. SHA-256 is current standard. MD5 is deprecated — broken. Used for integrity verification.'},
+  {d:'1',term:'Digital Signatures',def:'Hash encrypted with sender's private key. Provides authentication, integrity, and non-repudiation. Does NOT provide confidentiality — add encryption for that. Receiver verifies using sender's public key.'},
+  // Domain 2 – BC/DR/IR
+  {d:'2',term:'BCP vs DRP',def:'BCP (Business Continuity Plan) = sustain critical operations DURING a disruption. DRP (Disaster Recovery Plan) = restore IT systems AFTER a disaster. BCP is the umbrella; DRP is a technical subset of BCP.'},
+  {d:'2',term:'BIA (Business Impact Analysis)',def:'Identifies critical business functions, determines disruption impacts, establishes RPO/RTO targets. Foundation document for all BCP/DRP planning. Output: prioritized list of systems with recovery metrics.'},
+  {d:'2',term:'RPO vs RTO',def:'RPO (Recovery Point Objective) = max acceptable DATA LOSS in time — drives backup frequency. RTO (Recovery Time Objective) = max acceptable DOWNTIME — drives recovery infrastructure investment. Both come from BIA.'},
+  {d:'2',term:'DR Site Types',def:'Hot site: fully operational, real-time data, failover in minutes — most expensive. Warm site: hardware present, no current data — hours to activate. Cold site: facility only — days/weeks to recover — cheapest.'},
+  {d:'2',term:'Differential vs Incremental Backup',def:'Differential: all changes since last FULL backup — faster restore, slower backup. Incremental: changes since last ANY backup — faster backup, slower restore (need full + every incremental). Both need a base full backup.'},
+  {d:'2',term:'IR Phases (ISC2 Order)',def:'1. Preparation → 2. Detection and Analysis → 3. Containment, Eradication, and Recovery → 4. Post-Incident Activity. Incidents are PRIORITIZED in phase 2 (Detection and Analysis).'},
+  {d:'2',term:'IRT Models',def:'Three valid ISC2 IRT models: Dedicated (full-time team), Leveraged (part-time from other roles), Hybrid (core team + supplemental). "Pre-existing" is NOT a valid IRT model — common exam trap.'},
+  {d:'2',term:'Communications Role on IRT',def:'The Communications and Public Relations role acts as the main link between the IR team and Senior Management. Also manages external communications. HR is NOT a primary IRT member.'},
+  {d:'2',term:'Tabletop Exercise',def:'Discussion-based scenario walkthrough — participants talk through their responses without actually implementing anything. Tests plans and roles. Less disruptive than simulations but less realistic.'},
+  // Domain 3 – Access Controls
+  {d:'3',term:'DAC — Discretionary Access Control',def:'Data owner controls who can access their objects — can delegate permissions at their discretion. Windows NTFS is a DAC implementation. Flexible but hard to enforce centrally. Owner is responsible.'},
+  {d:'3',term:'MAC — Mandatory Access Control',def:'Administrators assign security labels — users cannot change them. Bell-LaPadula model. "No read up, no write down." Used in government/military. Most restrictive model. Anonymity NOT guaranteed by MAC.'},
+  {d:'3',term:'RBAC — Role-Based Access Control',def:'Permissions assigned to roles, users assigned to roles. Most common enterprise model. Easy to manage and audit. Example: all nurses have read access to patient records, not write.'},
+  {d:'3',term:'ABAC — Attribute-Based Access Control',def:'Access based on multiple attributes: user department, resource type, time of day, location. Most flexible and complex model. Used for context-aware, fine-grained access decisions.'},
+  {d:'3',term:'Least Privilege',def:'Grant ONLY the minimum permissions required for the job — no more. Reduces blast radius of breaches and insider threats. Must be combined with periodic access reviews to remain effective.'},
+  {d:'3',term:'Separation of Duties',def:'Critical tasks divided among multiple people so no single person can commit and conceal fraud. Primary control for fraud prevention and detection. Example: different people approve and process payments.'},
+  {d:'3',term:'MFA Factors',def:'Something you KNOW (password/PIN), something you HAVE (token/smartcard/OTP), something you ARE (biometrics). Must use two DIFFERENT categories. Two passwords is NOT MFA. "Something you trust" is not a valid factor.'},
+  {d:'3',term:'Turnstiles vs Bollards',def:'Turnstiles: prevent tailgating — one person at a time. Bollards: vehicle barriers — prevent vehicle ramming attacks. Bollards do NOT effectively prevent individual unauthorized pedestrian access.'},
+  {d:'3',term:'Fail Secure vs Fail Safe',def:'Fail secure (fail closed): door locks on power loss — secure but may trap people. Fail safe (fail open): door unlocks on power loss — safe for evacuation but insecure. Life safety overrides security.'},
+  // Domain 4 – Network Security
+  {d:'4',term:'OSI Model Security Relevance',def:'L7: phishing, XSS, app firewalls. L6: TLS encryption. L5: session hijacking. L4: port scanning, TCP floods. L3: IP spoofing, ACLs. L2: ARP spoofing, MAC flooding. L1: cable tapping, physical access.'},
+  {d:'4',term:'DoS vs DDoS',def:'DoS: single attacker exhausts resources. DDoS: coordinated botnet attack — much harder to block. Both target Availability. Mitigations: rate limiting, blackholing, scrubbing centers, overprovisioning.'},
+  {d:'4',term:'Ransomware',def:'Encrypts victim data and demands payment (usually cryptocurrency) for the decryption key. Double extortion = steal then encrypt. Targets Availability and Confidentiality. Backup and offline copies are best defense.'},
+  {d:'4',term:'Worm vs Trojan vs Virus',def:'Worm: self-replicates WITHOUT human action — spreads automatically. Trojan: disguised as legit software, user installs it. Virus: requires host file AND user action to spread. Rootkit: hides in OS, maintains persistent access.'},
+  {d:'4',term:'Cross-Site Scripting (XSS)',def:'Injects malicious JavaScript into web pages via poor input validation. Executes in victim's browser — steals cookies, sessions, credentials. Fix: output encoding, Content Security Policy headers, input validation.'},
+  {d:'4',term:'Phishing vs Spear Phishing vs Whaling',def:'Phishing: mass fraudulent emails. Spear phishing: targeted at specific individuals with personalized content. Whaling: spear phishing specifically targeting C-suite executives (high-value targets).'},
+  {d:'4',term:'Side-Channel Attack',def:'Extracts information from physical characteristics of hardware: power consumption, electromagnetic emissions, timing, acoustic signals. NOT an IP network attack — exploits physics, not software vulnerabilities.'},
+  {d:'4',term:'IDS vs IPS',def:'IDS: passive — detects and ALERTS only, does NOT block. Can be placed out-of-band via port mirror. IPS: inline — detects AND AUTOMATICALLY BLOCKS. Must be in the traffic path. Both can be host-based or network-based.'},
+  {d:'4',term:'SIEM Features',def:'SIEM: Security Information and Event Management. Features: log aggregation/consolidation, correlation, alerting, auditing, retention, forensic analysis. Does NOT include log encryption — that is done by source systems.'},
+  {d:'4',term:'Firewall vs IDS vs NAC',def:'Firewall: inspects packet headers to allow/deny traffic. IDS: monitors for suspicious activity and alerts. NAC: controls network access based on device compliance (patch level, AV status). Each serves a different security function.'},
+  // Domain 5 – Security Operations
+  {d:'5',term:'Data Lifecycle (ISC2)',def:'Create → Store → Use → Share → Archive → Destroy. Destruction is the FINAL phase. 2-3 labels is good practice. Common mistake: applying longest retention to all data unnecessarily.'},
+  {d:'5',term:'Data at Rest vs In Transit vs In Use',def:'At rest: stored on disk/USB/cloud — protect with AES-256 encryption. In transit: moving across network — protect with TLS/HTTPS/VPN. In use: being processed in memory — hardest to protect, secure enclaves.'},
+  {d:'5',term:'Data Remanence',def:'Residual data that remains after attempts to delete or erase it. Reason secure disposal methods are critical. Degaussing (magnetic media), shredding (physical), overwriting (HDDs), cryptographic erasure (cloud) are solutions.'},
+  {d:'5',term:'Security Awareness vs Training vs Education',def:'Awareness: posters, reminders — keeps security top of mind, no formal instruction. Training: structured, role-specific skill building (phishing simulation, secure coding). Education: formal comprehensive learning (degrees, certifications).'},
+  {d:'5',term:'Change Management Components',def:'RFC (Request for Change), Approval process, Rollback plan, Maintenance window. NOT a component: Governance. Rollback must be documented BEFORE implementing the change. CAB authorizes, not implements.'},
+  {d:'5',term:'SLA vs ROE vs MOU',def:'SLA: service guarantees + data ownership/destruction terms. ROE (Rules of Engagement): defines what actions are PERMITTED with a system or its information. MOU: informal agreement. ROE is most directly related to what you can DO.'},
+  {d:'5',term:'System Hardening',def:'Remove unnecessary software/services, change default credentials, apply patches, enable host firewall, apply least privilege. CIS Benchmarks provide hardening baselines. Security baseline = minimum acceptable security floor.'},
+  {d:'5',term:'PII vs PHI',def:'PII (Personally Identifiable Information): any data identifying an individual — primarily a Confidentiality concern. PHI (Protected Health Information): health data under HIPAA — also primarily Confidentiality. Both require Privacy Policy if collected.'},
+  {d:'5',term:'Redundancy vs Backup',def:'Redundancy: duplicate components operating in parallel — provides real-time failover (RAID, HA clusters, dual power). Backup: copy of data stored separately — provides recovery after loss. Both are needed for full resilience.'},
+  {d:'5',term:'Configuration Management vs Change Management',def:'Change Management: controls HOW changes are made (approval, rollback, documentation). Configuration Management: ensures systems match their documented baseline (SCCM). Elements: Inventory, Baselines, Updates — NOT audit logs.'},
+];
+
+/* ══════════════════════════════════
+   STATE
+══════════════════════════════════ */
+const DOMAIN_COLORS = { '1':['var(--d1)','rgba(107,63,160,0.12)'], '2':['var(--d2)','rgba(192,83,26,0.12)'], '3':['var(--d3)','rgba(14,122,138,0.12)'], '4':['var(--d4)','rgba(184,134,11,0.12)'], '5':['var(--d5)','rgba(46,125,50,0.12)'] };
+const DOMAIN_NAMES = { '1':'Security Principles', '2':'BC/DR/IR', '3':'Access Controls', '4':'Network Security', '5':'Security Operations' };
+
+let deck = [];      // current filtered+ordered indices into ALL_CARDS
+let status = {};    // index → 'unseen' | 'mastered' | 'reviewing' | 'again'
+let curIdx = 0;     // position in deck
+let isFlipped = false;
+let activeFilter = 'all';
+
+function init() {
+  ALL_CARDS.forEach((_, i) => { status[i] = 'unseen'; });
+  applyFilter('all');
+}
+
+function applyFilter(f) {
+  activeFilter = f;
+  if (f === 'all') {
+    deck = ALL_CARDS.map((_, i) => i);
+  } else {
+    deck = ALL_CARDS.map((_, i) => i).filter(i => ALL_CARDS[i].d === f);
+  }
+  curIdx = 0;
+  renderCard();
+  renderDots();
+  renderCardList();
+  updateStats();
+}
+
+function setFilter(f, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  applyFilter(f);
+}
+
+function renderCard() {
+  if (deck.length === 0) return;
+  isFlipped = false;
+  document.getElementById('fc-inner').classList.remove('flipped');
+  const card = ALL_CARDS[deck[curIdx]];
+  setTimeout(() => {
+    document.getElementById('fc-term').textContent = card.term;
+    document.getElementById('fc-def').textContent = card.def;
+    const [col, bg] = DOMAIN_COLORS[card.d];
+    const badge = document.getElementById('fc-domain-badge');
+    badge.textContent = card.d + '.0 ' + DOMAIN_NAMES[card.d];
+    badge.style.cssText = `color:${col};background:${bg};border-color:${col.replace('var(','').replace(')','')};border-color:${bg.replace('rgba','rgba').replace(',0.12',',0.4')}`;
+    badge.style.color = col;
+    badge.style.background = bg;
+    badge.style.borderColor = col;
+  }, 50);
+  document.getElementById('fc-counter').textContent = `${curIdx+1} / ${deck.length}`;
+  document.getElementById('btn-prev').disabled = curIdx === 0;
+  document.getElementById('btn-next').disabled = curIdx === deck.length - 1;
+  renderDots();
+}
+
+function flip() {
+  isFlipped = !isFlipped;
+  document.getElementById('fc-inner').classList.toggle('flipped', isFlipped);
+}
+
+function navigate(dir) {
+  const next = curIdx + dir;
+  if (next < 0 || next >= deck.length) return;
+  curIdx = next;
+  renderCard();
+}
+
+function grade(g) {
+  const cardIdx = deck[curIdx];
+  status[cardIdx] = g === 'again' ? 'again' : g;
+  updateStats();
+  renderCardList();
+  renderDots();
+  // auto-advance
+  if (curIdx < deck.length - 1) {
+    curIdx++;
+    renderCard();
+  }
+}
+
+function shuffleDeck() {
+  deck = deck.sort(() => Math.random() - 0.5);
+  curIdx = 0;
+  renderCard();
+  renderDots();
+}
+
+function studyWeak() {
+  const weak = ALL_CARDS.map((_, i) => i).filter(i => {
+    const s = status[i];
+    return s === 'again' || s === 'reviewing' || s === 'unseen';
+  }).filter(i => activeFilter === 'all' || ALL_CARDS[i].d === activeFilter);
+  if (weak.length === 0) { alert('No weak cards in this filter! 🎉 Try resetting or switching to All.'); return; }
+  deck = weak.sort(() => Math.random() - 0.5);
+  curIdx = 0;
+  renderCard();
+  renderDots();
+}
+
+function resetStatus() {
+  ALL_CARDS.forEach((_, i) => { status[i] = 'unseen'; });
+  updateStats();
+  renderCardList();
+  renderDots();
+}
+
+function updateStats() {
+  const inDeck = activeFilter === 'all' ? ALL_CARDS.map((_, i) => i) : ALL_CARDS.map((_, i) => i).filter(i => ALL_CARDS[i].d === activeFilter);
+  const m = inDeck.filter(i => status[i] === 'mastered').length;
+  const r = inDeck.filter(i => status[i] === 'reviewing').length;
+  const u = inDeck.filter(i => status[i] === 'unseen' || status[i] === 'again').length;
+  document.getElementById('stat-total').textContent = inDeck.length;
+  document.getElementById('stat-mastered').textContent = m;
+  document.getElementById('stat-reviewing').textContent = r;
+  document.getElementById('stat-unseen').textContent = u;
+  const pct = inDeck.length > 0 ? Math.round((m / inDeck.length) * 100) : 0;
+  document.getElementById('prog-pct').textContent = pct + '%';
+  document.getElementById('prog-fill').style.width = pct + '%';
+}
+
+function renderDots() {
+  const dots = document.getElementById('fc-dots');
+  const max = Math.min(deck.length, 12);
+  dots.innerHTML = '';
+  for (let i = 0; i < max; i++) {
+    const d = document.createElement('div');
+    d.className = 'fc-dot';
+    if (i === curIdx) d.classList.add('active');
+    else {
+      const s = status[deck[i]];
+      if (s === 'mastered') d.classList.add('mastered');
+      else if (s === 'reviewing') d.classList.add('reviewing');
+    }
+    d.onclick = ((idx) => () => { curIdx = idx; renderCard(); })(i);
+    dots.appendChild(d);
+  }
+}
+
+function renderCardList() {
+  const list = document.getElementById('card-list');
+  list.innerHTML = '';
+  const cards = activeFilter === 'all' ? ALL_CARDS.map((c,i)=>({c,i})) : ALL_CARDS.map((c,i)=>({c,i})).filter(({c}) => c.d === activeFilter);
+  cards.forEach(({c, i}) => {
+    const [col] = DOMAIN_COLORS[c.d];
+    const s = status[i];
+    const el = document.createElement('div');
+    el.className = 'card-mini' + (s === 'mastered' ? ' is-mastered' : s === 'reviewing' ? ' is-reviewing' : '');
+    el.style.setProperty('--dm-color', col);
+    el.innerHTML = `<div class="card-mini-term">${c.term}</div><div class="card-mini-status">${s === 'unseen' ? '—' : s === 'mastered' ? '✓ Mastered' : s === 'reviewing' ? '~ Reviewing' : '✗ Again'}</div>`;
+    el.onclick = () => {
+      const deckIdx = deck.indexOf(i);
+      if (deckIdx !== -1) { curIdx = deckIdx; renderCard(); window.scrollTo({top:0,behavior:'smooth'}); }
+      else {
+        if (activeFilter !== 'all') { setFilter('all', document.querySelector('[data-domain="all"]')); }
+        setTimeout(() => { const di = deck.indexOf(i); if (di !== -1) { curIdx = di; renderCard(); window.scrollTo({top:0,behavior:'smooth'}); } }, 50);
+      }
+    };
+    list.appendChild(el);
+  });
+}
+
+init();
+</script>
+</body>
+</html>
