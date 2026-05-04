@@ -311,6 +311,101 @@
       .exam-grid { grid-template-columns: repeat(2, 1fr); }
     }
 
+    /* ── DISCLAIMER ── */
+    .disclaimer-section {
+      background: var(--white);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 2.5rem 2rem;
+    }
+    .disclaimer-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+    }
+    .disclaimer-icon {
+      font-size: 22px;
+      flex-shrink: 0;
+      margin-top: 2px;
+      opacity: 0.7;
+    }
+    .disclaimer-content { flex: 1; }
+    .disclaimer-title {
+      font-family: 'Space Mono', monospace;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--navy);
+      margin-bottom: 10px;
+      letter-spacing: .02em;
+    }
+    .disclaimer-body {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 12px;
+    }
+    .disclaimer-sources {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    .disclaimer-sources li {
+      font-size: 12.5px;
+      color: var(--text);
+      line-height: 1.6;
+      padding-left: 4px;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .disclaimer-sources li em {
+      font-style: italic;
+      color: var(--muted);
+    }
+    .disclaimer-sources a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .disclaimer-sources a:hover { text-decoration: underline; }
+    .src-badge {
+      font-family: 'Space Mono', monospace;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: var(--mid);
+      color: var(--blue);
+      white-space: nowrap;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .disclaimer-note {
+      font-size: 11.5px;
+      color: var(--muted);
+      line-height: 1.65;
+      padding: 10px 14px;
+      background: var(--light);
+      border-radius: 8px;
+      border-left: 3px solid var(--border);
+      font-style: italic;
+    }
+    html.dark .disclaimer-section {
+      background: var(--white);
+      border-color: var(--border);
+    }
+    html.dark .disclaimer-note { background: var(--mid); }
+    html.dark .src-badge { background: var(--mid); color: var(--sky); }
+    html.dark .disclaimer-title { color: var(--text); }
+    html.dark .disclaimer-sources li { color: var(--text); }
+    @media (max-width: 600px) {
+      .disclaimer-inner { flex-direction: column; gap: 12px; }
+      .disclaimer-icon { display: none; }
+    }
+
     /* ── DARK MODE ── */
     html.dark {
       --light:  #131b27;
@@ -720,6 +815,32 @@
 
   </div>
 </div>
+
+<!-- DISCLAIMER -->
+<section class="disclaimer-section">
+  <div class="disclaimer-inner">
+    <div class="disclaimer-icon">📋</div>
+    <div class="disclaimer-content">
+      <div class="disclaimer-title">Educational Disclaimer &amp; Attribution</div>
+      <p class="disclaimer-body">
+        BL Cert Hub is a personal, non-commercial study portal built for educational purposes only.
+        Practice questions, explanations, and reference material on this site are derived from the following third-party resources:
+      </p>
+      <ul class="disclaimer-sources">
+        <li><span class="src-badge">CompTIA</span> Official N10-009 (Network+) and SY0-701 (Security+) exam objectives and domain content — <a href="https://www.comptia.org" target="_blank" rel="noopener">comptia.org</a></li>
+        <li><span class="src-badge">Craig Zacker</span> <em>CompTIA Network+ Practice Tests: Exam N10-009</em> — question bank used in Practice Test 2</li>
+        <li><span class="src-badge">Dion Training</span> Network+ practice exam questions — <a href="https://www.diontraining.com" target="_blank" rel="noopener">diontraining.com</a> — used in Practice Tests 3 &amp; 4</li>
+        <li><span class="src-badge">ISC2</span> Official CC (Certified in Cybersecurity) exam objectives and study materials — <a href="https://www.isc2.org" target="_blank" rel="noopener">isc2.org</a></li>
+        <li><span class="src-badge">Cisco</span> Official CCNA 200-301 exam objectives and Cisco IOS documentation — <a href="https://www.cisco.com" target="_blank" rel="noopener">cisco.com</a></li>
+      </ul>
+      <p class="disclaimer-note">
+        All trademarks, certification names, and logos are the property of their respective owners.
+        This site is not affiliated with, endorsed by, or sponsored by CompTIA, ISC2, Cisco, or any other certification body.
+        Content is provided as-is for personal study and is not a substitute for official study materials.
+      </p>
+    </div>
+  </div>
+</section>
 
 <!-- FOOTER -->
 <footer>
