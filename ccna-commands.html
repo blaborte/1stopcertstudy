@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CLI Commands — CCNA 200-301 | BL Cert Hub</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    :root{--navy:#0B1D3A;--blue:#1A5276;--accent:#2E86C1;--sky:#5DADE2;--light:#EAF4FB;--mid:#D6EAF8;--white:#fff;--text:#0B1D3A;--muted:#5D7A8C;--border:rgba(30,80,130,0.13);--shadow:0 2px 12px rgba(11,29,58,0.08);--green:#2E7D32;--amber:#B8860B;--red:#C0392B}
+    html{scroll-behavior:smooth}
+    body{font-family:"DM Sans",sans-serif;background:var(--light);color:var(--text);min-height:100vh;display:flex;flex-direction:column}
+    nav{background:var(--navy);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:56px;position:sticky;top:0;z-index:100;border-bottom:1px solid rgba(93,173,226,0.15)}
+    .nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+    .bl-circle{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#2E86C1,#5DADE2);display:flex;align-items:center;justify-content:center;font-family:"Space Mono",monospace;font-size:10px;font-weight:700;color:#fff;flex-shrink:0}
+    .nav-brand span{font-size:13px;font-weight:500;color:rgba(255,255,255,0.85);letter-spacing:.02em}
+    .nav-links{display:flex;gap:6px}
+    .nav-links a{font-size:12px;font-weight:500;color:rgba(255,255,255,0.6);text-decoration:none;padding:6px 12px;border-radius:6px;transition:all .18s}
+    .nav-links a:hover{color:#fff;background:rgba(255,255,255,0.08)}
+    .nav-links a.active{color:var(--sky);background:rgba(93,173,226,0.12)}
+    .theme-btn{width:34px;height:34px;border-radius:8px;border:1px solid rgba(255,255,255,0.18);background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.75);cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;transition:all .18s;flex-shrink:0}
+    .theme-btn:hover{background:rgba(255,255,255,0.15);color:#fff}
+    .hero{background:linear-gradient(135deg,#0B1D3A 0%,#1A5276 55%,#2E86C1 100%);padding:3rem 2rem 2.5rem;position:relative;overflow:hidden}
+    .hero-grid-pattern{position:absolute;inset:0;background-image:linear-gradient(rgba(93,173,226,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(93,173,226,0.04) 1px,transparent 1px);background-size:32px 32px;pointer-events:none}
+    .hero-bg-ring{position:absolute;border-radius:50%;border:40px solid rgba(93,173,226,0.08);pointer-events:none}
+    .hero-bg-ring.r1{width:300px;height:300px;top:-70px;right:-50px}
+    .hero-bg-ring.r2{width:180px;height:180px;bottom:-60px;left:40%;border-width:22px}
+    .hero-inner{position:relative;max-width:980px;margin:0 auto}
+    .exam-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.18);border-radius:20px;padding:5px 14px 5px 5px;margin-bottom:1.25rem}
+    .exam-badge .bl-circle{width:26px;height:26px;font-size:9px}
+    .exam-badge span{font-size:12px;color:rgba(255,255,255,0.8);font-weight:500}
+    .hero h1{font-family:"Space Mono",monospace;font-size:clamp(22px,3.5vw,38px);font-weight:700;color:#fff;line-height:1.2;margin-bottom:.5rem}
+    .hero h1 .accent{color:var(--sky)}
+    .hero-sub{font-size:14px;color:rgba(255,255,255,0.6);font-weight:300;line-height:1.7;max-width:520px}
+    /* LAYOUT */
+    .page-layout{display:flex;max-width:980px;margin:0 auto;padding:2rem 2rem 3rem;gap:24px;flex:1;width:100%}
+    /* SIDEBAR */
+    .sidebar{width:200px;flex-shrink:0}
+    .sidebar-sticky{position:sticky;top:72px}
+    .sidebar-title{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;padding-bottom:8px;border-bottom:2px solid var(--border)}
+    .sidebar-link{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:7px;text-decoration:none;font-size:12px;font-weight:500;color:var(--muted);transition:all .16s;margin-bottom:2px;border:1px solid transparent}
+    .sidebar-link:hover{background:var(--white);border-color:var(--border);color:var(--text)}
+    .sidebar-link.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+    .sidebar-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+    /* MAIN */
+    .cli-main{flex:1;min-width:0}
+    /* CONTROLS */
+    .controls{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:14px 18px;margin-bottom:1.5rem;box-shadow:var(--shadow);display:flex;gap:10px;align-items:center}
+    .search-wrap{position:relative;flex:1}
+    .search-icon{position:absolute;left:11px;top:50%;transform:translateY(-50%);font-size:13px;pointer-events:none}
+    .search-input{width:100%;padding:9px 12px 9px 34px;border:1px solid var(--border);border-radius:8px;font-family:"DM Sans",sans-serif;font-size:13px;color:var(--text);background:var(--light);outline:none;transition:border-color .18s}
+    .search-input:focus{border-color:var(--accent);background:var(--white)}
+    .result-count{font-size:12px;color:var(--muted);white-space:nowrap}
+    .btn-outline{background:transparent;border:1px solid var(--border);color:var(--text);padding:7px 14px;border-radius:8px;font-family:"DM Sans",sans-serif;font-size:12px;font-weight:500;cursor:pointer;transition:all .18s}
+    .btn-outline:hover{border-color:var(--accent);color:var(--accent)}
+    /* CATEGORY BLOCK */
+    .cat-block{margin-bottom:2rem}
+    .cat-header{display:flex;align-items:center;gap:12px;margin-bottom:1rem;padding-bottom:.75rem;border-bottom:2px solid var(--border);position:relative}
+    .cat-header::after{content:"";position:absolute;bottom:-2px;left:0;width:60px;height:2px;background:var(--cat-color)}
+    .cat-icon{font-size:18px}
+    .cat-title{font-family:"Space Mono",monospace;font-size:16px;font-weight:700;color:var(--text)}
+    .cat-count{font-size:11px;font-weight:500;padding:3px 9px;border-radius:10px;background:var(--mid);color:var(--blue);margin-left:auto}
+    /* COMMAND CARD */
+    .cmd-card{background:var(--white);border:1px solid var(--border);border-radius:12px;margin-bottom:8px;overflow:hidden;box-shadow:var(--shadow);transition:all .18s;border-left:3px solid var(--cat-color)}
+    .cmd-card:hover{box-shadow:0 4px 16px rgba(11,29,58,0.1)}
+    .cmd-card.hidden{display:none}
+    .cmd-header{display:flex;align-items:flex-start;gap:0;padding:0}
+    .cmd-code-wrap{flex:1;padding:13px 16px 13px 16px}
+    .cmd-code{font-family:"Space Mono",monospace;font-size:12px;font-weight:700;color:var(--accent);line-height:1.5;word-break:break-all}
+    .cmd-code .placeholder{color:var(--amber);font-style:italic}
+    .cmd-code .keyword{color:var(--sky)}
+    .cmd-mode{font-size:10px;font-weight:600;padding:2px 8px;border-radius:4px;margin-top:5px;display:inline-block;letter-spacing:.04em}
+    .mode-global{background:rgba(46,134,193,0.1);color:var(--accent)}
+    .mode-interface{background:rgba(46,125,50,0.1);color:var(--green)}
+    .mode-privileged{background:rgba(184,134,11,0.1);color:var(--amber)}
+    .mode-line{background:rgba(107,63,160,0.1);color:#6B3FA0}
+    .mode-router{background:rgba(192,57,43,0.1);color:var(--red)}
+    .cmd-right{display:flex;flex-direction:column;align-items:flex-end;padding:13px 14px 13px 0;gap:6px;flex-shrink:0}
+    .cmd-desc{font-size:12px;color:var(--muted);line-height:1.55;padding:0 16px 12px 16px;border-top:1px solid var(--border);background:rgba(234,244,251,0.3)}
+    .copy-btn{background:var(--light);border:1px solid var(--border);border-radius:6px;padding:4px 10px;font-size:10px;font-weight:600;cursor:pointer;color:var(--muted);transition:all .15s;font-family:"DM Sans",sans-serif;white-space:nowrap}
+    .copy-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--white)}
+    .copy-btn.copied{background:var(--green);border-color:var(--green);color:#fff}
+    .no-results-msg{text-align:center;padding:3rem;color:var(--muted);font-size:14px}
+    /* DARK */
+    html.dark{--light:#131b27;--mid:#1a2535;--white:#1e2a3a;--text:#d4e6f7;--muted:#7aa3c0;--border:rgba(93,173,226,0.14)}
+    html.dark body{background:var(--light);color:var(--text)}
+    html.dark nav,html.dark footer{background:#0a1220}
+    html.dark .cmd-card{background:var(--white);border-color:var(--border)}
+    html.dark .cmd-desc{background:rgba(0,0,0,0.15);border-color:var(--border)}
+    html.dark .controls{background:var(--white);border-color:var(--border)}
+    html.dark .search-input{background:var(--mid);border-color:var(--border);color:var(--text)}
+    html.dark .search-input:focus{background:var(--white)}
+    html.dark .copy-btn{background:var(--mid);border-color:var(--border);color:var(--muted)}
+    html.dark .sidebar-link:hover{background:var(--mid)}
+    html.dark .cat-count{background:var(--mid)}
+    footer{background:var(--navy);padding:1.25rem 2rem;text-align:center;border-top:1px solid rgba(93,173,226,0.12)}
+    footer p{font-size:12px;color:rgba(255,255,255,0.3)}
+    footer a{color:var(--sky);text-decoration:none}
+    @media(max-width:768px){.sidebar{display:none};.page-layout{padding:1.25rem}}
+    @media(max-width:600px){nav{padding:0 1.25rem};.hero{padding:2rem 1.25rem 2rem}}
+  </style>
+</head>
+<body>
+<script>
+(function(){const K="bl-theme";function apply(d){document.documentElement.classList.toggle("dark",d);const b=document.getElementById("theme-btn");if(b)b.textContent=d?"☀":"☾"}apply(localStorage.getItem(K)==="dark");window.__toggleTheme=function(){const d=!document.documentElement.classList.contains("dark");localStorage.setItem(K,d?"dark":"light");apply(d)};window.addEventListener("storage",function(e){if(e.key===K)apply(e.newValue==="dark")})})();
+</script>
+<nav>
+  <a class="nav-brand" href="index.html"><div class="bl-circle">BL</div><span>BL Cert Hub</span></a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="ccna-home.html">CCNA</a>
+    <a href="#" class="active">CLI Commands</a>
+    <button class="theme-btn" id="theme-btn" onclick="__toggleTheme()">☾</button>
+  </div>
+</nav>
+<div class="hero">
+  <div class="hero-grid-pattern"></div>
+  <div class="hero-bg-ring r1"></div>
+  <div class="hero-bg-ring r2"></div>
+  <div class="hero-inner">
+    <div class="exam-badge"><div class="bl-circle">BL</div><span>Cisco CCNA 200-301</span></div>
+    <h1>CLI <span class="accent">Commands</span></h1>
+    <p class="hero-sub">Comprehensive Cisco IOS command reference for the CCNA 200-301 exam. Search by command or description, click any card to copy.</p>
+  </div>
+</div>
+<div class="page-layout">
+  <aside class="sidebar">
+    <div class="sidebar-sticky">
+      <div class="sidebar-title">Categories</div>
+      <div id="sidebar-links"></div>
+    </div>
+  </aside>
+  <main class="cli-main">
+    <div class="controls">
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input class="search-input" id="search" type="text" placeholder="Search command or description..." oninput="filterCmds()">
+      </div>
+      <span class="result-count" id="result-count"></span>
+      <button class="btn-outline" onclick="clearSearch()">Clear</button>
+    </div>
+    <div id="cmd-container"></div>
+    <div class="no-results-msg" id="no-results" style="display:none">No commands match your search.</div>
+  </main>
+</div>
+<footer><p>Built by <a href="https://blaborte.github.io" target="_blank">Baltazar Laborte</a> · BL Cert Hub · Cisco CCNA 200-301</p></footer>
+<script>
+const CATEGORIES = [
+  {
+    id:'basic', icon:'⚡', title:'Basic Navigation & Modes', color:'#2E86C1',
+    cmds:[
+      {cmd:'enable',mode:'privileged',desc:'Enter privileged EXEC mode from user EXEC mode. Prompt changes from > to #.'},
+      {cmd:'configure terminal',mode:'global',desc:'Enter global configuration mode from privileged EXEC. Prompt changes to (config)#.'},
+      {cmd:'exit',mode:'global',desc:'Exit current mode and return to previous mode. Use multiple times to reach user EXEC.'},
+      {cmd:'end',mode:'global',desc:'Exit directly back to privileged EXEC mode from any configuration mode. Same as Ctrl+Z.'},
+      {cmd:'hostname <name>',mode:'global',desc:'Set the device hostname. Appears in the prompt and is used for SSH key generation.'},
+      {cmd:'show version',mode:'privileged',desc:'Display IOS version, uptime, hardware model, RAM, flash, and configuration register.'},
+      {cmd:'show running-config',mode:'privileged',desc:'Display the active configuration currently in RAM. Use | include/exclude/section to filter.'},
+      {cmd:'show startup-config',mode:'privileged',desc:'Display the saved configuration in NVRAM that loads on next boot.'},
+      {cmd:'copy running-config startup-config',mode:'privileged',desc:'Save running config to NVRAM. Equivalent to write memory or wr.'},
+      {cmd:'write erase',mode:'privileged',desc:'Erase the startup configuration from NVRAM. Requires reload to take effect.'},
+      {cmd:'reload',mode:'privileged',desc:'Reboot the device. Will prompt to save unsaved config changes.'},
+      {cmd:'show clock',mode:'privileged',desc:'Display current time and date. Use clock set to manually configure time.'},
+    ]
+  },
+  {
+    id:'interface', icon:'🔌', title:'Interface Configuration', color:'#117A65',
+    cmds:[
+      {cmd:'interface <type> <number>',mode:'interface',desc:'Enter interface configuration mode. Examples: interface gi0/0, interface fa0/1, interface lo0.'},
+      {cmd:'interface range <type> <x> - <y>',mode:'global',desc:'Configure multiple interfaces simultaneously. Example: interface range fa0/1 - 12.'},
+      {cmd:'ip address <ip> <mask>',mode:'interface',desc:'Assign IPv4 address and subnet mask to an interface.'},
+      {cmd:'ipv6 address <addr>/<prefix>',mode:'interface',desc:'Assign IPv6 address. Add eui-64 for EUI-64 generation from MAC address.'},
+      {cmd:'no shutdown',mode:'interface',desc:'Administratively enable an interface (bring it up). Router interfaces are shutdown by default.'},
+      {cmd:'shutdown',mode:'interface',desc:'Administratively disable an interface. Switch ports are enabled by default; router ports are not.'},
+      {cmd:'description <text>',mode:'interface',desc:'Add a text description to an interface for documentation purposes. Best practice always.'},
+      {cmd:'duplex <full|half|auto>',mode:'interface',desc:'Set interface duplex. Auto is default but mismatches cause CRC errors and slowness.'},
+      {cmd:'speed <10|100|1000|auto>',mode:'interface',desc:'Set interface speed in Mbps. Use auto with duplex auto for most interfaces.'},
+      {cmd:'show interfaces',mode:'privileged',desc:'Show status, errors, bandwidth, input/output rates for all interfaces.'},
+      {cmd:'show interfaces <type> <num>',mode:'privileged',desc:'Show detailed stats for a specific interface including CRC, input/output errors, resets.'},
+      {cmd:'show ip interface brief',mode:'privileged',desc:'Summary table of all interfaces: IP address, status (up/down), protocol (up/down). Most used show command.'},
+      {cmd:'show ipv6 interface brief',mode:'privileged',desc:'Summary of IPv6 interface status and assigned addresses.'},
+    ]
+  },
+  {
+    id:'vlan', icon:'🏷️', title:'VLANs & Trunking', color:'#6B3FA0',
+    cmds:[
+      {cmd:'vlan <id>',mode:'global',desc:'Create a VLAN and enter VLAN configuration mode. Example: vlan 10. Add name with name SALES.'},
+      {cmd:'name <vlan-name>',mode:'global',desc:'Assign a name to a VLAN in VLAN configuration mode. Best practice for documentation.'},
+      {cmd:'show vlan brief',mode:'privileged',desc:'Show all VLANs, their names, status, and assigned ports. Does NOT show trunk ports.'},
+      {cmd:'show vlan id <id>',mode:'privileged',desc:'Show detailed info about a specific VLAN including assigned ports.'},
+      {cmd:'switchport mode access',mode:'interface',desc:'Configure port as access port — carries traffic for only one VLAN. For end devices.'},
+      {cmd:'switchport access vlan <id>',mode:'interface',desc:'Assign access port to a specific VLAN. If VLAN does not exist it will be created.'},
+      {cmd:'switchport mode trunk',mode:'interface',desc:'Force port into trunk mode — carries multiple VLANs tagged with 802.1Q.'},
+      {cmd:'switchport trunk encapsulation dot1q',mode:'interface',desc:'Set 802.1Q encapsulation for trunking. Required on some older switches before trunk mode.'},
+      {cmd:'switchport trunk native vlan <id>',mode:'interface',desc:'Change the native VLAN (untagged traffic) on a trunk. Change from default VLAN 1 for security.'},
+      {cmd:'switchport trunk allowed vlan <list>',mode:'interface',desc:'Specify which VLANs are allowed on trunk. Example: switchport trunk allowed vlan 10,20,30.'},
+      {cmd:'switchport trunk allowed vlan add <id>',mode:'interface',desc:'Add a VLAN to the trunk allowed list without overwriting existing allowed VLANs.'},
+      {cmd:'show interfaces trunk',mode:'privileged',desc:'Show trunk ports, encapsulation, native VLAN, allowed VLANs, and VLANs in STP forwarding state.'},
+      {cmd:'show interfaces <int> switchport',mode:'privileged',desc:'Detailed switchport info: mode, access VLAN, trunk VLANs, native VLAN.'},
+    ]
+  },
+  {
+    id:'stp', icon:'🌳', title:'Spanning Tree Protocol', color:'#C0531A',
+    cmds:[
+      {cmd:'spanning-tree mode <pvst|rapid-pvst|mst>',mode:'global',desc:'Set STP mode. rapid-pvst is Cisco default — Rapid PVST+ (per-VLAN rapid STP).'},
+      {cmd:'spanning-tree vlan <id> priority <val>',mode:'global',desc:'Set bridge priority for a VLAN. Values must be multiples of 4096 (0-61440). Lower = preferred root.'},
+      {cmd:'spanning-tree vlan <id> root primary',mode:'global',desc:'Automatically sets priority to 24576 (or lower than current root) to become root bridge.'},
+      {cmd:'spanning-tree vlan <id> root secondary',mode:'global',desc:'Sets priority to 28672 to become BDR (Backup Designated Root).'},
+      {cmd:'spanning-tree portfast',mode:'interface',desc:'Enable PortFast on an access port. Immediately transitions to Forwarding state. Only for end devices.'},
+      {cmd:'spanning-tree bpduguard enable',mode:'interface',desc:'Shuts down port if BPDU received. Protects PortFast ports from rogue switches.'},
+      {cmd:'spanning-tree portfast default',mode:'global',desc:'Enable PortFast by default on all access ports globally. Still shut down if BPDU received with BPDU Guard.'},
+      {cmd:'spanning-tree bpduguard default',mode:'global',desc:'Enable BPDU Guard globally on all PortFast-enabled interfaces.'},
+      {cmd:'spanning-tree guard root',mode:'interface',desc:'Root Guard — prevents this port from becoming a root port. Protects root bridge election.'},
+      {cmd:'show spanning-tree',mode:'privileged',desc:'Show STP topology, root bridge info, port roles and states for all VLANs.'},
+      {cmd:'show spanning-tree vlan <id>',mode:'privileged',desc:'STP info for a specific VLAN: root ID, bridge ID, port roles, port states, timers.'},
+    ]
+  },
+  {
+    id:'etherchannel', icon:'⛓️', title:'EtherChannel', color:'#0E7A8A',
+    cmds:[
+      {cmd:'channel-group <num> mode active',mode:'interface',desc:'LACP active mode — initiates EtherChannel negotiation. Use with passive on other side.'},
+      {cmd:'channel-group <num> mode passive',mode:'interface',desc:'LACP passive mode — responds to LACP but does not initiate. Must pair with active.'},
+      {cmd:'channel-group <num> mode desirable',mode:'interface',desc:'PAgP desirable mode (Cisco) — initiates EtherChannel negotiation.'},
+      {cmd:'channel-group <num> mode auto',mode:'interface',desc:'PAgP auto mode — responds to PAgP but does not initiate.'},
+      {cmd:'channel-group <num> mode on',mode:'interface',desc:'Static EtherChannel — no negotiation protocol. Both sides must be set to on.'},
+      {cmd:'interface port-channel <num>',mode:'global',desc:'Enter the logical port-channel interface to configure trunk/access settings.'},
+      {cmd:'show etherchannel summary',mode:'privileged',desc:'Show EtherChannel groups, protocol, ports, and bundle state. P=bundled, D=down, S=Layer2.'},
+      {cmd:'show etherchannel port-channel',mode:'privileged',desc:'Detailed EtherChannel info including load-balance method and member port details.'},
+    ]
+  },
+  {
+    id:'routing', icon:'🛣️', title:'Routing & Static Routes', color:'#2E7D32',
+    cmds:[
+      {cmd:'ip routing',mode:'global',desc:'Enable IP routing on a Layer 3 switch. Not needed on routers — enabled by default.'},
+      {cmd:'ip route <net> <mask> <next-hop>',mode:'global',desc:'Configure a static route. Example: ip route 10.1.1.0 255.255.255.0 192.168.1.1'},
+      {cmd:'ip route 0.0.0.0 0.0.0.0 <next-hop>',mode:'global',desc:'Configure a default route (Gateway of Last Resort). Matches all unrouted destinations.'},
+      {cmd:'ipv6 route <prefix>/<len> <next-hop>',mode:'global',desc:'Configure an IPv6 static route. Example: ipv6 route 2001:db8::/32 2001:db8::1'},
+      {cmd:'ipv6 unicast-routing',mode:'global',desc:'Enable IPv6 routing on a router or Layer 3 switch. Required for IPv6 routing to function.'},
+      {cmd:'show ip route',mode:'privileged',desc:'Display IPv4 routing table. Codes: C=connected, S=static, O=OSPF, D=EIGRP, R=RIP, B=BGP.'},
+      {cmd:'show ipv6 route',mode:'privileged',desc:'Display IPv6 routing table with prefixes, sources, and next-hops.'},
+      {cmd:'show ip route static',mode:'privileged',desc:'Show only static routes in the routing table.'},
+    ]
+  },
+  {
+    id:'ospf', icon:'🔄', title:'OSPF Configuration', color:'#B8860B',
+    cmds:[
+      {cmd:'router ospf <process-id>',mode:'global',desc:'Enable OSPF routing process. Process ID is locally significant (1-65535) — does not need to match neighbors.'},
+      {cmd:'network <ip> <wildcard> area <id>',mode:'router',desc:'Advertise networks into OSPF. Wildcard is inverse of subnet mask. Example: network 10.0.0.0 0.255.255.255 area 0'},
+      {cmd:'router-id <ip>',mode:'router',desc:'Manually set OSPF Router ID. Takes effect on next OSPF process restart. Best practice.'},
+      {cmd:'passive-interface <interface>',mode:'router',desc:'Stop sending OSPF hellos on an interface but still advertise the network. Use on LAN-facing interfaces.'},
+      {cmd:'passive-interface default',mode:'router',desc:'Make all interfaces passive by default, then use no passive-interface to enable OSPF on specific links.'},
+      {cmd:'auto-cost reference-bandwidth <mbps>',mode:'router',desc:'Change OSPF reference bandwidth for cost calculation. Set to highest link speed in network (e.g. 10000 for 10G).'},
+      {cmd:'ip ospf cost <value>',mode:'interface',desc:'Manually set OSPF cost on an interface. Overrides auto-calculation. Lower cost = preferred path.'},
+      {cmd:'ip ospf priority <0-255>',mode:'interface',desc:'Set OSPF DR/BDR election priority. 0 = never a DR/BDR. Higher value wins. Default is 1.'},
+      {cmd:'ip ospf hello-interval <seconds>',mode:'interface',desc:'Change OSPF hello timer (default 10s on broadcast, 30s on NBMA). Must match neighbor.'},
+      {cmd:'ip ospf dead-interval <seconds>',mode:'interface',desc:'Change OSPF dead timer (default 4x hello). Must match neighbor exactly or adjacency fails.'},
+      {cmd:'clear ip ospf process',mode:'privileged',desc:'Restart OSPF process — forces re-election of Router ID and rebuilds neighbor adjacencies.'},
+      {cmd:'show ip ospf neighbor',mode:'privileged',desc:'Show OSPF neighbors, state (should be FULL), DR/BDR status, dead timer, interface.'},
+      {cmd:'show ip ospf interface',mode:'privileged',desc:'Show OSPF interface details: cost, hello/dead timers, DR/BDR IPs, neighbor count.'},
+      {cmd:'show ip ospf database',mode:'privileged',desc:'Show OSPF LSDB — all LSAs known to this router. Useful for topology verification.'},
+      {cmd:'show ip protocols',mode:'privileged',desc:'Show all routing protocols running, networks advertised, administrative distance, neighbors.'},
+    ]
+  },
+  {
+    id:'intervlan', icon:'🔀', title:'Inter-VLAN Routing & SVIs', color:'#6B3FA0',
+    cmds:[
+      {cmd:'interface vlan <id>',mode:'global',desc:'Create/enter SVI (Switch Virtual Interface) for a VLAN. Assign IP for inter-VLAN routing on L3 switch.'},
+      {cmd:'ip address <ip> <mask>',mode:'interface',desc:'Assign IP to SVI — this becomes the default gateway for hosts in that VLAN.'},
+      {cmd:'no shutdown',mode:'interface',desc:'Bring up the SVI. SVI comes up when VLAN exists and at least one port is up in that VLAN.'},
+      {cmd:'interface <type>.<subint>',mode:'global',desc:'Create a subinterface for Router-on-a-Stick. Example: interface gi0/0.10 for VLAN 10.'},
+      {cmd:'encapsulation dot1q <vlan-id>',mode:'interface',desc:'Set 802.1Q encapsulation on subinterface and associate it with a VLAN. Must match VLAN ID.'},
+      {cmd:'encapsulation dot1q <id> native',mode:'interface',desc:'Mark subinterface as handling native VLAN traffic (untagged). Matches native VLAN on switch trunk.'},
+      {cmd:'show interface vlan <id>',mode:'privileged',desc:'Show SVI status (up/up means VLAN is active with ports in it) and configured IP.'},
+    ]
+  },
+  {
+    id:'dhcp', icon:'📡', title:'DHCP', color:'#C0531A',
+    cmds:[
+      {cmd:'ip dhcp pool <name>',mode:'global',desc:'Create a DHCP pool and enter DHCP pool configuration mode.'},
+      {cmd:'network <ip> <mask>',mode:'global',desc:'Define the subnet to assign addresses from in DHCP pool config mode.'},
+      {cmd:'default-router <ip>',mode:'global',desc:'Specify the default gateway to assign to DHCP clients.'},
+      {cmd:'dns-server <ip>',mode:'global',desc:'Specify DNS server(s) to assign to DHCP clients.'},
+      {cmd:'domain-name <name>',mode:'global',desc:'Specify domain name to assign to DHCP clients.'},
+      {cmd:'lease <days> [hours] [minutes]',mode:'global',desc:'Set DHCP lease duration. Default is 1 day. lease infinite for permanent leases.'},
+      {cmd:'ip dhcp excluded-address <start> <end>',mode:'global',desc:'Exclude IP addresses from DHCP pool. Configure BEFORE pool — include router, servers, printers.'},
+      {cmd:'ip helper-address <dhcp-server-ip>',mode:'interface',desc:'Forward DHCP broadcasts to a DHCP server in another subnet. Applied on router interface facing clients.'},
+      {cmd:'show ip dhcp binding',mode:'privileged',desc:'Show all DHCP leases: client IP, MAC address, lease expiration, type.'},
+      {cmd:'show ip dhcp pool',mode:'privileged',desc:'Show DHCP pools: total addresses, leased count, available count.'},
+      {cmd:'show ip dhcp conflict',mode:'privileged',desc:'Show IPs that caused conflicts — addresses offered but already in use. Clear with clear ip dhcp conflict *.'},
+    ]
+  },
+  {
+    id:'nat', icon:'🔁', title:'NAT & PAT', color:'#0E7A8A',
+    cmds:[
+      {cmd:'ip nat inside',mode:'interface',desc:'Mark interface as the inside (private/LAN) side of NAT. Apply to LAN-facing interface.'},
+      {cmd:'ip nat outside',mode:'interface',desc:'Mark interface as the outside (public/WAN) side of NAT. Apply to WAN-facing interface.'},
+      {cmd:'ip nat inside source static <priv> <pub>',mode:'global',desc:'Static NAT — permanently maps one private IP to one public IP. For servers needing fixed public IP.'},
+      {cmd:'ip nat inside source list <acl> interface <int> overload',mode:'global',desc:'PAT/NAT Overload — many private IPs share one public IP using port numbers. Most common NAT type.'},
+      {cmd:'ip nat inside source list <acl> pool <name>',mode:'global',desc:'Dynamic NAT using a pool of public IPs. Create pool with ip nat pool command.'},
+      {cmd:'ip nat pool <name> <start> <end> netmask <mask>',mode:'global',desc:'Create NAT address pool for dynamic NAT.'},
+      {cmd:'show ip nat translations',mode:'privileged',desc:'Show active NAT translation table: inside local, inside global, outside local, outside global.'},
+      {cmd:'show ip nat statistics',mode:'privileged',desc:'Show NAT hit/miss counters, active translations, and inside/outside interfaces.'},
+      {cmd:'clear ip nat translation *',mode:'privileged',desc:'Clear all dynamic NAT translations from the table. Useful for troubleshooting.'},
+    ]
+  },
+  {
+    id:'security', icon:'🔒', title:'Security & ACLs', color:'#C0392B',
+    cmds:[
+      {cmd:'enable secret <password>',mode:'global',desc:'Set encrypted privileged EXEC password (MD5 hash). Always use secret over password.'},
+      {cmd:'service password-encryption',mode:'global',desc:'Encrypt all plaintext passwords in config with weak type 7 encryption. Better than nothing.'},
+      {cmd:'banner motd # <message> #',mode:'global',desc:'Set Message of the Day banner displayed before login. Use legally-approved unauthorized access warning.'},
+      {cmd:'username <user> privilege 15 secret <pass>',mode:'global',desc:'Create local user with privilege level 15 (full access) and encrypted password.'},
+      {cmd:'line console 0',mode:'global',desc:'Enter console line configuration mode for physical console port.'},
+      {cmd:'line vty 0 4',mode:'global',desc:'Enter VTY line config mode for Telnet/SSH access (lines 0-4 = 5 simultaneous sessions).'},
+      {cmd:'transport input ssh',mode:'line',desc:'Allow only SSH on VTY lines — disables Telnet. Security best practice.'},
+      {cmd:'login local',mode:'line',desc:'Use local username database for authentication on this line.'},
+      {cmd:'exec-timeout <min> <sec>',mode:'line',desc:'Set idle timeout for line. exec-timeout 5 0 = 5 minutes. exec-timeout 0 0 = never (lab use only).'},
+      {cmd:'login block-for <sec> attempts <n> within <sec>',mode:'global',desc:'Block logins after n failed attempts within time window. Defends against brute force.'},
+      {cmd:'access-list <1-99> permit|deny <ip> <wildcard>',mode:'global',desc:'Standard numbered ACL — filters on source IP only. Apply near destination.'},
+      {cmd:'access-list <100-199> permit|deny <proto> <src> <dst> eq <port>',mode:'global',desc:'Extended numbered ACL — filters source, destination, protocol, port. Apply near source.'},
+      {cmd:'ip access-list standard <name>',mode:'global',desc:'Create a named standard ACL. Use permit and deny statements inside ACL config mode.'},
+      {cmd:'ip access-list extended <name>',mode:'global',desc:'Create a named extended ACL. More flexible and easier to edit than numbered ACLs.'},
+      {cmd:'ip access-group <acl> in|out',mode:'interface',desc:'Apply ACL to an interface. in = filter incoming traffic, out = filter outgoing traffic.'},
+      {cmd:'show access-lists',mode:'privileged',desc:'Show all ACLs with match counters. Use to verify ACLs are matching expected traffic.'},
+      {cmd:'show ip access-lists',mode:'privileged',desc:'Show IP ACLs specifically with match counters per line.'},
+      {cmd:'switchport port-security',mode:'interface',desc:'Enable port security on an access port. Defaults to max 1 MAC, violation shutdown.'},
+      {cmd:'switchport port-security maximum <n>',mode:'interface',desc:'Set max number of MACs allowed on port. Default 1.'},
+      {cmd:'switchport port-security violation <mode>',mode:'interface',desc:'Set violation action: shutdown (err-disable), restrict (drop+log), protect (drop silently).'},
+      {cmd:'switchport port-security mac-address sticky',mode:'interface',desc:'Dynamically learn and stick current MACs as secure addresses in running config.'},
+      {cmd:'show port-security interface <int>',mode:'privileged',desc:'Show port security status, max MACs, current MACs, violations, last violation MAC.'},
+      {cmd:'ip dhcp snooping',mode:'global',desc:'Enable DHCP snooping globally. Must also enable per-VLAN with ip dhcp snooping vlan.'},
+      {cmd:'ip dhcp snooping vlan <id>',mode:'global',desc:'Enable DHCP snooping for specific VLANs. Untrusted ports will drop DHCP offers.'},
+      {cmd:'ip dhcp snooping trust',mode:'interface',desc:'Mark interface as trusted for DHCP snooping. Apply only on uplinks to DHCP servers.'},
+      {cmd:'ip arp inspection vlan <id>',mode:'global',desc:'Enable Dynamic ARP Inspection for VLANs. Validates ARP packets against DHCP snooping table.'},
+      {cmd:'ip arp inspection trust',mode:'interface',desc:'Mark interface as trusted for DAI. Apply on uplinks where ARP should not be validated.'},
+    ]
+  },
+  {
+    id:'ssh', icon:'🔑', title:'SSH & Remote Access', color:'#117A65',
+    cmds:[
+      {cmd:'ip domain-name <domain>',mode:'global',desc:'Set DNS domain name. Required for RSA key generation for SSH. Example: ip domain-name cisco.lab'},
+      {cmd:'crypto key generate rsa modulus 2048',mode:'global',desc:'Generate RSA key pair for SSH. 2048-bit minimum recommended. Enables SSH on the device.'},
+      {cmd:'ip ssh version 2',mode:'global',desc:'Force SSH version 2 only. More secure than version 1. Always configure this.'},
+      {cmd:'ip ssh time-out <seconds>',mode:'global',desc:'Set SSH negotiation timeout. Default 120 seconds.'},
+      {cmd:'ip ssh authentication-retries <n>',mode:'global',desc:'Set max SSH authentication attempts before disconnecting. Default 3.'},
+      {cmd:'show ip ssh',mode:'privileged',desc:'Show SSH version, timeout, authentication retries, and state (enabled/disabled).'},
+      {cmd:'show ssh',mode:'privileged',desc:'Show active SSH sessions: session ID, version, encryption, state, username.'},
+    ]
+  },
+  {
+    id:'snmp', icon:'📊', title:'SNMP & Monitoring', color:'#5D6D7E',
+    cmds:[
+      {cmd:'snmp-server community <string> ro',mode:'global',desc:'Set read-only SNMP community string for SNMPv2c. Monitoring tools use this to poll device.'},
+      {cmd:'snmp-server community <string> rw',mode:'global',desc:'Set read-write SNMP community string. Allows NMS to make changes via SNMP. Use carefully.'},
+      {cmd:'snmp-server host <ip> version 2c <string>',mode:'global',desc:'Configure SNMP trap destination. Device will send traps to this host using specified community.'},
+      {cmd:'snmp-server enable traps',mode:'global',desc:'Enable SNMP traps for all supported event types.'},
+      {cmd:'snmp-server group <grp> v3 priv',mode:'global',desc:'Create SNMPv3 group requiring authentication and privacy (encryption). Most secure.'},
+      {cmd:'snmp-server user <user> <grp> v3 auth sha <pw> priv aes 128 <pw>',mode:'global',desc:'Create SNMPv3 user with SHA authentication and AES-128 encryption.'},
+      {cmd:'logging host <ip>',mode:'global',desc:'Send syslog messages to a remote syslog server.'},
+      {cmd:'logging trap <level>',mode:'global',desc:'Set minimum severity level for syslog messages sent to server. Level 6 = informational.'},
+      {cmd:'ntp server <ip>',mode:'global',desc:'Configure device as NTP client, syncing to specified NTP server.'},
+      {cmd:'ntp master <stratum>',mode:'global',desc:'Make this device an NTP server at specified stratum level. Example: ntp master 3'},
+      {cmd:'show ntp status',mode:'privileged',desc:'Show NTP synchronization status. "Clock is synchronized" = good. Shows stratum and reference.'},
+      {cmd:'show ntp associations',mode:'privileged',desc:'Show NTP associations and reference sources. * = synced peer, + = candidate.'},
+    ]
+  },
+  {
+    id:'wireless', icon:'📶', title:'Wireless (WLC Context)', color:'#6B3FA0',
+    cmds:[
+      {cmd:'show ap summary',mode:'privileged',desc:'Show all APs joined to the WLC: name, MAC, model, IP, status.'},
+      {cmd:'show wlan summary',mode:'privileged',desc:'Show all configured WLANs: ID, name, status, security.'},
+      {cmd:'show client summary',mode:'privileged',desc:'Show all associated wireless clients: MAC, IP, WLAN, AP, RSSI.'},
+      {cmd:'show ap config general <ap-name>',mode:'privileged',desc:'Show detailed AP configuration: IP, model, channels, power levels, association.'},
+    ]
+  },
+  {
+    id:'show', icon:'🔎', title:'Key Show & Debug Commands', color:'#1A5276',
+    cmds:[
+      {cmd:'show mac address-table',mode:'privileged',desc:'Show switch MAC address table: VLAN, MAC, type (dynamic/static), and port.'},
+      {cmd:'show mac address-table dynamic',mode:'privileged',desc:'Show only dynamically learned MAC addresses (excludes static/secure entries).'},
+      {cmd:'show arp',mode:'privileged',desc:'Show ARP cache: protocol, IP address, hardware address, interface.'},
+      {cmd:'show ip arp',mode:'privileged',desc:'Show IP ARP table — same as show arp but IPv4-specific.'},
+      {cmd:'show cdp neighbors',mode:'privileged',desc:'Show directly connected Cisco neighbors: device ID, local interface, holdtime, capability, platform, remote port.'},
+      {cmd:'show cdp neighbors detail',mode:'privileged',desc:'Detailed CDP info including IP address of neighbors. Great for mapping topology.'},
+      {cmd:'show lldp neighbors',mode:'privileged',desc:'Show LLDP neighbors (open standard, works with non-Cisco devices).'},
+      {cmd:'ping <ip>',mode:'privileged',desc:'Send 5 ICMP echo requests. Success = !!!!! (5 exclamations). Test Layer 3 connectivity.'},
+      {cmd:'ping <ip> source <interface>',mode:'privileged',desc:'Extended ping sourced from specific interface. Tests routing path from that source address.'},
+      {cmd:'traceroute <ip>',mode:'privileged',desc:'Trace hop-by-hop path using ICMP/UDP probes. Shows each router and RTT. * = no response.'},
+      {cmd:'debug ip ospf events',mode:'privileged',desc:'Debug OSPF events in real time. Disable with undebug all or no debug all.'},
+      {cmd:'undebug all',mode:'privileged',desc:'Disable all active debug commands. Always run this when done — debug output impacts performance.'},
+      {cmd:'terminal monitor',mode:'privileged',desc:'Send debug and log output to current SSH/Telnet session (off by default for remote sessions).'},
+      {cmd:'show processes cpu',mode:'privileged',desc:'Show CPU utilization per process. High CPU from routing protocol = convergence event.'},
+      {cmd:'show memory',mode:'privileged',desc:'Show memory usage. Free memory dropping over time indicates a memory leak or overload.'},
+    ]
+  },
+];
+
+let allCards = [];
+
+function buildModeTag(mode) {
+  const labels = {
+    global:'Global Config', interface:'Interface Config', privileged:'Privileged EXEC',
+    line:'Line Config', router:'Router Config'
+  };
+  return `<span class="cmd-mode mode-${mode}">${labels[mode]||mode}</span>`;
+}
+
+function buildCmdCard(cmd, catColor) {
+  const id = 'cmd-' + Math.random().toString(36).slice(2);
+  const cleanCmd = cmd.cmd.replace(/<[^>]+>/g,'<...>');
+  return `
+<div class="cmd-card" id="${id}" style="border-left-color:${catColor}">
+  <div class="cmd-header">
+    <div class="cmd-code-wrap">
+      <div class="cmd-code">${cmd.cmd.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+        .replace(/&lt;([^&]+)&gt;/g,'<span class="placeholder">&lt;$1&gt;</span>')
+      }</div>
+      ${buildModeTag(cmd.mode)}
+    </div>
+    <div class="cmd-right">
+      <button class="copy-btn" onclick="copyCmd(this,'${cmd.cmd.replace(/'/g,"\\'")}')">Copy</button>
+    </div>
+  </div>
+  <div class="cmd-desc">${cmd.desc}</div>
+</div>`;
+}
+
+function copyCmd(btn, cmdText) {
+  navigator.clipboard.writeText(cmdText).catch(()=>{});
+  btn.textContent = 'Copied!';
+  btn.classList.add('copied');
+  setTimeout(()=>{btn.textContent='Copy';btn.classList.remove('copied')}, 1500);
+}
+
+function render() {
+  const container = document.getElementById('cmd-container');
+  const sidebar = document.getElementById('sidebar-links');
+  container.innerHTML = '';
+  sidebar.innerHTML = '';
+  allCards = [];
+
+  CATEGORIES.forEach(cat => {
+    // Sidebar link
+    const link = document.createElement('a');
+    link.className = 'sidebar-link';
+    link.href = '#cat-' + cat.id;
+    link.innerHTML = `<span class="sidebar-dot" style="background:${cat.color}"></span>${cat.title}`;
+    sidebar.appendChild(link);
+
+    // Category block
+    const block = document.createElement('div');
+    block.className = 'cat-block';
+    block.id = 'cat-' + cat.id;
+    block.style.setProperty('--cat-color', cat.color);
+    block.innerHTML = `
+      <div class="cat-header">
+        <span class="cat-icon">${cat.icon}</span>
+        <span class="cat-title">${cat.title}</span>
+        <span class="cat-count">${cat.cmds.length} commands</span>
+      </div>`;
+    cat.cmds.forEach(cmd => {
+      block.innerHTML += buildCmdCard(cmd, cat.color);
+      allCards.push({cmd: cmd.cmd.toLowerCase(), desc: cmd.desc.toLowerCase(), el: null, catId: cat.id});
+    });
+    container.appendChild(block);
+  });
+
+  // Store element refs after render
+  document.querySelectorAll('.cmd-card').forEach((el, i) => { if(allCards[i]) allCards[i].el = el; });
+  updateCount();
+}
+
+function filterCmds() {
+  const q = document.getElementById('search').value.toLowerCase().trim();
+  let visible = 0;
+  allCards.forEach(c => {
+    const show = !q || c.cmd.includes(q) || c.desc.includes(q);
+    if (c.el) c.el.classList.toggle('hidden', !show);
+    if (show) visible++;
+  });
+  // Hide empty category blocks
+  CATEGORIES.forEach(cat => {
+    const block = document.getElementById('cat-' + cat.id);
+    if (!block) return;
+    const anyVisible = [...block.querySelectorAll('.cmd-card')].some(el => !el.classList.contains('hidden'));
+    block.style.display = anyVisible ? '' : 'none';
+  });
+  document.getElementById('no-results').style.display = visible === 0 ? 'block' : 'none';
+  updateCount(visible, q);
+}
+
+function updateCount(visible, q) {
+  const total = allCards.length;
+  const cnt = document.getElementById('result-count');
+  if (q) { cnt.textContent = `${visible} of ${total} commands`; }
+  else { cnt.textContent = `${total} commands`; }
+}
+
+function clearSearch() {
+  document.getElementById('search').value = '';
+  allCards.forEach(c => { if(c.el) c.el.classList.remove('hidden'); });
+  CATEGORIES.forEach(cat => { const b = document.getElementById('cat-'+cat.id); if(b) b.style.display=''; });
+  document.getElementById('no-results').style.display = 'none';
+  updateCount();
+}
+
+// Sidebar active tracking
+window.addEventListener('scroll', () => {
+  let active = null;
+  CATEGORIES.forEach(cat => {
+    const block = document.getElementById('cat-' + cat.id);
+    if (block && block.getBoundingClientRect().top <= 120) active = cat.id;
+  });
+  document.querySelectorAll('.sidebar-link').forEach(l => {
+    l.classList.toggle('active', l.getAttribute('href') === '#cat-' + active);
+  });
+});
+
+render();
+</script>
+</body>
+</html>
