@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Practice Exam — CCNA 200-301 | BL Cert Hub</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    :root{
+      --navy:#0B1D3A;--blue:#1A5276;--accent:#2E86C1;--sky:#5DADE2;
+      --light:#EAF4FB;--mid:#D6EAF8;--white:#fff;--text:#0B1D3A;--muted:#5D7A8C;
+      --border:rgba(30,80,130,0.13);
+      --correct:#27AE60;--correct-bg:rgba(39,174,96,0.07);--correct-border:rgba(39,174,96,0.28);
+      --wrong:#E74C3C;--wrong-bg:rgba(231,76,60,0.07);--wrong-border:rgba(231,76,60,0.28);
+    }
+    html{scroll-behavior:smooth}
+    body{font-family:'DM Sans',sans-serif;background:var(--light);color:var(--text);min-height:100vh}
+
+    /* NAV */
+    nav{background:var(--navy);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:56px;position:sticky;top:0;z-index:100;border-bottom:1px solid rgba(93,173,226,0.15)}
+    .nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+    .bl-circle{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#2E86C1,#5DADE2);display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:#fff;flex-shrink:0}
+    .nav-brand span{font-size:13px;font-weight:500;color:rgba(255,255,255,0.85);letter-spacing:.02em}
+    .nav-links{display:flex;gap:6px}
+    .nav-links a{font-size:12px;font-weight:500;color:rgba(255,255,255,0.6);text-decoration:none;padding:6px 12px;border-radius:6px;transition:all .18s}
+    .nav-links a:hover{color:#fff;background:rgba(255,255,255,0.08)}
+    .nav-links a.active{color:var(--sky);background:rgba(93,173,226,0.12)}
+
+    /* HERO */
+    .hero{background:linear-gradient(135deg,#0B1D3A 0%,#1A5276 55%,#2E86C1 100%);padding:3rem 2rem 2.5rem;position:relative;overflow:hidden}
+    .hero-grid-pattern{position:absolute;inset:0;background-image:linear-gradient(rgba(93,173,226,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(93,173,226,0.04) 1px,transparent 1px);background-size:32px 32px;pointer-events:none}
+    .hero-bg-ring{position:absolute;border-radius:50%;border:40px solid rgba(93,173,226,0.08);pointer-events:none}
+    .hero-bg-ring.r1{width:300px;height:300px;top:-70px;right:-50px}
+    .hero-bg-ring.r2{width:180px;height:180px;bottom:-60px;left:40%;border-width:22px}
+    .hero-inner{position:relative;max-width:880px;margin:0 auto}
+    .exam-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.18);border-radius:20px;padding:5px 14px 5px 5px;margin-bottom:1.25rem}
+    .exam-badge .bl-circle{width:26px;height:26px;font-size:9px}
+    .exam-badge span{font-size:12px;color:rgba(255,255,255,0.8);font-weight:500}
+    .hero h1{font-family:'Space Mono',monospace;font-size:clamp(22px,3.5vw,38px);font-weight:700;color:#fff;line-height:1.2;margin-bottom:.5rem}
+    .hero h1 .accent{color:var(--sky)}
+    .hero-sub{font-size:14px;color:rgba(255,255,255,0.6);font-weight:300;line-height:1.7;max-width:500px}
+
+    /* WRAP */
+    .exam-wrap{max-width:880px;margin:0 auto;padding:2rem 2rem 3rem}
+
+    /* ── SETUP SCREEN ── */
+    #setup-screen{display:block}
+    .setup-title{font-family:'Space Mono',monospace;font-size:14px;font-weight:700;color:var(--navy);margin-bottom:1rem}
+    .setup-section{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:16px;box-shadow:0 2px 8px rgba(11,29,58,0.06)}
+    .setup-section-label{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+    .setup-section-label::after{content:'';flex:1;height:1px;background:var(--border)}
+    .option-grid{display:grid;gap:10px}
+    .option-grid.cols-3{grid-template-columns:repeat(3,1fr)}
+    .option-grid.cols-6{grid-template-columns:repeat(6,1fr)}
+    .opt-btn{
+      padding:12px 10px;border-radius:10px;border:1.5px solid var(--border);
+      background:var(--light);cursor:pointer;text-align:center;
+      transition:all .18s;font-family:'DM Sans',sans-serif;
+    }
+    .opt-btn:hover{border-color:var(--accent);background:rgba(46,134,193,0.05)}
+    .opt-btn.selected{border-color:var(--accent);background:rgba(46,134,193,0.1);color:var(--accent)}
+    .opt-btn .ob-val{font-family:'Space Mono',monospace;font-size:16px;font-weight:700;color:var(--navy);display:block;margin-bottom:2px}
+    .opt-btn.selected .ob-val{color:var(--accent)}
+    .opt-btn .ob-lbl{font-size:11px;color:var(--muted)}
+    .opt-btn.selected .ob-lbl{color:var(--accent)}
+    .start-btn{width:100%;padding:14px;border-radius:10px;background:var(--accent);border:none;color:#fff;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:all .18s;letter-spacing:.02em;margin-top:8px}
+    .start-btn:hover{background:var(--blue)}
+
+    /* ── EXAM SCREEN ── */
+    #exam-screen{display:none}
+
+    /* SESSION BAR */
+    .session-bar{background:var(--white);border:1px solid var(--border);border-radius:12px;margin-bottom:1.25rem;overflow:hidden;box-shadow:0 2px 8px rgba(11,29,58,0.06)}
+    .session-bar-head{display:flex;align-items:center;justify-content:space-between;padding:11px 18px;cursor:pointer;user-select:none;transition:background .15s}
+    .session-bar-head:hover{background:rgba(46,134,193,0.03)}
+    .session-bar-pills{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .s-pill{font-size:11px;font-weight:500;padding:4px 12px;border-radius:20px;background:rgba(46,134,193,0.08);color:var(--accent);border:1px solid rgba(46,134,193,0.18);white-space:nowrap}
+    .s-pill.timer-pill{background:var(--navy);color:var(--sky);border-color:transparent;font-family:'Space Mono',monospace;font-weight:700}
+    .s-pill.timer-pill.warning{color:#F39C12}
+    .s-pill.timer-pill.danger{color:#E74C3C;animation:pulse .8s infinite}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+    .bar-chevron{font-size:11px;color:var(--muted);transition:transform .25s;flex-shrink:0;margin-left:8px}
+    .bar-chevron.open{transform:rotate(180deg)}
+    .session-bar-body{max-height:0;overflow:hidden;transition:max-height .3s ease}
+    .session-bar-body.open{max-height:160px}
+    .session-bar-inner{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:0 18px 14px;border-top:1px solid var(--border);padding-top:12px;margin-top:0}
+    .sbi-item{text-align:center;background:var(--light);border-radius:8px;padding:10px}
+    .sbi-val{font-family:'Space Mono',monospace;font-size:15px;font-weight:700;color:var(--navy)}
+    .sbi-lbl{font-size:10px;color:var(--muted);margin-top:2px}
+
+    /* SCOREBOARD */
+    .scoreboard{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:1.5rem}
+    .score-card{background:var(--navy);border-radius:12px;padding:14px;text-align:center}
+    .score-val{font-family:'Space Mono',monospace;font-size:20px;font-weight:700;color:var(--sky)}
+    .score-lbl{font-size:10px;color:rgba(255,255,255,0.45);margin-top:4px}
+
+    /* PROGRESS */
+    .progress-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+    .progress-label{font-size:12px;font-weight:500;color:var(--text)}
+    .progress-pct{font-family:'Space Mono',monospace;font-size:12px;color:var(--accent);font-weight:700}
+    .progress-track{height:6px;background:var(--mid);border-radius:3px;overflow:hidden;margin-bottom:1.25rem}
+    .progress-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--blue),var(--sky));border-radius:3px;transition:width .4s}
+
+    /* Q NAV PILLS */
+    .section-label{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);display:flex;align-items:center;gap:10px;margin-bottom:.75rem}
+    .section-label::after{content:'';flex:1;height:1px;background:var(--border)}
+    .q-nav{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:1.25rem}
+    .q-pill{width:30px;height:30px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;border:1px solid var(--border);background:var(--white);color:var(--muted);cursor:pointer;transition:all .15s}
+    .q-pill:hover{border-color:var(--accent);color:var(--accent)}
+    .q-pill.current{background:var(--accent);border-color:var(--accent);color:#fff}
+    .q-pill.ans-correct{background:rgba(39,174,96,0.15);border-color:var(--correct);color:var(--correct)}
+    .q-pill.ans-wrong{background:rgba(231,76,60,0.15);border-color:var(--wrong);color:var(--wrong)}
+    .q-pill.ans-skip{background:var(--mid);border-color:var(--border);color:var(--muted)}
+
+    /* QUESTION */
+    .question-card{background:var(--white);border:1px solid var(--border);border-radius:14px;overflow:hidden;margin-bottom:1.5rem;box-shadow:0 2px 12px rgba(11,29,58,0.07)}
+    .q-body{padding:22px 22px 18px}
+    .q-text{font-size:14px;font-weight:500;color:var(--text);line-height:1.7;margin-bottom:12px}
+    .q-meta-row{display:flex;align-items:center;gap:8px;margin-bottom:14px}
+    .q-num{font-family:'Space Mono',monospace;font-size:11px;font-weight:700;color:var(--muted)}
+    .q-domain-badge{font-size:10px;font-weight:500;padding:3px 10px;border-radius:10px;background:rgba(46,134,193,0.08);color:var(--accent);border:1px solid rgba(46,134,193,0.18)}
+    .q-multi-note{font-size:11px;color:var(--muted);font-style:italic;margin-bottom:12px}
+    .options{display:flex;flex-direction:column;gap:8px}
+    .option{display:flex;align-items:flex-start;gap:12px;padding:11px 16px;border-radius:9px;border:1px solid var(--border);background:var(--light);cursor:pointer;transition:all .16s;font-size:13px;color:var(--text);line-height:1.5;user-select:none}
+    .option:hover:not(.disabled){border-color:var(--accent);background:rgba(46,134,193,0.05)}
+    .option.selected{border-color:var(--accent);background:rgba(46,134,193,0.08)}
+    .option.correct{border-color:var(--correct);background:var(--correct-bg);color:#1A6B3A}
+    .option.wrong{border-color:var(--wrong);background:var(--wrong-bg);color:#A93226}
+    .option.disabled{pointer-events:none}
+    .opt-key{width:26px;height:26px;border-radius:50%;flex-shrink:0;background:var(--mid);display:flex;align-items:center;justify-content:center;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;color:var(--blue);transition:all .16s;margin-top:1px}
+    .option.correct .opt-key{background:var(--correct);color:#fff}
+    .option.wrong .opt-key{background:var(--wrong);color:#fff}
+    .option.selected .opt-key{background:var(--accent);color:#fff}
+    .feedback{display:none;margin-top:14px;padding:13px 16px;border-radius:9px;font-size:13px;line-height:1.65;border:1px solid}
+    .feedback.show{display:block}
+    .feedback.correct-fb{background:rgba(39,174,96,0.08);border-color:var(--correct-border);color:#1A6B3A}
+    .feedback.wrong-fb{background:rgba(231,76,60,0.08);border-color:var(--wrong-border);color:#A93226}
+    .feedback strong{display:block;margin-bottom:4px;font-size:12px;letter-spacing:.03em}
+    .q-controls{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-top:1px solid var(--border);background:rgba(234,244,251,0.5)}
+    .btn{font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;padding:8px 18px;border-radius:8px;border:1px solid;cursor:pointer;transition:all .18s;letter-spacing:.02em}
+    .btn-primary{background:var(--accent);border-color:var(--accent);color:#fff}
+    .btn-primary:hover{background:var(--blue);border-color:var(--blue)}
+    .btn-primary:disabled{opacity:.4;pointer-events:none}
+    .btn-outline{background:transparent;border-color:var(--border);color:var(--text)}
+    .btn-outline:hover{border-color:var(--accent);color:var(--accent)}
+    .btn-danger{background:transparent;border-color:rgba(231,76,60,0.3);color:var(--wrong)}
+    .btn-danger:hover{background:rgba(231,76,60,0.07)}
+
+    /* RESULTS */
+    #results-screen{display:none;background:var(--white);border:1px solid var(--border);border-radius:14px;padding:3rem 2rem;text-align:center;box-shadow:0 2px 12px rgba(11,29,58,0.07)}
+    .result-score{font-family:'Space Mono',monospace;font-size:52px;font-weight:700;color:var(--accent);line-height:1}
+    .result-label{font-size:14px;color:var(--muted);margin-top:6px;margin-bottom:2rem}
+    .result-grade{display:inline-block;font-family:'Space Mono',monospace;font-size:13px;font-weight:700;padding:6px 20px;border-radius:8px;margin-bottom:2rem}
+    .result-grade.pass{background:rgba(39,174,96,0.1);color:var(--correct);border:1px solid var(--correct-border)}
+    .result-grade.fail{background:rgba(231,76,60,0.1);color:var(--wrong);border:1px solid var(--wrong-border)}
+    .result-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:2rem;max-width:400px;margin-left:auto;margin-right:auto}
+    .rs-item{background:var(--light);border-radius:10px;padding:12px}
+    .rs-val{font-family:'Space Mono',monospace;font-size:20px;font-weight:700}
+    .rs-lbl{font-size:10px;color:var(--muted);margin-top:3px}
+    .result-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+
+    /* FOOTER */
+    footer{background:var(--navy);padding:1.25rem 2rem;text-align:center;border-top:1px solid rgba(93,173,226,0.12)}
+    footer p{font-size:12px;color:rgba(255,255,255,0.3)}
+    footer a{color:var(--sky);text-decoration:none}
+
+    @media(max-width:600px){
+      .exam-wrap{padding:1.25rem}
+      .scoreboard{grid-template-columns:repeat(2,1fr)}
+      .option-grid.cols-6{grid-template-columns:repeat(3,1fr)}
+      .option-grid.cols-3{grid-template-columns:1fr}
+      nav{padding:0 1.25rem}
+      .hero{padding:2rem 1.25rem 2rem}
+    }
+
+    /* ── DARK MODE ── */
+    html.dark {
+      --light:  #131b27;
+      --mid:    #1a2535;
+      --white:  #1e2a3a;
+      --text:   #d4e6f7;
+      --muted:  #7aa3c0;
+      --border: rgba(93,173,226,0.14);
+      --shadow: 0 2px 12px rgba(0,0,0,0.35);
+    }
+    html.dark body { background: var(--light); color: var(--text); }
+    html.dark nav  { background: #0a1220; border-color: rgba(93,173,226,0.12); }
+    html.dark footer { background: #0a1220; }
+    html.dark .exam-card,
+    html.dark .tool-card,
+    html.dark .question-card,
+    html.dark .widget,
+    html.dark .session-bar,
+    html.dark .setup-section,
+    html.dark .domain-weights,
+    html.dark .mode-bar,
+    html.dark .controls-bar,
+    html.dark .fc-area + .grade-note,
+    html.dark .acronym-card,
+    html.dark .card-mini,
+    html.dark .score-card,
+    html.dark .stat-pill,
+    html.dark .sum-card,
+    html.dark .fc-nav-btn,
+    html.dark .domain-header,
+    html.dark .obj-header { background: var(--white); border-color: var(--border); }
+    html.dark .domain-body { background: var(--white); border-color: var(--border); }
+    html.dark .score-card,
+    html.dark .sum-card { background: #0e1929; }
+    html.dark .question-box,
+    html.dark .opt-btn,
+    html.dark .option,
+    html.dark .sbi-item,
+    html.dark .rs-item,
+    html.dark .setup-section { background: var(--mid); }
+    html.dark .option { border-color: var(--border); color: var(--text); }
+    html.dark .option:hover:not(.disabled) { background: rgba(93,173,226,0.08); }
+    html.dark .fc-scene .fc-front { background: #0d1929; }
+    html.dark .fc-scene .fc-back  { background: #122040; }
+    html.dark .progress-track,
+    html.dark .prog-track,
+    html.dark .mini-bar,
+    html.dark .dw-bar-track { background: var(--mid); }
+    html.dark .cert-name,
+    html.dark .tool-name,
+    html.dark .cs-val,
+    html.dark .stat-val,
+    html.dark .sbi-val,
+    html.dark .rs-val,
+    html.dark .obj-title,
+    html.dark .domain-title { color: var(--text); }
+    html.dark .cert-vendor,
+    html.dark .cert-desc,
+    html.dark .tool-desc,
+    html.dark .cs-lbl,
+    html.dark .stat-lbl,
+    html.dark .score-lbl,
+    html.dark .sum-lbl,
+    html.dark .ac-def,
+    html.dark .card-mini-term,
+    html.dark .card-mini-status { color: var(--muted); }
+    html.dark .section-label::after,
+    html.dark .card-stats { border-color: var(--border); }
+    html.dark .port-table td { background: var(--white); border-color: var(--border); color: var(--text); }
+    html.dark .port-table th { background: #0a1220; }
+    html.dark .alpha-heading { background: var(--mid); color: var(--text); }
+    html.dark .search-input { background: var(--mid); border-color: var(--border); color: var(--text); }
+    html.dark .search-input:focus { background: var(--white); }
+    html.dark .alpha-btn,
+    html.dark .filter-btn,
+    html.dark .mode-tab,
+    html.dark .grade-btn,
+    html.dark .btn-outline { background: var(--mid); border-color: var(--border); color: var(--muted); }
+    html.dark .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+    html.dark .q-controls { background: rgba(0,0,0,0.15); border-color: var(--border); }
+    html.dark .feedback.correct-fb { background: rgba(39,174,96,0.12); }
+    html.dark .feedback.wrong-fb   { background: rgba(231,76,60,0.12); }
+    html.dark #results-screen { background: var(--white); }
+    html.dark .result-label { color: var(--muted); }
+    html.dark .acronym-card.is-mastered { background: rgba(46,125,50,0.1); }
+    html.dark .card-mini.is-mastered { background: rgba(46,125,50,0.1); }
+    html.dark .card-mini.is-reviewing { background: rgba(184,134,11,0.1); }
+    html.dark .stat-pill { background: var(--white); border-color: var(--border); color: var(--muted); }
+    html.dark .fc-dot { background: rgba(93,173,226,0.2); }
+    html.dark .session-bar-inner { border-color: var(--border); }
+    html.dark .q-header { background: #0a1220; }
+    html.dark .q-meta-row .q-num { color: var(--muted); }
+
+    /* Dark-mode toggle button */
+    .theme-btn {
+      width: 34px; height: 34px; border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.08);
+      color: rgba(255,255,255,0.75);
+      cursor: pointer; font-size: 15px;
+      display: flex; align-items: center; justify-content: center;
+      transition: all .18s; flex-shrink: 0;
+    }
+    .theme-btn:hover { background: rgba(255,255,255,0.15); color: #fff; }
+
+
+    html.dark{--light:#131b27;--mid:#1a2535;--white:#1e2a3a;--text:#d4e6f7;--muted:#7aa3c0;--border:rgba(93,173,226,0.14)}
+    html.dark body{background:var(--light);color:var(--text)}
+    html.dark nav,html.dark footer{background:#0a1220}
+    html.dark .setup-section,html.dark .session-bar,html.dark .question-card,html.dark #results-screen{background:var(--white);border-color:var(--border)}
+    html.dark .question-box,html.dark .opt-btn,html.dark .option,html.dark .sbi-item,html.dark .rs-item{background:var(--mid)}
+    html.dark .option{border-color:var(--border);color:var(--text)}
+    html.dark .q-controls{background:rgba(0,0,0,0.15);border-color:var(--border)}
+    html.dark .q-meta-row .q-num{color:var(--muted)}
+    html.dark .q-header{background:#0a1220}
+    html.dark .score-card{background:#0e1929}
+    html.dark .section-label::after{background:var(--border)}
+    html.dark .q-pill{background:var(--white);border-color:var(--border)}
+    html.dark .session-bar-inner{border-color:var(--border)}
+    html.dark .setup-section-label::after{background:var(--border)}
+    .theme-btn{width:34px;height:34px;border-radius:8px;border:1px solid rgba(255,255,255,0.18);background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.75);cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;transition:all .18s;flex-shrink:0}
+    .theme-btn:hover{background:rgba(255,255,255,0.15);color:#fff}
+
+  </style>
+</head>
+<body>
+<script>
+(function(){const K="bl-theme";function apply(d){document.documentElement.classList.toggle("dark",d);const b=document.getElementById("theme-btn");if(b)b.textContent=d?"☀":"☾"}apply(localStorage.getItem(K)==="dark");window.__toggleTheme=function(){const d=!document.documentElement.classList.contains("dark");localStorage.setItem(K,d?"dark":"light");apply(d)};window.addEventListener("storage",function(e){if(e.key===K)apply(e.newValue==="dark")})})();
+</script>
+
+
+
+
+<nav>
+  <a class="nav-brand" href="index.html"><div class="bl-circle">BL</div><span>BL Cert Hub</span></a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="ccna-home.html">CCNA</a>
+    <a href="#" class="active">Practice Exam</a>
+    <button class="theme-btn" id="theme-btn" onclick="__toggleTheme()" title="Toggle dark mode">☾</button>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="hero-grid-pattern"></div>
+  <div class="hero-bg-ring r1"></div>
+  <div class="hero-bg-ring r2"></div>
+  <div class="hero-inner">
+    <div class="exam-badge"><div class="bl-circle">BL</div><span>Cisco CCNA 200-301</span></div>
+    <h1>Practice <span class="accent">Exam</span></h1>
+    <p class="hero-sub">203 questions from the ISC2 CC question bank covering all 5 domains. Choose your session length and timer, then start.</p>
+  </div>
+</div>
+
+<div class="exam-wrap">
+
+  <!-- SETUP SCREEN -->
+  <div id="setup-screen">
+    <div class="setup-section">
+      <div class="setup-section-label">Number of Questions</div>
+      <div class="option-grid cols-6" id="q-count-grid">
+        <div class="opt-btn selected" data-count="10" onclick="selectCount(this,10)"><span class="ob-val">10</span><span class="ob-lbl">Quick</span></div>
+        <div class="opt-btn" data-count="20" onclick="selectCount(this,20)"><span class="ob-val">20</span><span class="ob-lbl">Short</span></div>
+        <div class="opt-btn" data-count="30" onclick="selectCount(this,30)"><span class="ob-val">30</span><span class="ob-lbl">Medium</span></div>
+        <div class="opt-btn" data-count="50" onclick="selectCount(this,50)"><span class="ob-val">50</span><span class="ob-lbl">Standard</span></div>
+        <div class="opt-btn" data-count="100" onclick="selectCount(this,100)"><span class="ob-val">100</span><span class="ob-lbl">Extended</span></div>
+        <div class="opt-btn" id="all-q-btn" data-count="100" onclick="selectCount(this, parseInt(this.dataset.count))"><span class="ob-val">All</span><span class="ob-lbl">100 Qs</span></div>
+      </div>
+    </div>
+    <div class="setup-section">
+      <div class="setup-section-label">Timer</div>
+      <div class="option-grid cols-3" id="timer-grid">
+        <div class="opt-btn selected" data-time="0" onclick="selectTimer(this,0)"><span class="ob-val">None</span><span class="ob-lbl">Untimed</span></div>
+        <div class="opt-btn" data-time="600" onclick="selectTimer(this,600)"><span class="ob-val">10m</span><span class="ob-lbl">10 Minutes</span></div>
+        <div class="opt-btn" data-time="1200" onclick="selectTimer(this,1200)"><span class="ob-val">20m</span><span class="ob-lbl">20 Minutes</span></div>
+        <div class="opt-btn" data-time="1800" onclick="selectTimer(this,1800)"><span class="ob-val">30m</span><span class="ob-lbl">30 Minutes</span></div>
+        <div class="opt-btn" data-time="3600" onclick="selectTimer(this,3600)"><span class="ob-val">1h</span><span class="ob-lbl">1 Hour</span></div>
+        <div class="opt-btn" data-time="5400" onclick="selectTimer(this,5400)"><span class="ob-val">1.5h</span><span class="ob-lbl">1.5 Hours</span></div>
+      </div>
+    </div>
+    <button class="start-btn" onclick="startExam()">Start Practice Exam →</button>
+  </div>
+
+  <!-- EXAM SCREEN -->
+  <div id="exam-screen">
+    <div class="session-bar">
+      <div class="session-bar-head" onclick="toggleSessionBar()">
+        <div class="session-bar-pills">
+          <span class="s-pill" id="session-q-pill">10 Questions</span>
+          <span class="s-pill" id="session-t-pill">Untimed</span>
+          <span class="s-pill timer-pill" id="timer-pill" style="display:none">00:00</span>
+        </div>
+        <span class="bar-chevron" id="bar-chevron">▼</span>
+      </div>
+      <div class="session-bar-body" id="session-bar-body">
+        <div class="session-bar-inner">
+          <div class="sbi-item"><div class="sbi-val" id="sbi-total">—</div><div class="sbi-lbl">Total Questions</div></div>
+          <div class="sbi-item"><div class="sbi-val" id="sbi-timer">—</div><div class="sbi-lbl">Time Limit</div></div>
+          <div class="sbi-item"><div class="sbi-val" id="sbi-mode">Untimed</div><div class="sbi-lbl">Mode</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="scoreboard">
+      <div class="score-card"><div class="score-val" id="sc-total">—</div><div class="score-lbl">Questions</div></div>
+      <div class="score-card"><div class="score-val" id="sc-answered">0</div><div class="score-lbl">Answered</div></div>
+      <div class="score-card"><div class="score-val" id="sc-correct">0</div><div class="score-lbl">Correct</div></div>
+      <div class="score-card"><div class="score-val" id="sc-pct">0%</div><div class="score-lbl">Score</div></div>
+    </div>
+    <div class="progress-row">
+      <span class="progress-label" id="prog-label">Question 1</span>
+      <span class="progress-pct" id="prog-pct">0%</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="prog-bar"></div></div>
+    <div class="section-label">Jump to Question</div>
+    <div class="q-nav" id="q-nav"></div>
+    <div class="question-card" id="q-card">
+      <div class="q-body">
+        <div class="q-text" id="q-text"></div>
+        <div class="q-meta-row">
+          <span class="q-num" id="q-num-label">Question 1</span>
+          <span class="q-domain-badge" id="q-domain-label"></span>
+        </div>
+        <div class="q-multi-note" id="q-multi-note" style="display:none">Select all that apply</div>
+        <div class="options" id="q-options"></div>
+        <div class="feedback" id="q-feedback"></div>
+      </div>
+      <div class="q-controls">
+        <button class="btn btn-outline" onclick="goTo(curQ-1)" id="btn-prev">← Prev</button>
+        <button class="btn btn-danger" onclick="endExam()">End Exam</button>
+        <button class="btn btn-primary" id="btn-next" onclick="handleNext()" disabled>Next →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULTS SCREEN -->
+  <div id="results-screen">
+    <div class="result-score" id="res-score">0/0</div>
+    <div class="result-label" id="res-label">ISC2 CC Practice Exam Complete</div>
+    <div class="result-grade" id="res-grade">—</div>
+    <div class="result-stats">
+      <div class="rs-item"><div class="rs-val" id="res-correct" style="color:var(--correct)">0</div><div class="rs-lbl">Correct</div></div>
+      <div class="rs-item"><div class="rs-val" id="res-wrong" style="color:var(--wrong)">0</div><div class="rs-lbl">Incorrect</div></div>
+      <div class="rs-item"><div class="rs-val" id="res-skip" style="color:var(--muted)">0</div><div class="rs-lbl">Skipped</div></div>
+    </div>
+    <div class="result-actions">
+      <button class="btn btn-primary" onclick="backToSetup()">↺ New Session</button>
+      <button class="btn btn-outline" onclick="location.href='cc-home.html'">← Back to Hub</button>
+    </div>
+  </div>
+
+</div>
+<footer><p>Built by <a href="https://blaborte.github.io" target="_blank">Baltazar Laborte</a> · BL Cert Hub · Cisco CCNA 200-301</p></footer>
+
+<script>
+
+const CCNA_Q = [
+// ══ DOMAIN 1: Network Fundamentals (20) ══════════════════════════════════════
+  {d:'1',q:'Which OSI layer is responsible for logical addressing and routing packets between networks?',opts:['A. Data Link','B. Network','C. Transport','D. Session'],ans:[1],exp:'The Network layer (Layer 3) handles logical IP addressing and routing between networks. Data Link handles MAC addressing within the same network. Transport handles end-to-end delivery. Session manages application connections.'},
+  {d:'1',q:'A host has IP address 192.168.10.45/26. What is its network address?',opts:['A. 192.168.10.0','B. 192.168.10.32','C. 192.168.10.64','D. 192.168.10.128'],ans:[1],exp:'/26 means block size 64. Subnets: .0, .64, .128, .192. Host .45 falls in the 192.168.10.32 subnet (32-63). Network address = 192.168.10.32.'},
+  {d:'1',q:'What is the maximum number of usable host addresses in a /28 subnet?',opts:['A. 12','B. 14','C. 16','D. 30'],ans:[1],exp:'/28 = 16 total IPs (2^4). Subtract 2 for network and broadcast = 14 usable host addresses.'},
+  {d:'1',q:'Which IPv6 address type is automatically assigned to every IPv6 interface and only valid on the local link?',opts:['A. Global unicast','B. Unique local','C. Link-local','D. Anycast'],ans:[2],exp:'Link-local addresses (FE80::/10) are auto-configured on every IPv6 interface. They are never routed beyond the local link segment and are used for neighbor discovery and routing protocol hellos.'},
+  {d:'1',q:'A switch receives a frame with a destination MAC not in its CAM table. What does it do?',opts:['A. Drops the frame','B. Sends an ARP request','C. Floods it out all ports except the incoming port','D. Forwards it to the default gateway'],ans:[2],exp:'When a destination MAC is unknown, the switch floods the frame out all ports in the same VLAN except the ingress port. This is called unknown unicast flooding. The CAM table is updated when the destination replies.'},
+  {d:'1',q:'Which RFC 1918 private address range is correct?',opts:['A. 172.32.0.0/12','B. 192.168.0.0/16','C. 10.0.0.0/24','D. 169.254.0.0/16'],ans:[1],exp:'RFC 1918 private ranges: 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16. 172.32.x.x is outside the /12 range. 169.254.x.x is APIPA, not an RFC 1918 range.'},
+  {d:'1',q:'Which transport layer protocol provides reliable, ordered delivery using a three-way handshake?',opts:['A. UDP','B. ICMP','C. TCP','D. ARP'],ans:[2],exp:'TCP uses a three-way handshake (SYN, SYN-ACK, ACK) to establish a reliable connection. It provides ordered delivery and retransmission of lost packets. UDP is connectionless and provides no delivery guarantee.'},
+  {d:'1',q:'What is the IPv6 loopback address?',opts:['A. FE80::1','B. ::1','C. FF02::1','D. 2001::1'],ans:[1],exp:'::1 is the IPv6 loopback address, equivalent to 127.0.0.1 in IPv4. FE80::1 would be a link-local address. FF02::1 is the all-nodes multicast address.'},
+  {d:'1',q:'A host receives an IP address of 169.254.45.12. What does this indicate?',opts:['A. The host uses a static IP','B. The host failed to reach a DHCP server','C. The host is configured for IPv6','D. The host is behind a NAT router'],ans:[1],exp:'169.254.0.0/16 is the APIPA range. A host self-assigns an APIPA address when it cannot contact a DHCP server. This indicates a DHCP failure — the host cannot reach the network normally.'},
+  {d:'1',q:'How many usable hosts exist in a /8 network?',opts:['A. 254','B. 65,534','C. 16,777,214','D. 16,777,216'],ans:[2],exp:'A /8 has 24 host bits. 2^24 = 16,777,216 total IPs. Subtract 2 (network + broadcast) = 16,777,214 usable hosts.'},
+  {d:'1',q:'Which protocol resolves IPv4 addresses to MAC addresses on a local network?',opts:['A. RARP','B. DNS','C. DHCP','D. ARP'],ans:[3],exp:'ARP (Address Resolution Protocol) broadcasts a request asking "who has IP x.x.x.x?" and the matching host replies with its MAC address. DNS resolves names to IPs. DHCP assigns IPs automatically.'},
+  {d:'1',q:'What is the purpose of the TTL field in an IPv4 header?',opts:['A. Indicates packet priority for QoS','B. Prevents packets from looping by decrementing at each router hop','C. Specifies the maximum segment size','D. Identifies the upper-layer protocol'],ans:[1],exp:'TTL decrements by 1 at each router. When TTL reaches 0, the packet is discarded and an ICMP Time Exceeded message is sent to the source. This prevents routing loops from keeping packets alive forever.'},
+  {d:'1',q:'Which statement correctly describes TCP vs UDP?',opts:['A. UDP uses a three-way handshake; TCP does not','B. TCP provides error recovery; UDP provides faster delivery with no guarantee','C. UDP is used for file transfers; TCP for video streaming','D. Both TCP and UDP provide reliable delivery'],ans:[1],exp:'TCP provides reliable ordered delivery with error recovery and flow control. UDP is connectionless with no delivery guarantees — faster and suitable for DNS, VoIP, video streaming, and TFTP.'},
+  {d:'1',q:'A company needs to subnet 192.168.1.0/24 to support at least 50 hosts per subnet. Which prefix?',opts:['A. /25','B. /26','C. /27','D. /28'],ans:[1],exp:'/25 = 126 hosts, /26 = 62 hosts, /27 = 30 hosts, /28 = 14 hosts. To support 50+ hosts, /26 gives 62 usable hosts — the smallest subnet that satisfies the requirement.'},
+  {d:'1',q:'What is the correct EUI-64 process for generating an IPv6 interface ID from a MAC address?',opts:['A. Append FF:FE to the end of the MAC','B. Reverse all bits in the MAC address','C. Split MAC in half, insert FF:FE, flip the 7th bit','D. Prepend FE80:: to the MAC address'],ans:[2],exp:'EUI-64: split the 48-bit MAC into two halves, insert FF:FE between them to create 64 bits, then flip the 7th bit (Universal/Local bit) of the first byte to create the unique interface identifier.'},
+  {d:'1',q:'Which TCP/IP model layer maps to both OSI Data Link AND Physical layers?',opts:['A. Internet','B. Transport','C. Application','D. Network Access'],ans:[3],exp:'The TCP/IP Network Access layer (Link layer) covers functions of both the OSI Physical layer (raw bits) and Data Link layer (framing, MAC addressing). The TCP/IP model has 4 layers vs OSI\'s 7.'},
+  {d:'1',q:'What is the broadcast address for 172.16.5.0/24?',opts:['A. 172.16.5.1','B. 172.16.5.254','C. 172.16.5.255','D. 172.16.255.255'],ans:[2],exp:'In a /24, the broadcast is the last address in the range — all host bits set to 1. For 172.16.5.0/24, the broadcast is 172.16.5.255.'},
+  {d:'1',q:'Which IPv6 prefix is used for multicast?',opts:['A. FE80::/10','B. FC00::/7','C. 2000::/3','D. FF00::/8'],ans:[3],exp:'FF00::/8 is the IPv6 multicast prefix — all multicast addresses start with FF. FE80::/10 is link-local, FC00::/7 is unique local (private), 2000::/3 is global unicast.'},
+  {d:'1',q:'A router has Gi0/0 (192.168.1.1/24) and Gi0/1 (10.0.0.1/8). A host on 192.168.1.0/24 sends a packet to 10.5.5.5. What happens?',opts:['A. The router drops the packet — 10.5.5.5 is private','B. The router forwards the packet out Gi0/1','C. The router sends an ARP request for 10.5.5.5','D. The packet is forwarded out Gi0/0'],ans:[1],exp:'The router matches 10.5.5.5 to the 10.0.0.0/8 network connected to Gi0/1. Private address status is irrelevant to routing decisions — routers forward based on destination prefix match.'},
+  {d:'1',q:'Which collision domain description is correct?',opts:['A. Devices that receive each other\'s broadcasts','B. Devices sharing bandwidth where simultaneous transmissions cause collisions','C. A logical VLAN separation of traffic','D. IP addresses assigned to one router interface'],ans:[1],exp:'A collision domain is a network segment where devices share the same medium and simultaneous transmissions collide. Switches create a separate collision domain per port. Routers and switches both break up broadcast domains at Layer 3.'},
+
+// ══ DOMAIN 2: Network Access (17) ════════════════════════════════════════════
+  {d:'2',q:'What is the purpose of 802.1Q trunking on a switch port?',opts:['A. Encrypts traffic between switches','B. Carries multiple VLANs over one link by tagging frames','C. Allows only one VLAN per port for security','D. Enables PoE on uplink ports'],ans:[1],exp:'802.1Q adds a 4-byte VLAN tag to Ethernet frames so multiple VLANs can traverse one trunk link. Access ports carry one VLAN (untagged). Trunk ports carry many VLANs (tagged).'},
+  {d:'2',q:'Which STP port state both forwards data frames AND populates the MAC address table?',opts:['A. Blocking','B. Listening','C. Learning','D. Forwarding'],ans:[3],exp:'Only the Forwarding state allows data frames to be sent and received. Learning builds the MAC table but does not forward data. Blocking and Listening discard all data frames.'},
+  {d:'2',q:'What does the native VLAN on a trunk mean and why does a mismatch matter?',opts:['A. Highest-numbered VLAN used for management','B. The VLAN whose frames travel untagged on a trunk; a mismatch assigns traffic to the wrong VLAN','C. A VLAN reserved for VoIP QoS','D. Default VLAN for all access ports'],ans:[1],exp:'The native VLAN is the one VLAN sent untagged on a trunk. A native VLAN mismatch between trunk ends causes traffic from one VLAN to be placed into a different VLAN — both a connectivity issue and a security risk (VLAN hopping).'},
+  {d:'2',q:'What does "spanning-tree portfast" do on a switch port?',opts:['A. Makes the port root port immediately','B. Skips STP listening/learning and goes directly to forwarding','C. Permanently disables STP','D. Forces the port to blocking state'],ans:[1],exp:'PortFast bypasses the 30-second STP delay (15s listening + 15s learning) for access ports connecting to end devices. It should NEVER be used on switch-to-switch links — this would create a temporary loop.'},
+  {d:'2',q:'Which command shows all trunk ports, their allowed VLANs, and native VLAN?',opts:['A. show ip interface brief','B. show vlan brief','C. show interfaces trunk','D. show spanning-tree'],ans:[2],exp:'"show interfaces trunk" displays all trunk ports, their encapsulation, native VLAN, VLANs allowed, and VLANs in STP forwarding state. "show vlan brief" shows access ports and VLANs but NOT trunk ports.'},
+  {d:'2',q:'Which LACP mode actively initiates EtherChannel negotiation?',opts:['A. Passive','B. Auto','C. Desirable','D. Active'],ans:[3],exp:'LACP "active" mode initiates negotiation. "Passive" responds but does not initiate — must pair with active. "Auto" and "Desirable" are PAgP (Cisco proprietary) modes. LACP is the open standard (802.3ad).'},
+  {d:'2',q:'What does BPDU Guard do when a BPDU is received on a PortFast port?',opts:['A. Prevents the port becoming root port','B. Blocks all BPDUs from the CPU','C. Error-disables the port to prevent rogue switches','D. Reduces STP convergence time'],ans:[2],exp:'BPDU Guard places a PortFast port into err-disabled state upon receiving any BPDU. This prevents an unauthorized switch from being connected and disrupting the STP topology.'},
+  {d:'2',q:'A port must carry traffic for VLAN 10 and VLAN 20 simultaneously. Which mode?',opts:['A. Access','B. Trunk','C. Routed','D. Dynamic desirable'],ans:[1],exp:'Trunk mode allows a port to carry multiple VLANs simultaneously using 802.1Q tagging. Access mode only supports one VLAN per port.'},
+  {d:'2',q:'Which VTP mode allows creating, modifying, and deleting VLANs?',opts:['A. Client mode','B. Transparent mode','C. Server mode','D. Off mode'],ans:[2],exp:'VTP Server mode allows full VLAN management. Client mode receives updates but cannot change VLANs. Transparent mode passes VTP advertisements but maintains its own independent VLAN database.'},
+  {d:'2',q:'Which 802.11 standard operates exclusively on 5GHz and supports up to ~3.5 Gbps?',opts:['A. 802.11b','B. 802.11g','C. 802.11n','D. 802.11ac'],ans:[3],exp:'802.11ac (Wi-Fi 5) operates only on 5GHz and supports up to ~3.5 Gbps using MU-MIMO. 802.11n uses both bands. 802.11b and 802.11g are 2.4GHz only.'},
+  {d:'2',q:'Which protocol do Lightweight APs use to communicate with a WLC?',opts:['A. 802.1Q','B. CAPWAP','C. LLDP','D. VTP'],ans:[1],exp:'CAPWAP (Control And Provisioning of Wireless Access Points) creates tunnels between Lightweight APs and the WLC. UDP 5246 for control, UDP 5247 for data. The WLC centrally manages AP config, firmware, and security.'},
+  {d:'2',q:'What is the key difference between WPA2-Personal and WPA2-Enterprise?',opts:['A. WPA2-Personal uses AES; WPA2-Enterprise uses TKIP','B. WPA2-Enterprise requires RADIUS for 802.1X per-user auth; WPA2-Personal uses a shared key','C. WPA2-Personal uses per-user keys; WPA2-Enterprise uses a group key','D. WPA2-Enterprise only supports 2.4GHz'],ans:[1],exp:'WPA2-Enterprise uses 802.1X with RADIUS to authenticate each user individually. WPA2-Personal (PSK) uses one pre-shared key for everyone. Enterprise provides better accountability and security but requires RADIUS infrastructure.'},
+  {d:'2',q:'What happens when Root Guard receives a superior BPDU on a port?',opts:['A. The port becomes the new root port','B. The port goes root-inconsistent and stops forwarding','C. The BPDU is silently discarded','D. The switch elects a new root bridge'],ans:[1],exp:'Root Guard protects the STP root bridge position. If a superior BPDU arrives on a Root Guard port, that port is placed into root-inconsistent (blocked) state. It recovers automatically when superior BPDUs stop.'},
+  {d:'2',q:'What is the purpose of a Switch Virtual Interface (SVI)?',opts:['A. Connects directly to the internet','B. Provides a Layer 3 IP interface for a VLAN to enable inter-VLAN routing','C. Creates a trunk between two switches','D. Mirrors traffic for monitoring'],ans:[1],exp:'An SVI is a virtual Layer 3 interface tied to a VLAN. Assigning an IP to the SVI and enabling "ip routing" allows the multilayer switch to route between VLANs internally — no external router needed.'},
+  {d:'2',q:'Why should DTP be disabled on access ports?',opts:['A. DTP prevents BPDU forwarding','B. DTP is required for STP','C. Disabling DTP prevents VLAN hopping attacks via trunk negotiation','D. DTP must be disabled before PortFast'],ans:[2],exp:'An attacker can send crafted DTP frames to negotiate a trunk with a switch and then perform VLAN hopping. Disabling DTP with "switchport nonegotiate" on access ports eliminates this attack vector.'},
+  {d:'2',q:'An SVI for VLAN 50 is down/down despite being configured with an IP. Most likely cause?',opts:['A. STP is blocking all VLAN 50 ports','B. No active ports are assigned to VLAN 50, or VLAN 50 does not exist in the database','C. Default gateway not set on switch','D. VLAN 50 not in VTP domain'],ans:[1],exp:'SVIs only come up when: (1) the VLAN exists in the VLAN database, (2) at least one access port is assigned and active in that VLAN. All three conditions must be true simultaneously.'},
+  {d:'2',q:'Which EtherChannel protocol is an open IEEE standard that works with non-Cisco devices?',opts:['A. PAgP','B. LACP','C. DTP','D. VTP'],ans:[1],exp:'LACP (Link Aggregation Control Protocol, IEEE 802.3ad) is vendor-neutral and works with any manufacturer. PAgP is Cisco proprietary. DTP negotiates trunking. VTP manages VLANs.'},
+
+// ══ DOMAIN 3: IP Connectivity (22) ═══════════════════════════════════════════
+  {d:'3',q:'Which routing protocol uses cost calculated from bandwidth as its metric?',opts:['A. RIP','B. EIGRP','C. OSPF','D. BGP'],ans:[2],exp:'OSPF uses cost = reference bandwidth / interface bandwidth. Default reference is 100 Mbps. Lower cost = preferred path. RIP uses hop count. EIGRP uses composite metric of bandwidth and delay.'},
+  {d:'3',q:'Routes: 10.0.0.0/8, 10.1.0.0/16, 10.1.1.0/24. Packet destined for 10.1.1.5. Which route wins?',opts:['A. 10.0.0.0/8','B. 10.1.0.0/16','C. 10.1.1.0/24','D. Dropped — ambiguous'],ans:[2],exp:'Longest prefix match: the most specific route always wins. 10.1.1.0/24 (24 matching bits) beats /16 (16) and /8 (8). This is fundamental to how all IP routers make forwarding decisions.'},
+  {d:'3',q:'What is the administrative distance of a Cisco static route?',opts:['A. 0','B. 1','C. 90','D. 110'],ans:[1],exp:'Static routes have AD=1, trusted second only to directly connected routes (AD=0). OSPF=110, EIGRP internal=90. Lower AD = more trusted. AD breaks ties when multiple protocols offer the same prefix.'},
+  {d:'3',q:'Which command creates a default route pointing to 203.0.113.1?',opts:['A. ip route 255.255.255.255 0.0.0.0 203.0.113.1','B. ip default-gateway 203.0.113.1','C. ip route 0.0.0.0 0.0.0.0 203.0.113.1','D. ip default-network 203.0.113.0'],ans:[2],exp:'"ip route 0.0.0.0 0.0.0.0 203.0.113.1" creates the default route (Gateway of Last Resort). 0.0.0.0/0 matches ALL destinations not in the routing table. "ip default-gateway" is for non-routing switches only.'},
+  {d:'3',q:'How is the OSPF Router ID selected if not manually configured?',opts:['A. Lowest interface IP','B. Highest loopback IP, then highest active physical IP','C. Assigned by the ABR','D. Always 1.1.1.1 by default'],ans:[1],exp:'OSPF RID selection: (1) manual "router-id" command, (2) highest loopback IP, (3) highest active non-loopback IP. Loopbacks are preferred because they never go down, ensuring a stable Router ID.'},
+  {d:'3',q:'Which of these does NOT prevent OSPF neighbor adjacency formation?',opts:['A. Mismatched hello timers','B. Different OSPF process IDs','C. Mismatched area IDs','D. Different subnet masks on the link'],ans:[1],exp:'OSPF process IDs are locally significant and do NOT need to match between neighbors. Mismatched hello/dead timers, area IDs, subnet masks, MTU, stub flags, and authentication ALL prevent adjacency.'},
+  {d:'3',q:'Which OSPF network type elects a DR and BDR to reduce OSPF traffic?',opts:['A. Point-to-point','B. Point-to-multipoint','C. Broadcast (Ethernet)','D. Loopback'],ans:[2],exp:'Broadcast multi-access networks (Ethernet) elect a DR and BDR. All other routers (DROTHERs) form adjacency only with the DR and BDR, reducing the number of OSPF adjacencies from O(n^2) to O(n).'},
+  {d:'3',q:'What does "passive-interface gi0/0" do under OSPF?',opts:['A. Shuts the interface down','B. Stops OSPF hellos on the interface but still advertises the connected network','C. Prevents routing updates from being received','D. Sets interface cost to infinity'],ans:[1],exp:'"passive-interface" stops OSPF hello packets on that interface (no neighbors can form) but the network on that interface is still included in OSPF LSAs and advertised. Use on interfaces facing end users where no OSPF neighbors exist.'},
+  {d:'3',q:'What is a floating static route?',opts:['A. A route that changes next-hop dynamically','B. A static route with higher AD than a dynamic protocol, acting as a backup','C. A redistributed route from another domain','D. A summary route'],ans:[1],exp:'A floating static has a higher AD than the primary dynamic route (e.g., AD 200 vs OSPF 110). The static route stays hidden while the dynamic route is present. If the dynamic route disappears, the static "floats up" into the table.'},
+  {d:'3',q:'An OSPF neighbor is stuck in EXSTART state. Most likely cause?',opts:['A. Mismatched hello timers','B. MTU mismatch between routers','C. Different OSPF process IDs','D. Interface is passive'],ans:[1],exp:'EXSTART/EXCHANGE state hangs are most commonly caused by MTU mismatch. Routers exchange DBDs in this phase, and mismatched MTU prevents DBD acceptance. Fix the MTU or use "ip ospf mtu-ignore."'},
+  {d:'3',q:'Which command shows all OSPF neighbor relationships and their state?',opts:['A. show ip route ospf','B. show ip ospf database','C. show ip ospf neighbor','D. debug ip ospf events'],ans:[2],exp:'"show ip ospf neighbor" shows neighbor Router IDs, state (should be FULL), DR/BDR designation, dead timer, and interface. FULL state means the relationship is complete and routes are being exchanged.'},
+  {d:'3',q:'What does HSRP\'s virtual IP address represent?',opts:['A. The IP of the active router','B. A shared gateway IP for hosts that remains stable through failover','C. A load-balanced IP across all routers','D. The STP root bridge address'],ans:[1],exp:'HSRP routers share a virtual IP that hosts use as their default gateway. One router is active, one is standby. If the active router fails, the standby takes over — the virtual IP never changes, so hosts need no reconfiguration.'},
+  {d:'3',q:'In "show ip route", what letter designates an OSPF-learned route?',opts:['A. S','B. C','C. D','D. O'],ans:[3],exp:'Route codes: O=OSPF, C=Connected, S=Static, D=EIGRP, R=RIP, B=BGP, L=Local interface address. "O" stands for OSPF in the routing table output.'},
+  {d:'3',q:'A router has "auto-cost reference-bandwidth 10000." What changes?',opts:['A. Maximum OSPF neighbors allowed','B. Cost calculation — a 10GbE link now has cost 1','C. The hello interval to 10,000ms','D. The dead interval'],ans:[1],exp:'OSPF cost = reference bandwidth / interface bandwidth. Reference 10000 means 10GbE = cost 1, 1GbE = cost 10, 100Mbps = cost 100. This must be set consistently on all OSPF routers in the domain.'},
+  {d:'3',q:'What does "ip routing" do on a multilayer switch?',opts:['A. Enables OSPF','B. Configures DHCP','C. Enables Layer 3 routing between VLANs','D. Allows IPv6 forwarding'],ans:[2],exp:'"ip routing" enables the routing function on a multilayer switch, allowing it to route packets between VLANs using SVIs. Without this command, the switch operates at Layer 2 only even if SVIs have IP addresses.'},
+  {d:'3',q:'Which statement about VRRP is correct?',opts:['A. VRRP is Cisco proprietary requiring a license','B. VRRP is an open standard (RFC 5798) with master and backup routers','C. VRRP uses the same virtual MAC as HSRP','D. VRRP only works on routers, not switches'],ans:[1],exp:'VRRP (RFC 5798) is the open-standard first-hop redundancy protocol. It elects one master and one or more backups sharing a virtual IP. Unlike HSRP (Cisco-only), VRRP works across multi-vendor networks.'},
+  {d:'3',q:'A host on VLAN 10 needs to reach VLAN 20 on the same multilayer switch. What must be enabled?',opts:['A. A separate physical router','B. ip routing on the switch','C. A trunk port to a Layer 2 switch','D. VTP server mode'],ans:[1],exp:'Inter-VLAN routing on a multilayer switch requires SVIs for each VLAN and "ip routing" enabled globally. Both conditions allow internal routing between VLANs without an external router.'},
+  {d:'3',q:'What happens when a packet\'s TTL reaches 0 at a router?',opts:['A. Forwarded without decrement','B. Dropped; ICMP Time Exceeded sent to source','C. Held while requesting a new route','D. Forwarded to default gateway'],ans:[1],exp:'When TTL hits 0, the router drops the packet and sends ICMP Type 11 (Time Exceeded) to the source. Traceroute exploits this behavior — it sends packets with increasing TTL to discover each hop in the path.'},
+  {d:'3',q:'Which protocol is the internet\'s inter-AS path vector routing protocol?',opts:['A. OSPF','B. EIGRP','C. RIP','D. BGP'],ans:[3],exp:'BGP (Border Gateway Protocol) is the internet routing protocol — a path vector protocol used between autonomous systems. It makes decisions based on path attributes and policies. OSPF and EIGRP are IGPs used within an AS.'},
+  {d:'3',q:'Which command shows the complete IPv4 routing table?',opts:['A. show interfaces','B. show ip route','C. show arp','D. show ip protocols'],ans:[1],exp:'"show ip route" displays the full routing table: all routes, sources (C/S/O/D etc.), administrative distances, metrics, next-hops, outgoing interfaces, and route age.'},
+  {d:'3',q:'"ip ospf priority 0" is configured on an interface. What is the result?',opts:['A. Router becomes DR','B. Router can never be elected DR or BDR on that segment','C. OSPF disabled on interface','D. Hello interval set to 0'],ans:[1],exp:'OSPF priority 0 permanently disqualifies the router from DR/BDR election on that segment. Default priority is 1. Highest priority wins. Priority 0 = DROTHER permanently. The router still forms adjacencies with DR and BDR.'},
+  {d:'3',q:'Which command adds 192.168.1.0/24 to OSPF area 0 with the correct wildcard mask?',opts:['A. network 192.168.1.0 255.255.255.0 area 0','B. network 192.168.1.0 0.0.0.255 area 0','C. ospf network 192.168.1.0/24 area 0','D. ip ospf 192.168.1.0 area 0'],ans:[1],exp:'OSPF uses wildcard masks (inverse of subnet mask). For /24, wildcard = 0.0.0.255. Command: "network 192.168.1.0 0.0.0.255 area 0" under "router ospf [pid]". Wildcard 0 bits must match; 1 bits are ignored.'},
+
+// ══ DOMAIN 4: IP Services (12) ═══════════════════════════════════════════════
+  {d:'4',q:'What is the correct DHCP message order when a client obtains an IP?',opts:['A. Discover, Offer, Request, Acknowledge','B. Request, Offer, Discover, Acknowledge','C. Discover, Request, Offer, Acknowledge','D. Offer, Discover, Acknowledge, Request'],ans:[0],exp:'DHCP DORA: Discover (client broadcasts for a server), Offer (server offers an IP), Request (client requests the offered IP), Acknowledge (server confirms and delivers lease including IP, mask, gateway, DNS).'},
+  {d:'4',q:'Which command on a router forwards DHCP broadcasts to a server at 10.0.0.5?',opts:['A. ip dhcp-server 10.0.0.5','B. ip helper-address 10.0.0.5','C. ip dhcp relay 10.0.0.5','D. ip forward-protocol udp 10.0.0.5'],ans:[1],exp:'"ip helper-address 10.0.0.5" on the interface facing clients converts DHCP broadcast Discovers into unicast packets directed to the server. This allows one DHCP server to serve multiple subnets.'},
+  {d:'4',q:'Which NAT type permanently maps one private IP to one public IP?',opts:['A. Dynamic NAT','B. PAT','C. Static NAT','D. Overload NAT'],ans:[2],exp:'Static NAT creates a permanent one-to-one mapping. Used for servers that must always be reachable at the same public IP. Dynamic NAT uses a pool. PAT maps many private IPs to one public IP using port numbers.'},
+  {d:'4',q:'Which NTP stratum directly connects to an atomic clock?',opts:['A. Stratum 0','B. Stratum 1','C. Stratum 2','D. Stratum 16'],ans:[1],exp:'Stratum 0 IS the atomic clock (GPS, cesium) — not a network device. Stratum 1 servers are directly connected to stratum 0. Stratum 16 means unsynchronized. Each additional hop adds 1 stratum.'},
+  {d:'4',q:'Which syslog severity level indicates the system is completely unusable?',opts:['A. 1 - Alert','B. 2 - Critical','C. 3 - Error','D. 0 - Emergency'],ans:[3],exp:'Syslog 0 (Emergency) = system unusable. 1 (Alert) = immediate action required. 2 (Critical) = serious failure. 7 (Debug) = least severe. Lower number = more severe event.'},
+  {d:'4',q:'In NAT translation output, what does "Inside Global" represent?',opts:['A. The private IP of the internal host','B. The public IP representing the internal host as seen from outside','C. The ISP router\'s IP address','D. The DNS name of the internal server'],ans:[1],exp:'Inside Global = the public/routable IP that the internet sees for an internal host. Inside Local = the host\'s actual private IP. Outside Global = the real destination IP on the internet.'},
+  {d:'4',q:'Which command marks an interface as the inside NAT interface?',opts:['A. ip nat outside','B. nat inside','C. ip nat inside','D. ip nat enable'],ans:[2],exp:'"ip nat inside" marks the LAN-facing interface as inside. "ip nat outside" marks the WAN-facing interface. Both markings are required on their respective interfaces for NAT to function.'},
+  {d:'4',q:'Which protocol and port does SNMP use for polling?',opts:['A. TCP port 161','B. UDP port 161','C. TCP port 162','D. UDP port 162'],ans:[1],exp:'SNMP uses UDP port 161 for queries (NMS polling devices) and UDP port 162 for traps (unsolicited device notifications to NMS). TCP is not used by SNMP.'},
+  {d:'4',q:'Which command makes a router sync its time from NTP server 8.8.8.8?',opts:['A. clock set 8.8.8.8','B. ntp master 8.8.8.8','C. ntp server 8.8.8.8','D. ip name-server 8.8.8.8'],ans:[2],exp:'"ntp server 8.8.8.8" configures the router as an NTP client. "ntp master [stratum]" makes the router an NTP server. "ip name-server" sets DNS. "clock set" manually sets time without NTP.'},
+  {d:'4',q:'Which QoS mechanism guarantees low latency for VoIP by placing it in a strict priority queue?',opts:['A. FIFO queuing','B. Weighted Fair Queuing','C. Low Latency Queuing (LLQ)','D. Priority Queuing with shaping'],ans:[2],exp:'LLQ combines CBWFQ with a strict priority queue. VoIP traffic in the priority queue is always serviced first, guaranteeing minimum delay and jitter — critical for voice quality.'},
+  {d:'4',q:'What is the difference between traffic policing and traffic shaping?',opts:['A. Policing delays excess; shaping drops it','B. Policing drops/re-marks excess; shaping buffers and delays excess','C. Policing inbound only; shaping outbound only','D. Identical with different names'],ans:[1],exp:'Policing drops or re-marks packets exceeding the rate — immediate action, no buffering. Shaping buffers excess traffic and sends it later — smoother delivery but adds latency. Policing is simpler; shaping is gentler on the application.'},
+  {d:'4',q:'With PAT, what differentiates return traffic for multiple internal hosts sharing one public IP?',opts:['A. Source IP address','B. Destination MAC address','C. Source port number in the NAT table','D. TTL value'],ans:[2],exp:'PAT uses unique source port numbers to track each internal session. The NAT table maps [public IP:unique port] back to [private IP:port], allowing many simultaneous sessions through one public IP address.'},
+
+// ══ DOMAIN 5: Security Fundamentals (15) ═════════════════════════════════════
+  {d:'5',q:'Which ACL type filters on source IP, destination IP, protocol, AND port number?',opts:['A. Standard ACL','B. Extended ACL','C. Dynamic ACL','D. Reflexive ACL'],ans:[1],exp:'Extended ACLs (100-199 or named) match source/dest IP, protocol, and port. Standard ACLs (1-99) match source IP only. Extended ACLs should be placed near the source to block traffic early.'},
+  {d:'5',q:'ACL has: (1) permit tcp 192.168.1.0 0.0.0.255 any eq 80. (2) deny ip any any. Packet: src 192.168.1.5, dst 10.0.0.1 port 80. Applied inbound. Result?',opts:['A. Denied by line 2','B. Permitted by line 1','C. Denied by implicit deny','D. No match — forwarded'],ans:[1],exp:'ACLs process top-down. The packet matches line 1 (source in 192.168.1.0/24, TCP port 80) and is permitted immediately. Line 2 is never checked. Every ACL has an implicit deny all at the end even if not written.'},
+  {d:'5',q:'Which commands configure port security to allow 2 MACs with shutdown on violation?',opts:['A. switchport security maximum 2 violation shutdown','B. switchport port-security maximum 2 + violation shutdown (separate commands)','C. port-security max 2 action shutdown','D. switchport port-security 2 shutdown'],ans:[1],exp:'Three separate commands: "switchport port-security" to enable, "switchport port-security maximum 2" to set the limit, "switchport port-security violation shutdown" to err-disable on violation. All entered in interface config mode.'},
+  {d:'5',q:'Which feature validates ARP packets against the DHCP snooping table to prevent ARP poisoning?',opts:['A. Port security','B. Storm control','C. DHCP snooping','D. Dynamic ARP Inspection (DAI)'],ans:[3],exp:'DAI drops ARP packets where the IP-to-MAC mapping does not match the DHCP snooping binding table. DHCP snooping must be enabled first since DAI depends on its binding table to validate ARPs.'},
+  {d:'5',q:'What does DHCP snooping do to untrusted ports?',opts:['A. Prevents IP conflicts','B. Blocks DHCP Discover broadcasts','C. Drops DHCP server replies to prevent rogue DHCP servers','D. Limits DHCP leases per VLAN'],ans:[2],exp:'DHCP snooping classifies ports as trusted (uplinks to legitimate DHCP servers) or untrusted (client-facing). DHCP Offer/ACK/NAK arriving on untrusted ports are dropped — preventing rogue DHCP servers from hijacking client IPs.'},
+  {d:'5',q:'Which VTY configuration restricts access to SSH only and uses local authentication?',opts:['A. login; transport input all','B. login local; transport input ssh','C. password cisco; transport input telnet','D. no login; transport input ssh'],ans:[1],exp:'"login local" uses the local username database. "transport input ssh" restricts to SSH only, disabling Telnet. "no login" allows access with no credentials — a critical vulnerability. Always use "login local" + "transport input ssh."'},
+  {d:'5',q:'What are the three 802.1X components?',opts:['A. Switch, router, firewall','B. Supplicant, authenticator, authentication server','C. Client, server, certificate authority','D. Classifier, policer, scheduler'],ans:[1],exp:'802.1X: Supplicant (device requesting access), Authenticator (switch/AP controlling port access), Authentication Server (RADIUS verifying credentials). The port only opens after successful authentication — port-based NAC.'},
+  {d:'5',q:'A port is err-disabled after a port security violation. How do you restore it?',opts:['A. no shutdown only','B. shutdown then no shutdown','C. clear port-security','D. switchport port-security reset'],ans:[1],exp:'To clear err-disabled state: "shutdown" then "no shutdown" on the interface. This resets the port. Alternatively, configure "errdisable recovery cause psecure-violation" and "errdisable recovery interval 300" for automatic recovery.'},
+  {d:'5',q:'Where should standard ACLs be placed?',opts:['A. Close to source — saves bandwidth','B. Close to destination — they only match source IP so placement near source is too broad','C. Always on WAN interface','D. On management interface'],ans:[1],exp:'Standard ACLs match only source IP. Placing near the source blocks that source from reaching ANY destination. Placing near the destination only affects traffic going there. Extended ACLs go near source since they can specify exact destinations.'},
+  {d:'5',q:'What is TACACS+ used for in a Cisco network?',opts:['A. VLAN segmentation','B. Encrypting all network traffic','C. Centralized AAA for device administration (router/switch management)','D. Intrusion detection'],ans:[2],exp:'TACACS+ (TCP 49) provides AAA for device administration — controlling who can log into network devices and what commands they can run. RADIUS handles network access (Wi-Fi, VPN). TACACS+ separates authentication, authorization, and accounting.'},
+  {d:'5',q:'Which ACL entry permits only HTTPS traffic to host 10.1.1.100?',opts:['A. permit tcp any host 10.1.1.100 eq 80','B. permit tcp any host 10.1.1.100 eq 443','C. permit https any 10.1.1.100','D. permit udp any host 10.1.1.100 eq 443'],ans:[1],exp:'HTTPS = TCP port 443. Option B correctly specifies TCP, any source, host 10.1.1.100, port 443. Option A is HTTP (port 80). Option C is invalid IOS syntax. Option D incorrectly uses UDP — HTTPS is TCP.'},
+  {d:'5',q:'What makes "enable secret" more secure than "enable password"?',opts:['A. They are identical','B. "enable secret" uses MD5 hashing and overrides "enable password" if both are set','C. "enable password" uses SHA-256','D. "enable secret" is only for SSH'],ans:[1],exp:'"enable secret" stores the password as an MD5 hash — much harder to crack than "enable password\'s" weak Type 7 cipher. If both are configured, "enable secret" always takes precedence. Always use "enable secret" in production.'},
+  {d:'5',q:'Which command blocks logins for 120 seconds after 3 failures within 60 seconds?',opts:['A. security authentication failure rate 3 log','B. login block-for 120 attempts 3 within 60','C. login delay 120 attempts 3 interval 60','D. aaa authentication attempts 3 lockout 120'],ans:[1],exp:'"login block-for 120 attempts 3 within 60" is the correct IOS syntax. Blocks all login attempts for 120 seconds if 3 failed attempts occur within a 60-second window. Defends against brute-force on VTY/console.'},
+  {d:'5',q:'How do you restrict SSH access to a specific management workstation at 192.168.1.100?',opts:['A. Outbound ACL on WAN interface','B. access-class ACL in on the VTY lines','C. Inbound ACL on LAN interface','D. Outbound ACL on loopback'],ans:[1],exp:'"access-class [acl] in" on VTY lines restricts which source IPs can SSH to the router. This controls management access specifically. "access-group" applies ACLs to interfaces for data traffic; "access-class" controls who can open a management session.'},
+  {d:'5',q:'What advantage do named ACLs have over numbered ACLs?',opts:['A. No advantages','B. Allow individual ACE deletion and use descriptive names','C. Support more entries','D. Must be applied with access-class only'],ans:[1],exp:'Named ACLs allow inserting or deleting individual lines (ACEs) without removing the entire ACL. Numbered ACLs require full deletion and recreation to change a single entry. Named ACLs also use meaningful names for easier management.'},
+
+// ══ DOMAIN 6: Automation & Programmability (14) ═══════════════════════════════
+  {d:'6',q:'In SDN, what is the role of the control plane?',opts:['A. Forwards packets in hardware at wire speed','B. Makes routing/switching decisions and programs the data plane','C. Provides the GUI for administrators','D. Encrypts traffic between devices'],ans:[1],exp:'The SDN control plane is the "brain" — it runs routing protocols, builds forwarding tables, and programs the data plane. The data plane (forwarding plane) executes those decisions in hardware at high speed with no logic of its own.'},
+  {d:'6',q:'What is Ansible\'s key advantage over Puppet and Chef for network automation?',opts:['A. Supports more device types','B. Agent-based, more reliable','C. Agentless — uses SSH/APIs without installing software on managed devices','D. Better encryption'],ans:[2],exp:'Ansible is agentless — no client software needs to be installed on routers or switches. It connects via SSH or REST APIs. Puppet and Chef are agent-based, requiring software installation on every managed device — impractical for most network gear.'},
+  {d:'6',q:'Which REST API HTTP method retrieves data without modifying anything?',opts:['A. POST','B. PUT','C. DELETE','D. GET'],ans:[3],exp:'GET is read-only — it retrieves data with no side effects. POST creates. PUT replaces entirely. PATCH updates partially. DELETE removes. GET is idempotent — calling it multiple times produces the same result.'},
+  {d:'6',q:'In JSON, what do square brackets [ ] represent?',opts:['A. Object','B. String','C. Array','D. Boolean'],ans:[2],exp:'Square brackets [ ] = array (ordered list). Curly braces { } = object (key-value pairs). Arrays can contain objects, strings, numbers, booleans, or nested arrays. JSON is the most common REST API data format.'},
+  {d:'6',q:'What data modeling language does NETCONF use to define configuration structure?',opts:['A. JSON','B. XML','C. YANG','D. YAML'],ans:[2],exp:'YANG (Yet Another Next Generation) is the data modeling language for NETCONF. YANG defines structure and semantics; NETCONF uses XML as the encoding format for actual messages transported over SSH.'},
+  {d:'6',q:'What is the correct description of southbound vs northbound SDN APIs?',opts:['A. Southbound: controller to apps; northbound: controller to devices','B. Southbound: controller to devices; northbound: controller to applications','C. Both connect controller to devices at different speeds','D. Southbound uses REST; northbound uses NETCONF'],ans:[1],exp:'Southbound APIs (OpenFlow, NETCONF, RESTCONF, gRPC) connect the controller DOWN to network devices. Northbound APIs (typically REST) connect the controller UP to applications and orchestration systems that consume network services.'},
+  {d:'6',q:'Which Python library is commonly used to make HTTP REST API calls?',opts:['A. json','B. requests','C. paramiko','D. netmiko'],ans:[1],exp:'"requests" is the standard Python library for HTTP REST API calls (GET, POST, PUT, DELETE). "json" parses data. "paramiko" handles SSH sessions. "netmiko" is a multi-vendor SSH library for network devices.'},
+  {d:'6',q:'What is Cisco DNA Center\'s primary function?',opts:['A. Cloud-based firewall management','B. Intent-Based Networking platform for design, provisioning, assurance, and policy','C. Dedicated RADIUS server for wireless','D. Network diagramming software'],ans:[1],exp:'Cisco DNA Center is an IBN (Intent-Based Networking) platform providing centralized design, automated provisioning, AI-powered assurance (predicting issues before users notice), and policy management across the entire network.'},
+  {d:'6',q:'Which tool uses YAML playbooks and is push-based?',opts:['A. Puppet','B. Chef','C. Ansible','D. SaltStack'],ans:[2],exp:'Ansible uses YAML playbooks and is push-based (control node pushes config to devices). Puppet and Chef are pull-based (agents pull from server). Ansible\'s agentless, push-based, YAML approach makes it the most popular for network automation.'},
+  {d:'6',q:'What is the difference between REST PUT and PATCH?',opts:['A. PUT retrieves; PATCH deletes','B. PUT replaces the entire resource; PATCH updates only specified fields','C. They are identical','D. PUT is encrypted; PATCH is not'],ans:[1],exp:'PUT replaces the complete resource — must send the entire object. PATCH does a partial update — send only the fields to change. Both modify existing resources unlike POST which creates new ones.'},
+  {d:'6',q:'What is the primary benefit of Infrastructure as Code (IaC)?',opts:['A. Eliminates network engineers','B. Enables consistent, repeatable, version-controlled deployments and prevents configuration drift','C. Only works for cloud, not physical devices','D. Replaces all network protocols'],ans:[1],exp:'IaC defines network config in code files that are version-controlled (Git), tested, and deployed consistently across all devices. This prevents configuration drift, ensures reproducible deployments, and enables rollback to known-good states.'},
+  {d:'6',q:'Which network plane handles actual packet forwarding using ASICs at wire speed?',opts:['A. Control plane','B. Management plane','C. Data plane','D. Policy plane'],ans:[2],exp:'The data plane (forwarding plane) uses dedicated ASIC hardware to forward packets at line rate with no CPU involvement. Control plane runs routing protocols (CPU-based). Management plane handles SSH/SNMP admin access.'},
+  {d:'6',q:'Which Cisco SD-WAN component handles orchestration and initial device onboarding?',opts:['A. vManage: orchestration; vSmart: GUI; vBond: policy','B. vManage: GUI/management; vSmart: policy/control; vBond: orchestration/onboarding','C. vBond: forwarding; vManage: OSPF; vSmart: logging','D. All three perform identical functions for redundancy'],ans:[1],exp:'vManage = centralized GUI/API for management. vSmart = distributes control policies and OMP routes to WAN edges. vBond = orchestration — the first contact for onboarding new WAN edge devices, authenticating them and pointing to vManage/vSmart.'},
+  {d:'6',q:'Using Ansible to configure OSPF on 50 routers simultaneously is an example of?',opts:['A. Network monitoring','B. Configuration drift','C. Network automation','D. Manual provisioning'],ans:[2],exp:'Pushing configuration to 50 devices simultaneously via Ansible is network automation. It replaces manual SSH-per-device workflows, applies changes consistently, reduces human error, and dramatically cuts provisioning time.'},
+];
+
+const DOMAIN_COLORS = {
+  '1':'#6B3FA0','2':'#C0531A','3':'#0E7A8A',
+  '4':'#B8860B','5':'#2E7D32','6':'#5D6D7E'
+};
+const DOMAIN_NAMES = {
+  '1':'Network Fundamentals','2':'Network Access','3':'IP Connectivity',
+  '4':'IP Services','5':'Security Fundamentals','6':'Automation & Programmability'
+};
+
+/* ══════════════════════════════════════
+   STATE
+══════════════════════════════════════ */
+let sessionQ = [];
+let curQ = 0;
+let answers = [];
+let revealed = [];
+let correct = 0, wrong = 0;
+let selectedTest = 1;
+let selectedCount = 10;
+let selectedTime = 0;
+let timerInterval = null;
+let timeLeft = 0;
+
+/* ══════════════════════════════════════
+   SETUP
+══════════════════════════════════════ */
+function selectCount(el, n) {
+  document.querySelectorAll('#q-count-grid .opt-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedCount = n;
+}
+function selectTimer(el, t) {
+  document.querySelectorAll('#timer-grid .opt-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedTime = t;
+}
+function selectTest(el, t) {
+  selectedTest = t;
+  document.querySelectorAll('#test-select-grid .opt-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  // Update question count options based on pool size
+  const poolSize = t === 1 ? 129 : t === 2 ? 100 : 229;
+  // Update "All" button label
+  const allBtn = document.getElementById('all-q-btn');
+  if (allBtn) {
+    allBtn.querySelector('.ob-val').textContent = 'All';
+    allBtn.querySelector('.ob-lbl').textContent = poolSize + ' Qs';
+    allBtn.dataset.count = poolSize;
+  }
+  // Update session title label on results
+  const lbl = document.getElementById('res-label');
+  if (lbl) lbl.textContent = t === 'both' ? 'Combined Practice Exam Complete' : `Practice Test ${t} Complete`;
+}
+
+function toggleSessionBar() {
+  const body = document.getElementById('session-bar-body');
+  const chev = document.getElementById('bar-chevron');
+  body.classList.toggle('open');
+  chev.classList.toggle('open');
+}
+
+function startExam() {
+  const shuffled = [...CCNA_Q].sort(() => Math.random() - 0.5);
+  sessionQ = shuffled.slice(0, Math.min(selectedCount, CCNA_Q.length));
+  curQ = 0;
+  answers = new Array(sessionQ.length).fill(null);
+  revealed = new Array(sessionQ.length).fill(false);
+  correct = 0; wrong = 0;
+
+  document.getElementById('sc-total').textContent = sessionQ.length;
+  document.getElementById('session-q-pill').textContent = sessionQ.length + ' Qs';
+  document.getElementById('sbi-total').textContent = sessionQ.length;
+
+  if (selectedTime > 0) {
+    timeLeft = selectedTime;
+    const tLabel = formatTime(selectedTime);
+    document.getElementById('session-t-pill').textContent = '⏱ ' + tLabel;
+    document.getElementById('sbi-timer').textContent = tLabel;
+    document.getElementById('sbi-mode').textContent = 'Timed';
+    document.getElementById('timer-pill').style.display = 'inline-block';
+    document.getElementById('timer-pill').textContent = tLabel;
+    startTimer();
+  } else {
+    document.getElementById('session-t-pill').textContent = 'Untimed';
+    document.getElementById('sbi-timer').textContent = '∞';
+    document.getElementById('sbi-mode').textContent = 'Untimed';
+    document.getElementById('timer-pill').style.display = 'none';
+  }
+
+  document.getElementById('setup-screen').style.display = 'none';
+  document.getElementById('exam-screen').style.display = 'block';
+  renderQuestion();
+  updateScoreboard();
+}
+
+/* ══════════════════════════════════════
+   TIMER
+══════════════════════════════════════ */
+function startTimer() {
+  clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    const pill = document.getElementById('timer-pill');
+    const tStr = formatTime(timeLeft);
+    pill.textContent = tStr;
+    document.getElementById('session-t-pill').textContent = '⏱ ' + tStr;
+    pill.className = 's-pill timer-pill';
+    if (timeLeft <= 60) pill.classList.add('danger');
+    else if (timeLeft <= 180) pill.classList.add('warning');
+    if (timeLeft <= 0) { clearInterval(timerInterval); endExam(); }
+  }, 1000);
+}
+function formatTime(s) {
+  const h = Math.floor(s / 3600);
+  const m = Math.floor((s % 3600) / 60);
+  const sec = s % 60;
+  if (h > 0) return `${h}:${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+  return `${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+}
+
+/* ══════════════════════════════════════
+   RENDER QUESTION
+══════════════════════════════════════ */
+function renderQuestion() {
+  const q = sessionQ[curQ];
+  document.getElementById('q-num-label').textContent = `Question ${curQ + 1}`;
+  document.getElementById('q-domain-label').textContent = q.domain;
+  document.getElementById('q-text').textContent = q.q;
+  document.getElementById('q-multi-note').style.display = q.multi ? 'block' : 'none';
+
+  const pct = Math.round(((curQ + 1) / sessionQ.length) * 100);
+  document.getElementById('prog-label').textContent = `Question ${curQ + 1} of ${sessionQ.length}`;
+  document.getElementById('prog-pct').textContent = pct + '%';
+  document.getElementById('prog-bar').style.width = pct + '%';
+
+  const fb = document.getElementById('q-feedback');
+  fb.className = 'feedback'; fb.innerHTML = '';
+
+  const opts = document.getElementById('q-options');
+  opts.innerHTML = '';
+  q.opts.forEach((o, i) => {
+    const el = document.createElement('div');
+    el.className = 'option';
+    el.dataset.idx = i;
+    el.innerHTML = `<div class="opt-key">${o.charAt(0)}</div><span>${o.slice(3)}</span>`;
+    el.onclick = () => selectOpt(i, el);
+    if (revealed[curQ]) {
+      el.classList.add('disabled');
+      if (q.ans.includes(i)) el.classList.add('correct');
+      else if (answers[curQ] && answers[curQ].includes(i)) el.classList.add('wrong');
+    } else if (answers[curQ] && answers[curQ].includes(i)) {
+      el.classList.add('selected');
+    }
+    opts.appendChild(el);
+  });
+
+  if (revealed[curQ] && answers[curQ] && answers[curQ].length > 0) showFeedback(q);
+
+  const btnNext = document.getElementById('btn-next');
+  btnNext.disabled = !(answers[curQ] && answers[curQ].length > 0);
+  btnNext.textContent = curQ === sessionQ.length - 1 ? 'Finish →' : 'Next →';
+  document.getElementById('btn-prev').disabled = curQ === 0;
+
+  buildNav();
+}
+
+function selectOpt(idx, el) {
+  if (revealed[curQ]) return;
+  const q = sessionQ[curQ];
+  if (!answers[curQ]) answers[curQ] = [];
+
+  if (q.multi) {
+    if (answers[curQ].includes(idx)) {
+      answers[curQ] = answers[curQ].filter(i => i !== idx);
+      el.classList.remove('selected');
+    } else {
+      answers[curQ].push(idx);
+      el.classList.add('selected');
+    }
+    document.getElementById('btn-next').disabled = answers[curQ].length === 0;
+    if (answers[curQ].length === q.ans.length) revealAnswer();
+  } else {
+    document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+    answers[curQ] = [idx];
+    el.classList.add('selected');
+    revealAnswer();
+  }
+}
+
+function revealAnswer() {
+  if (revealed[curQ]) return;
+  revealed[curQ] = true;
+  const q = sessionQ[curQ];
+  const isCorrect = q.ans.slice().sort().join(',') === answers[curQ].slice().sort().join(',');
+  if (isCorrect) correct++; else wrong++;
+
+  document.querySelectorAll('.option').forEach(el => {
+    el.classList.add('disabled');
+    const i = parseInt(el.dataset.idx);
+    if (q.ans.includes(i)) el.classList.add('correct');
+    else if (answers[curQ].includes(i)) el.classList.add('wrong');
+    el.classList.remove('selected');
+  });
+
+  showFeedback(q);
+  document.getElementById('btn-next').disabled = false;
+  updateScoreboard();
+  buildNav();
+}
+
+function showFeedback(q) {
+  const isCorrect = q.ans.slice().sort().join(',') === (answers[curQ] || []).slice().sort().join(',');
+  const fb = document.getElementById('q-feedback');
+  fb.className = 'feedback show ' + (isCorrect ? 'correct-fb' : 'wrong-fb');
+  fb.innerHTML = `<strong>${isCorrect ? '✓ Correct!' : '✗ Incorrect'}</strong>${q.exp}`;
+}
+
+function handleNext() {
+  if (!revealed[curQ] && answers[curQ] && answers[curQ].length > 0) { revealAnswer(); return; }
+  if (curQ < sessionQ.length - 1) { goTo(curQ + 1); }
+  else { endExam(); }
+}
+
+function goTo(i) {
+  if (i < 0 || i >= sessionQ.length) return;
+  curQ = i;
+  renderQuestion();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function buildNav() {
+  const nav = document.getElementById('q-nav');
+  nav.innerHTML = '';
+  sessionQ.forEach((_, i) => {
+    const pill = document.createElement('div');
+    pill.className = 'q-pill';
+    pill.textContent = i + 1;
+    pill.onclick = () => goTo(i);
+    if (i === curQ) pill.classList.add('current');
+    else if (revealed[i]) {
+      const q = sessionQ[i];
+      const isCorr = q.ans.slice().sort().join(',') === (answers[i]||[]).slice().sort().join(',');
+      pill.classList.add(isCorr ? 'ans-correct' : 'ans-wrong');
+    } else if (answers[i] && answers[i].length > 0) pill.classList.add('ans-skip');
+    nav.appendChild(pill);
+  });
+}
+
+function updateScoreboard() {
+  const answered = revealed.filter(Boolean).length;
+  const pct = answered > 0 ? Math.round((correct / answered) * 100) : 0;
+  document.getElementById('sc-answered').textContent = answered;
+  document.getElementById('sc-correct').textContent = correct;
+  document.getElementById('sc-pct').textContent = pct + '%';
+}
+
+/* ══════════════════════════════════════
+   END / RESULTS
+══════════════════════════════════════ */
+function endExam() {
+  clearInterval(timerInterval);
+  const total = sessionQ.length;
+  const skipped = total - correct - wrong;
+  const pct = Math.round((correct / total) * 100);
+
+  document.getElementById('exam-screen').style.display = 'none';
+  document.getElementById('res-score').textContent = `${correct}/${total}`;
+  document.getElementById('res-correct').textContent = correct;
+  document.getElementById('res-wrong').textContent = wrong;
+  document.getElementById('res-skip').textContent = skipped;
+
+  const grade = document.getElementById('res-grade');
+  const resLbl = document.getElementById('res-label');
+  if (resLbl) resLbl.textContent = 'ISC2 CC Practice Exam Complete';
+  if (pct >= 72) { grade.className = 'result-grade pass'; grade.textContent = `${pct}% — PASS 🎉`; }
+  else { grade.className = 'result-grade fail'; grade.textContent = `${pct}% — Keep Studying`; }
+
+  document.getElementById('results-screen').style.display = 'block';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function backToSetup() {
+  clearInterval(timerInterval);
+  document.getElementById('results-screen').style.display = 'none';
+  document.getElementById('exam-screen').style.display = 'none';
+  document.getElementById('setup-screen').style.display = 'block';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>
